@@ -1,0 +1,48 @@
+.content-wrapper {
+  // @media (min-width: 1024px){
+  //   height: 100%;
+  // }
+  width: 100%;
+  background-color: white;
+  color: black;
+  padding-left: 15px;
+}
+
+.title-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-input,
+.item-select,
+.toolbar {
+  margin: 20px 0;
+}
+
+.attachments-content {
+  margin-bottom: 20px;
+}
+
+ion-label.attachment-label {
+  font-weight: bold;
+}
+
+ion-label.file-name-label {
+  display: flex;
+  justify-content: flex-start;
+}
+
+ion-label.view-label {
+  display: flex;
+  justify-content: space-evenly;
+  float: right;
+  width: 45;
+}
+
+ion-label.delete-label {
+  float: right;
+  display: flex;
+  justify-content: flex-end;
+}

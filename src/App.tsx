@@ -7,6 +7,7 @@ import New from './app/Dashboard/New/New';
 import Login from './app/Dashboard/Account/Login';
 import Register from './app/Dashboard/Account/Register';
 import PasswordReset from './app/Dashboard/Account/PasswordReset';
+import Questions from './app/Questions/QuestionsPage'
 
 import { setupIonicReact } from '@ionic/react';
 
@@ -54,6 +55,9 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/password-reset">
           <PasswordReset />
+        </Route>
+        <Route exact path="/questions">
+          <Questions />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>
