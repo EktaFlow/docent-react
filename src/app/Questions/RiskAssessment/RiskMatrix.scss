@@ -170,6 +170,8 @@ $basic-cell-size: 4vw;
   height: $basic-cell-size;
   border: solid black 2px;
   filter: brightness(120%);
+  font-size: 1.8em;
+  font-weight: bold;
 }
 
 .low-risk-cell {
@@ -183,4 +185,8 @@ $basic-cell-size: 4vw;
 .high-risk-cell {
   background-color: red;
   @extend %digit-cell;
+}
+
+img {
+  cursor: pointer;
 }

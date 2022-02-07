@@ -1,7 +1,5 @@
 .content-wrapper {
-  // @media (min-width: 1024px){
-  //   height: 100%;
-  // }
+  min-height: 100%;
   width: 100%;
   background-color: white;
   color: black;
@@ -19,10 +17,6 @@
 .item-select,
 .toolbar {
   margin: 20px 0;
-}
-
-.attachments-content {
-  margin-bottom: 20px;
 }
 
 ion-label.attachment-label {
@@ -45,4 +39,21 @@ ion-label.delete-label {
   float: right;
   display: flex;
   justify-content: flex-end;
+}
+
+.explanation-text {
+  background-color: #ededed;
+  width: 98%;
+  height: auto;
+  margin: 3px;
+  font-size: 18px;
+
+  p {
+    padding: 10px;
+  }
+}
+
+div.attachments-table {
+  display: flex;
+  justify-content: center;
 }
