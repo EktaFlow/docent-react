@@ -1,0 +1,116 @@
+.comprehensive-wrapper {
+  min-height: 100%;
+  width: 100%;
+  background-color: white;
+  color: black;
+
+  display: flex;
+  flex-direction: column;
+}
+
+ion-row.comprehensive-filter-toolbar {
+  border-bottom: 0.5px solid lightgray;
+}
+
+ion-card-title.review-header {
+  color: black;
+}
+
+.review-card {
+  margin: 15px auto;
+  width: 50%;
+  .card-content-md {
+    h2,
+    h4 {
+      padding: 5px 0;
+    }
+  }
+}
+
+.review-card-content {
+  color: black;
+  width: 100%;
+}
+
+.box {
+  border-radius: 3px;
+  width: fit-content;
+  padding: 4px 6px;
+  text-align: center;
+}
+
+.yes {
+  background-color: green;
+  color: white;
+}
+.no {
+  background-color: red;
+  color: white;
+}
+.na {
+  background-color: darkgrey;
+  color: white;
+}
+
+@media screen and (min-width: 992px) {
+  .comprehensive-filter-toolbar {
+    .filter-button1 {
+      margin-left: 35px;
+      margin-right: 80px;
+
+      padding-right: 20px;
+      padding-left: 20px;
+    }
+
+    .filter-button2 {
+      margin-left: 20px;
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .comprehensive-filter-toolbar {
+    .filter-item,
+    .filter-button1,
+    .filter-button2,
+    .filter-button3 {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .review-card {
+    width: 85%;
+  }
+  .info-card-content {
+    p {
+      width: 90%;
+      padding: 2px;
+    }
+    ul {
+      width: 90%;
+      margin-left: 0;
+      padding: 2px;
+    }
+  }
+
+  .no {
+    .box {
+      width: 100%;
+    }
+  }
+
+  .yes {
+    .box {
+      width: 100%;
+    }
+  }
+
+  .na {
+    .box {
+      width: 100%;
+    }
+  }
+}

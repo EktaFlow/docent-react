@@ -1,0 +1,96 @@
+.action-items-wrapper {
+  min-height: 100%;
+  width: 100%;
+  background-color: white;
+  color: black;
+
+  display: flex;
+  flex-direction: column;
+
+  table {
+    border-width: 1px;
+    border-spacing: 2px;
+    border-style: outset;
+    border-color: gray;
+    border-collapse: separate;
+    background-color: white;
+    margin: 0 20px 0 20px;
+  }
+  table td {
+    border-width: 1px;
+    padding: 2px;
+    border-color: gray;
+    background-color: white;
+    // -moz-border-radius: ;
+  }
+
+  table th {
+    border-width: 1px;
+    padding: 1px;
+    border-color: gray;
+    background-color: white;
+    // -moz-border-radius: ;
+  }
+
+  .action-header,
+  .row-border {
+    border: 1px solid black;
+  }
+
+  .thread {
+    width: 15%;
+  }
+
+  .subthread {
+    width: 15%;
+  }
+
+  .question {
+    width: 20%;
+  }
+
+  .action-row {
+    border-width: 1px;
+    border-spacing: 2px;
+    border-color: black;
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .action-items-wrapper {
+    .filter-button1 {
+      margin-left: 35px;
+      margin-right: 80px;
+
+      padding-right: 20px;
+      padding-left: 20px;
+    }
+
+    .filter-button2 {
+      margin-left: 20px;
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .action-items-wrapper {
+    .filter-item,
+    .filter-button1,
+    .filter-button2,
+    .filter-button3 {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .action-items-wrapper {
+    overflow: scroll;
+    padding-bottom: 30px;
+  }
+  .review-card {
+    width: 85%;
+  }
+}
