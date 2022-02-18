@@ -79,9 +79,6 @@ const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Functi
                   onClick={() => showLikelihoodDescription()}>
                 </img>
               </IonCol>
-            </IonRow>
-
-            <IonRow>
               <IonCol size="10" className="ion-no-padding">
                 <IonItem color="dark">
                   <IonLabel position="floating">Consequence </IonLabel>
@@ -102,6 +99,27 @@ const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Functi
                   onClick={() => showConsequenceDescription()}>
                 </img>
               </IonCol>
+              {/* <IonCol size="12" size-lg="6">
+                <IonItem color="dark">
+                  <IonLabel position="floating">Greatest Impact</IonLabel>
+                  <IonSelect interface="popover">
+                    <IonSelectOption value="cost">Cost</IonSelectOption>
+                    <IonSelectOption value="schedule">Schedule</IonSelectOption>
+                    <IonSelectOption value="performance">Performance</IonSelectOption>
+                  </IonSelect>
+                </IonItem>
+              </IonCol>
+              <IonCol size="12" size-lg="6">
+                <IonItem color="dark">
+                  <IonLabel position="floating">Risk Response</IonLabel>
+                  <IonSelect interface="popover">
+                    <IonSelectOption value="accept">Accept</IonSelectOption>
+                    <IonSelectOption value="transfer">Transfer</IonSelectOption>
+                    <IonSelectOption value="avoid">Avoid</IonSelectOption>
+                    <IonSelectOption value="mitigate">Mitigate</IonSelectOption>
+                  </IonSelect>
+                </IonItem>
+              </IonCol> */}
             </IonRow>
 
             <IonModal isOpen={descriptionModal}
@@ -125,7 +143,7 @@ const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Functi
                 <IonSelectOption value="schedule">Schedule</IonSelectOption>
                 <IonSelectOption value="performance">Performance</IonSelectOption>
               </IonSelect>
-            </IonItem>
+            </IonItem> 
 
             <IonItem color="dark">
               <IonLabel position="floating">Risk Response</IonLabel>
