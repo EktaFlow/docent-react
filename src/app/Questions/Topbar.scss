@@ -2,6 +2,12 @@
   background-color: #222428;
   width: 100%;
   padding-left: 20px;
+  .popover-link {
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
 }
 
 ion-col.topbar-header {
@@ -10,21 +16,14 @@ ion-col.topbar-header {
 }
 
 .topbar-header {
-    h1 {
-        margin-bottom: 0px;
-        margin-top: 10px;
-    }
+  h1 {
+    margin-bottom: 0px;
+    margin-top: 10px;
+  }
 }
 
 .right-info {
   float: right;
-}
-
-span {
-  &:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
 }
 
 .popover-wrapper {
@@ -34,6 +33,7 @@ span {
 
 ion-popover.thread-popover {
   --width: 30%;
+  overflow: scroll;
 }
 
 .thread-popup {
@@ -134,37 +134,22 @@ ion-popover.thread-popover {
 }
 
 ion-popover.question-history-popover {
-  --width: 70%;
-  --height: 70%;
+  --width: 65%;
+  --height: 65%;
   --border-radius: 0;
-}
 
-.question-history {
-  padding: 10px;
-  min-height: 100%;
-  background-color: white;
-  color: black;
-
-  .header {
-    width: 100%;
-    background-color: darkslateblue;
-    margin: 0;
-
-    h2 {
-      color: white;
-      padding: 25px 20px;
-      margin: 0;
-    }
-  }
-
-  .answers-list {
-    width: 100%;
-    margin-left: 10px;
-  }
 }
 
 .additional-info {
   padding: 10px;
   background-color: white;
   color: black;
+}
+
+@media screen and (max-width: 1024px) {
+  ion-popover.question-history-popover {
+    --width: 80%;
+
+  
+  }
 }

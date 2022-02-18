@@ -1,4 +1,4 @@
-import { IonPage, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonHeader, IonToolbar, IonTitle, IonRow, IonCol, IonContent, IonGrid, IonTextarea, IonInput } from '@ionic/react';
+import { IonPage, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonHeader, IonToolbar, IonTitle, IonRow, IonCol, IonContent, IonGrid, IonTextarea, IonInput, IonDatetime, IonModal, IonText, IonPopover } from '@ionic/react';
 import React, { useState, useEffect } from 'react';
 
 import Header from '../Framework/Header';
@@ -101,37 +101,6 @@ const QuestionsPage: React.FC = () => {
                   </IonSelect>
                 </IonItem>
 
-
-                {yes && <div>
-                  <IonItem color="dark">
-                    <IonLabel position="floating">Objective Evidence</IonLabel>
-                    <IonTextarea placeholder="What needs to be done to meet this objective?"></IonTextarea>
-                  </IonItem>
-                </div>}
-
-                {no && <div>
-                  <h3><b>Action Plan</b></h3>
-                  <IonItem color="dark">
-                    <IonLabel position="floating">Owner</IonLabel>
-                    <IonInput placeholder=""></IonInput>
-                  </IonItem>
-                  <IonItem color="dark">
-                    <IonLabel position="floating">Action Item</IonLabel>
-                    <IonTextarea placeholder="What needs to be done to meet this objective?"></IonTextarea>
-                  </IonItem>
-                  <IonItem color="dark">
-                    <IonLabel position="floating">Reason</IonLabel>
-                    <IonTextarea placeholder="Reason that the criteria is not met..."></IonTextarea>
-                  </IonItem>
-                </div>}
-
-                {na && <div>
-                  <IonItem color="dark">
-                    <IonLabel position="floating">Documentation</IonLabel>
-                    <IonTextarea placeholder="Document why this question is not applicable..."></IonTextarea>
-                  </IonItem>
-                </div>}
-
                 <IonButton color="dsb" onClick={() => showExplanationText(!explanationText)}>Explanation Text</IonButton>
 
                 {explanationText && <div className="explanation-text">
@@ -149,6 +118,55 @@ const QuestionsPage: React.FC = () => {
                     Examples of ‘Objective Evidence’:<br />
                     ● TRA Report is TRL of 1 or greater
                   </p>
+                </div>}
+
+
+                {yes && <div>
+                  <IonItem color="dark">
+                    <IonLabel position="floating">Objective Evidence</IonLabel>
+                    <IonTextarea placeholder="What needs to be done to meet this objective?"></IonTextarea>
+                  </IonItem>
+                </div>}
+
+                {no && <div>
+                  <h3><b>Action Plan</b></h3>
+                  <IonRow>
+                    <IonCol size="12" size-lg="6" className="ion-no-padding">
+                      <IonItem color="dark">
+                        <IonLabel position="floating">Owner</IonLabel>
+                        <IonInput placeholder=""></IonInput>
+                      </IonItem>
+                    </IonCol>
+                    <IonCol size="12" size-lg="6" className="ion-no-padding due-date-col">
+
+                      <IonItem button={true} color="dark" id="open-date-input">
+                        <IonLabel>Due Date</IonLabel>
+                        <IonPopover trigger="open-date-input" showBackdrop={false}>
+                          <IonDatetime
+                            presentation="date"
+
+                          />
+                        </IonPopover>
+                      </IonItem>
+
+                    </IonCol>
+                  </IonRow>
+
+                  <IonItem color="dark">
+                    <IonLabel position="floating">Action Item</IonLabel>
+                    <IonTextarea placeholder="What needs to be done to meet this objective?"></IonTextarea>
+                  </IonItem>
+                  <IonItem color="dark">
+                    <IonLabel position="floating">Reason</IonLabel>
+                    <IonTextarea placeholder="Reason that the criteria is not met..."></IonTextarea>
+                  </IonItem>
+                </div>}
+
+                {na && <div>
+                  <IonItem color="dark">
+                    <IonLabel position="floating">Documentation</IonLabel>
+                    <IonTextarea placeholder="Document why this question is not applicable..."></IonTextarea>
+                  </IonItem>
                 </div>}
 
 
@@ -172,20 +190,20 @@ const QuestionsPage: React.FC = () => {
 
                 <div className="attachments-content">
                   {/* <table className="attachments-table"> */}
-                    <IonRow>
-                      <IonCol className="ion-no-padding">
-                        <IonLabel className="attachment-label file-name-label">File</IonLabel>
-                      </IonCol>
-                      <IonCol className="ion-no-padding">
-                        <IonLabel className="attachment-label date-label">Date Added</IonLabel>
-                      </IonCol>
-                      <IonCol id="view" className="ion-no-padding">
-                        <IonLabel className="attachment-label view-label">View</IonLabel>
-                      </IonCol>
-                      <IonCol id="delete" className="ion-no-padding">
-                        <IonLabel className="attachment-label delete-label">Delete</IonLabel>
-                      </IonCol>
-                    </IonRow>
+                  <IonRow>
+                    <IonCol className="ion-no-padding">
+                      <IonLabel className="attachment-label file-name-label">File</IonLabel>
+                    </IonCol>
+                    <IonCol className="ion-no-padding">
+                      <IonLabel className="attachment-label date-label">Date Added</IonLabel>
+                    </IonCol>
+                    <IonCol id="view" className="ion-no-padding">
+                      <IonLabel className="attachment-label view-label">View</IonLabel>
+                    </IonCol>
+                    <IonCol id="delete" className="ion-no-padding">
+                      <IonLabel className="attachment-label delete-label">Delete</IonLabel>
+                    </IonCol>
+                  </IonRow>
                   {/* </table> */}
                 </div>
               </IonCol>

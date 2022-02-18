@@ -4,6 +4,7 @@
   background-color: white;
   color: black;
   padding-left: 15px;
+
 }
 
 .title-wrapper {
@@ -53,7 +54,23 @@ ion-label.delete-label {
   }
 }
 
+div.attachments-content {
+  // display: flex;
+  // width: 100%;
+  // justify-content: space-around;
+  margin-bottom: 175px;
+}
+
 div.attachments-table {
   display: flex;
   justify-content: center;
+}
+
+@media screen and (min-width: 992px) {
+  .content-wrapper {
+    .due-date-col {
+      padding-left: 30px;
+      padding-top: 25px;
+    }
+  }
 }
