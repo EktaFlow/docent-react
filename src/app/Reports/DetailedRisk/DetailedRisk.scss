@@ -1,0 +1,98 @@
+.detailed-risk-wrapper {
+  min-height: 100%;
+  width: 100%;
+  background-color: white;
+  color: black;
+
+  display: flex;
+  flex-direction: column;
+
+  h2 {
+    text-align: center;
+    text-decoration: underline;
+  }
+
+  .detailed-card-wrapper {
+    background-color: #f5f5f5;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .detailed-risk-card {
+    background-color: white;
+    padding: 10px;
+    width: 80%;
+    margin: 0px auto;
+    margin-bottom: 20px;
+
+    .red {
+      color: red;
+    }
+
+    h2,
+    h4,
+    h6,
+    p {
+      margin-bottom: 0;
+      margin-top: 5px;
+    }
+
+    .subthread-card {
+      background-color: white;
+      margin-bottom: 20px;
+
+      .question {
+        margin-left: 20px;
+        margin-bottom: 10px;
+        padding-right: 5px;
+
+        .extra-risk {
+          padding: 2px 2px 20px 15px;
+          margin-left: 30px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .detailed-risk-wrapper {
+    .filter-button1 {
+      margin-left: 35px;
+      margin-right: 80px;
+
+      padding-right: 20px;
+      padding-left: 20px;
+    }
+
+    .filter-button2 {
+      margin-left: 20px;
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .detailed-risk-wrapper {
+    .filter-item,
+    .filter-button1,
+    .filter-button2,
+    .filter-button3 {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .action-items-wrapper {
+    overflow: scroll;
+    padding-bottom: 30px;
+  }
+
+  .detailed-card-wrapper {
+    .detailed-risk-card {
+      width: 95%;
+    }
+  }
+}

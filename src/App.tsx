@@ -7,7 +7,14 @@ import New from './app/Dashboard/New/New';
 import Login from './app/Dashboard/Account/Login';
 import Register from './app/Dashboard/Account/Register';
 import PasswordReset from './app/Dashboard/Account/PasswordReset';
-import Questions from './app/Questions/QuestionsPage'
+import Questions from './app/Questions/QuestionsPage';
+import Review from './app/Reports/Review/Review';
+import Comprehensive from './app/Reports/Comprehensive/Comprehensive';
+import RiskSummary from './app/Reports/RiskSummary/RiskSummary';
+import ActionItems from './app/Reports/ActionItems/ActionItems';
+import DetailedRisk from './app/Reports/DetailedRisk/DetailedRisk';
+import QuestionsList from './app/Reports/QuestionsList/QuestionsList';
+
 
 import { setupIonicReact } from '@ionic/react';
 
@@ -58,6 +65,24 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/questions">
           <Questions />
+	</Route>
+        <Route exact path="/review-report">
+          <Review />
+        </Route>
+        <Route exact path="/comprehensive-report">
+          <Comprehensive />
+        </Route>
+        <Route exact path="/risk-summary">
+          <RiskSummary />
+        </Route>
+        <Route exact path="/action-items">
+          <ActionItems />
+        </Route>
+        <Route exact path="/detailed-risk">
+          <DetailedRisk />
+        </Route>
+        <Route exact path="/questions-list">
+          <QuestionsList />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>
