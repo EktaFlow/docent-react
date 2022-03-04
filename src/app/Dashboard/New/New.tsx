@@ -6,9 +6,60 @@ import Header from '../../Framework/Header';
 import './New.scss';
 import ChooseThreads from './ChooseThreads';
 import { format, parseISO } from 'date-fns';
+import {createAssessment} from '../../../api/api'
 
 const New: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState('');
+  const [newAssessment, setNewAssessment] = useState({
+    name: '',
+    scope: '',
+    target_mrl: null,
+    current_mrl: null,
+    level_switching: '',
+    target: null,
+    location: '',
+    deskbook_version: ''
+  });
+  const [tempTM, setNewTempTM] = useState({
+    email: '',
+    role: ''
+  })
+  const [tms, setTms] = useState([  ])
+
+  useEffect(() => {
+
+  }, [])
+
+  // function handleChange(e: React.ChangeEvent<HTMLInputElement>, eleType:string){
+  //   var newNew = Object.assign({}, newAssessment);
+  //   newNew[eleType] = e.target.value;
+  //   setNewAssessment(newNew)
+  // }
+
+  function handleChange(e: Event) {
+    // const { name, value } = e.currentTarget
+    console.log(e.target)
+    // setNewAssessment(newAssessment => ({ ...newAssessment, [e.target!.value]: e.target!.value }))
+  }
+
+  async function saveAssessment(){
+    var assm = await createAssessment(newAssessment)
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+
+  function saveTempTM(e: Event){
+    console.log(e)
+  }
+
+  function addTM(){
+    console.log(tempTM)
+  }
+
 
   const formatDate = (value: string) => {
     return format(parseISO(value), 'MMM dd yyyy');
@@ -27,11 +78,20 @@ const New: React.FC = () => {
             <h3>Assessment Information</h3>
             <IonItem color="dark">
               <IonLabel position="floating">Assessment Name* (0/50)</IonLabel>
-              <IonInput placeholder=""></IonInput>
+              <IonInput
+                name="name"
+                value={newAssessment.name}
+                onIonChange={handleChange}
+              ></IonInput>
             </IonItem>
             <IonItem color="dark">
               <IonLabel position="floating">Target MRL*</IonLabel>
-              <IonSelect interface="popover">
+              <IonSelect
+                name="target_mrl"
+                onIonChange={handleChange}
+                value={newAssessment.target_mrl}
+                interface="popover"
+              >
                 <IonSelectOption value="1">1</IonSelectOption>
                 <IonSelectOption value="2">2</IonSelectOption>
                 <IonSelectOption value="3">3</IonSelectOption>
@@ -46,7 +106,12 @@ const New: React.FC = () => {
             </IonItem>
             <IonItem color="dark">
               <IonLabel position="floating">Level Switching</IonLabel>
-              <IonSelect interface="popover">
+              <IonSelect
+                name="level_switching"
+                value={newAssessment.level_switching}
+                onIonChange={handleChange}
+                interface="popover"
+              >
                 <IonSelectOption value="yes">Yes</IonSelectOption>
                 <IonSelectOption value="no">No</IonSelectOption>
               </IonSelect>
@@ -63,15 +128,28 @@ const New: React.FC = () => {
             </IonItem>
             <IonItem color="dark">
               <IonLabel position="floating">Location</IonLabel>
-              <IonInput placeholder=""></IonInput>
+              <IonInput
+                name="location"
+                value={newAssessment.location}
+                onIonChange={handleChange}
+              ></IonInput>
             </IonItem>
             <IonItem color="dark">
-              <IonLabel position="floating">Additional Information</IonLabel>
-              <IonTextarea placeholder=""></IonTextarea>
+              <IonLabel position="floating">Additional Information/Scope</IonLabel>
+              <IonTextarea
+                name="scope"
+                value={newAssessment.scope}
+                onIonChange={handleChange}
+              ></IonTextarea>
             </IonItem>
             <IonItem color="dark">
               <IonLabel position="floating">Deskbook Version*</IonLabel>
-              <IonSelect interface="popover">
+              <IonSelect
+                name="deskbook_version"
+                value={newAssessment.deskbook_version}
+                onIonChange={handleChange}
+                interface="popover"
+              >
                 <IonSelectOption value="2020">2020</IonSelectOption>
                 <IonSelectOption value="2018">2018</IonSelectOption>
               </IonSelect>
@@ -86,14 +164,23 @@ const New: React.FC = () => {
             <div className="tm-fields-wrapper">
               <IonItem color="dark">
                 <IonLabel position="floating">Member Email</IonLabel>
-                <IonInput placeholder=""></IonInput>
+                <IonInput
+                  name="email"
+                  value={tempTM.email}
+                  onIonChange={saveTempTM}
+                ></IonInput>
               </IonItem>
               <IonItem color="dark">
                 <IonLabel position="floating">Member Role</IonLabel>
-                <IonInput placeholder=""></IonInput>
+                <IonInput
+                  name="role"
+                  value={tempTM.role}
+                  onIonChange={saveTempTM}
+                  placeholder="">
+                </IonInput>
               </IonItem>
             </div>
-            <IonButton color="dsb" expand='full' >Add Team Member</IonButton>
+            <IonButton color="dsb" expand='full' onClick={addTM}>Add Team Member</IonButton>
 
             <div className="added-members">
               <IonChip  color="light">

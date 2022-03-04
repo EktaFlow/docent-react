@@ -1,3 +1,4 @@
+import React, {useState, useEffect} from 'react'
 
 import { IonContent, IonIcon, IonAccordionGroup, IonAccordion, IonItem, IonLabel, IonList, IonButton, IonInput, IonPage } from '@ionic/react';
 
@@ -6,7 +7,20 @@ import './Home.scss';
 import AssessmentItem from './AssessmentItem';
 import Sidebar from './Sidebar';
 
+import {grabAssessments} from '../../../api/api'
+
 const Home: React.FC = () => {
+
+  const [assessments, setAssessments] = useState(null);
+
+  useEffect(() => {
+    async function getAssessments(){
+      var asts = await grabAssessments();
+      console.log(asts)
+    }
+
+    getAssessments()
+  }, [])
 
   return (
     <IonPage className="home-page-wrapper">
