@@ -1,0 +1,74 @@
+.criteria-wrapper {
+  min-height: 100%;
+  width: 100%;
+  background-color: white;
+  color: black;
+
+  ion-card.thread-card,
+  ion-card.subthread-card {
+    background-color: white;
+  }
+
+  .thread-card {
+    width: 60%;
+    margin: 15px auto;
+    .subthread-card {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      .mrl {
+        margin-left: 40px;
+        margin-top: 10px;
+
+        b,
+        p {
+          color: #737373;
+        }
+      }
+    }
+    .down-arrow {
+      margin-right: 5px;
+      margin-top: 10px;
+    }
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .criteria-filter-toolbar {
+    .filter-button1 {
+      margin-left: 35px;
+      margin-right: 80px;
+
+      padding-right: 30px;
+      padding-left: 30px;
+    }
+
+    .filter-button2 {
+      margin-left: 20px;
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .criteria-wrapper {
+    .thread-card {
+      width: 95%;
+      .subthread-card {
+        .mrl {
+          margin: 0;
+          padding-left: 5px;
+          padding-top: 10px;
+        }
+      }
+    }
+  }
+
+  .criteria-filter-toolbar {
+    .filter-item,
+    .filter-button1,
+    .filter-button2,
+    .filter-button3 {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+  }
+}

@@ -1,0 +1,24 @@
+.faqs-wrapper {
+  min-height: 100%;
+  width: 100%;
+  background-color: white;
+  color: black;
+
+
+  ion-row {
+    padding-top: 10px;
+    padding-left: 10px;
+  }
+
+  ion-card {
+    background-color: white;
+    ion-card-header {
+      b {
+        color: #737373;
+      }
+    }
+    ion-card-content {
+      color: #737373;
+    }
+  }
+}

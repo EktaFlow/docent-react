@@ -1,11 +1,67 @@
 import { IonPage, IonContent, IonRow, IonCol, IonButton, IonItem, IonLabel, IonSelect, IonSelectOption } from '@ionic/react';
 
+import DataTable from 'react-data-table-component'
+
 import './ActionItems.scss';
 import Header from '../../Framework/Header';
 import InfoCard from '../InfoCard';
 import ReportsTopbar from '../ReportsTopbar';
 
 const ActionItems: React.FC = () => {
+
+  // table info
+  const columns = [
+    {
+      name: 'Title',
+      selector: (row: { MRL: any; }) => row.MRL,
+    },
+    {
+      name: 'Threads',
+      selector: (row: { Threads: any; }) => row.Threads,
+      wrap: true,
+    },
+    {
+      name: 'Questions',
+      selector: (row: { Questions: any; }) => row.Questions,
+      width: '280px',
+      wrap: true,
+    },
+    {
+      name: 'Answer',
+      selector: (row: { Answer: any; }) => row.Answer,
+    },
+    {
+      name: 'Action',
+      selector: (row: { Action: any; }) => row.Action,
+    },
+    {
+      name: 'Due',
+      selector: (row: { Due: any; }) => row.Due,
+    },
+    {
+      name: 'Owner',
+      selector: (row: { Owner: any; }) => row.Owner,
+    },
+    {
+      name: 'Risk',
+      selector: (row: { Risk: any; }) => row.Risk,
+    },
+  ];
+
+  const data = [
+    {
+      id: 1,
+      MRL: '1',
+      Threads: 'Technology & Industrial Base',
+      Questions: 'Have global trends in emerging industrial base capabilities been identified?',
+      Answer: 'No',
+      Action: 'null',
+      Due: '',
+      Owner: 'null',
+      Risk: '',
+    }
+  ]
+
   return (
     <IonPage>
       <Header />
@@ -47,35 +103,10 @@ const ActionItems: React.FC = () => {
             </IonCol>
           </IonRow>
 
-          <table>
-
-            <tr>
-              <th className="action-header">MRL</th>
-              <th className="action-header thread">Threads</th>
-              <th className="action-header subthread">Subthreads</th>
-              <th className="action-header question">Question</th>
-              <th className="action-header">Answer</th>
-              <th className="action-header">Action</th>
-              <th className="action-header">Due</th>
-              <th className="action-header">Owner</th>
-              <th className="action-header">Risk</th>
-            </tr>
-
-
-
-            <tr className="action-row">
-              <td className="row-border">1</td>
-              <td className="row-border">Technology & Industrial Base</td>
-
-              <td className="row-border">A.1 - Technology Transition to Production</td>
-              <td className="row-border">Have global trends in emerging industrial base capabilities been identified?</td>
-              <td className="row-border">No</td>
-              <td className="row-border">null</td>
-              <td className="row-border"></td>
-              <td className="row-border">null</td>
-              <td className="row-border"></td>
-            </tr>
-          </table>
+          <DataTable
+            columns={columns}
+            data={data}
+          />
 
         </div>
       </IonContent>
