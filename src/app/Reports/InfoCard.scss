@@ -1,0 +1,56 @@
+ion-card.info-card,
+ion-card.review-card {
+  background-color: white;
+}
+
+.info-card {
+  width: 30%;
+  margin: 30px;
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5,
+  .h6 {
+    color: rgb(200, 200, 200);
+  }
+}
+
+.info-card-content {
+  width: 100%;
+  // border: 1px solid green;
+  margin: 5px auto;
+  p {
+    font-size: 16px;
+  }
+
+  ul {
+    list-style-type: none;
+    display: inline-block;
+    vertical-align: top;
+    width: 45%;
+    padding: 10px;
+
+    margin-left: 50px;
+    li {
+      padding-left: 8px;
+    }
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .info-card {
+    width: 85%;
+  }
+  .info-card-content {
+    p {
+      width: 90%;
+      padding: 2px;
+    }
+    ul {
+      width: 90%;
+      margin-left: 0;
+      padding: 2px;
+    }
+  }
+}

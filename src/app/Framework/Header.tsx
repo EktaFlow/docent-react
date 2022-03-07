@@ -5,23 +5,37 @@ import React, { useState, useEffect } from 'react';
 
 const Header: React.FC = () => {
   const [inAssessment, setInAssessment] = useState(true);
+  // const [showPopover, setShowPopover] = useState(false);
 
   return (
     <div className="header-wrapper">
       <h2 className="header-title">docent</h2>
       <div className="header-nav-wrapper">
         <IonButton expand='full' color="light" routerLink="/home">Home</IonButton>
-        { inAssessment && <IonButton id="trigger-reports" expand='full' color="light">Reports</IonButton> }
+        {inAssessment && <IonButton id="trigger-reports" expand='full' color="light">Reports</IonButton>}
+        {/* {inAssessment && <IonButton expand='full' color="light" onClick={() => setShowPopover(!showPopover)}>Reports</IonButton>} */}
 
         <IonPopover trigger="trigger-reports">
           <IonButton color="light" expand="full">MRL Summary</IonButton>
-          <IonButton color="light" expand="full">Questions List</IonButton>
-          <IonButton color="light" expand="full">Review</IonButton>
-          <IonButton color="light" expand="full">Comprehensive</IonButton>
-          <IonButton color="light" expand="full">Action Items</IonButton>
-          <IonButton color="light" expand="full">MRL Risk Summary</IonButton>
-          <IonButton color="light" expand="full">Detailed Risk Report</IonButton>
+          <IonButton color="light" expand="full" routerLink="questions-list">Questions List</IonButton>
+          <IonButton color="light" expand="full" routerLink="review-report">Review</IonButton>
+          <IonButton color="light" expand="full" routerLink="comprehensive-report">Comprehensive</IonButton>
+          <IonButton color="light" expand="full" routerLink="action-items">Action Items</IonButton>
+          <IonButton color="light" expand="full" routerLink="risk-summary">MRL Risk Summary</IonButton>
+          <IonButton color="light" expand="full" routerLink="detailed-risk">Detailed Risk Report</IonButton>
         </IonPopover>
+{/* 
+       {showPopover &&
+          <IonPopover>
+            <IonButton color="light" expand="full">MRL Summary</IonButton>
+            <IonButton color="light" expand="full">Questions List</IonButton>
+            <IonButton color="light" expand="full" routerLink="review-report">Review</IonButton>
+            <IonButton color="light" expand="full" routerLink="comprehensive-report">Comprehensive</IonButton>
+            <IonButton color="light" expand="full" routerLink="action-items">Action Items</IonButton>
+            <IonButton color="light" expand="full" routerLink="risk-summary">MRL Risk Summary</IonButton>
+            <IonButton color="light" expand="full" routerLink="detailed-risk">Detailed Risk Report</IonButton>
+          </IonPopover>
+       } */}
 
         <IonButton id="trigger-help" expand='full' color="light">Help</IonButton>
 
