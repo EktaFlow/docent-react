@@ -1,0 +1,76 @@
+.content-wrapper {
+  min-height: 100%;
+  width: 100%;
+  background-color: white;
+  color: black;
+  padding-left: 15px;
+
+}
+
+.title-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-input,
+.item-select,
+.toolbar {
+  margin: 20px 0;
+}
+
+ion-label.attachment-label {
+  font-weight: bold;
+}
+
+ion-label.file-name-label {
+  display: flex;
+  justify-content: flex-start;
+}
+
+ion-label.view-label {
+  display: flex;
+  justify-content: space-evenly;
+  float: right;
+  width: 45;
+}
+
+ion-label.delete-label {
+  float: right;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.explanation-text {
+  background-color: #ededed;
+  width: 98%;
+  height: auto;
+  margin: 3px;
+  font-size: 18px;
+
+  p {
+    padding: 10px;
+  }
+}
+
+div.attachments-content {
+  // display: flex;
+  // width: 100%;
+  // justify-content: space-around;
+  margin-bottom: 175px;
+}
+
+div.attachments-table {
+  display: flex;
+  justify-content: center;
+}
+
+@media screen and (min-width: 992px) {
+  .content-wrapper {
+    .due-date-col {
+      padding-left: 30px;
+      padding-top: 25px;
+    }
+  }
+}

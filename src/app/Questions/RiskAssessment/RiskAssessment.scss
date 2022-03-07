@@ -1,0 +1,23 @@
+.risk-assessment-wrapper {
+  padding-left: 10px;
+}
+
+.item-input,
+.item-select,
+.toolbar,
+h6 {
+  margin: 20px 0;
+}
+
+ion-modal.full-screen {
+  --width: 96%;
+  --height: 95%;
+  --border-radius: 0;
+}
+
+.qmark-col {
+  img {
+    margin-top: 15px;
+    margin-left: 3px;
+  }
+}

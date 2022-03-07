@@ -3,10 +3,12 @@ import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
 import Home from './app/Dashboard/Home/Home';
-import New from './app/Dashboard/New/New';
+
+import New from './app/Dashboard/New/New'
 import Login from './app/Dashboard/Account/Login';
 import Register from './app/Dashboard/Account/Register';
 import PasswordReset from './app/Dashboard/Account/PasswordReset';
+
 
 import { setupIonicReact } from '@ionic/react';
 
@@ -45,6 +47,9 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/start-new">
           <New />
+        </Route>
+        <Route exact path="/questions">
+          <Questions />
         </Route>
         <Route exact path="/login">
           <Login />

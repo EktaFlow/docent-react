@@ -1,0 +1,248 @@
+$likelihood-label-width: 45px;
+$likelihood-cell-width: 1vw;
+$basic-cell-width: 3vw;
+
+$color-coding-key-width: 7.5em;
+
+$cell-font-weight: normal;
+
+%digit-cell {
+  background-clip: padding-box;
+  width: $basic-cell-width;
+  font-weight: $cell-font-weight;
+  border: solid black 2px;
+  font-size: 1.2em;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.popover-wrapper {
+  min-height: 100%;
+  width: 100%;
+  background-color: white;
+  color: black;
+  padding-left: 15px;
+}
+
+.matrix-table-container {
+  height: 64vh;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.risk-matrix-table {
+  margin: 0 auto;
+}
+
+.popover-matrix-row {
+  height: 9vh;
+}
+
+.input-cell {
+  @extend %digit-cell;
+  font-size: 20px;
+}
+
+.low-risk-cell {
+  background-color: green;
+  @extend %digit-cell;
+}
+.med-risk-cell {
+  background-color: yellow;
+  @extend %digit-cell;
+}
+.high-risk-cell {
+  background-color: red;
+  @extend %digit-cell;
+}
+
+.empty-cell {
+  width: $basic-cell-width;
+  border: none;
+}
+
+.consequence-row {
+  height: 5vh;
+}
+
+.consequence-cell {
+  @extend %digit-cell;
+  @media (max-width: 790px) {
+    font-size: 8px;
+    padding: 2px;
+  }
+}
+
+#empty-consequence-cell-left {
+  @extend %digit-cell;
+  border: none;
+  border-left: solid black 2px;
+  border-bottom: solid black 2px;
+}
+#empty-consequence-cell-right {
+  @extend %digit-cell;
+  border: none;
+  border-right: solid black 2px;
+  border-bottom: solid black 2px;
+}
+.empty-consequence-cell-middle {
+  @extend %digit-cell;
+  border: none;
+  border-bottom: solid black 2px;
+}
+
+.consequence-label {
+  @extend %digit-cell;
+  max-width: 0;
+  overflow: visible;
+  white-space: nowrap;
+  border: none;
+}
+
+%color-code-cell {
+  height: 5vh;
+  line-height: 5vh;
+  padding-left: 0.5vw;
+}
+
+.color-coding {
+  float: left;
+  width: $color-coding-key-width;
+  //border: solid black 1px;
+  clear: both;
+}
+.color-coding > div {
+  @extend %color-code-cell;
+}
+#color-code-cell1 {
+  border: 2px solid black;
+  background-color: green;
+}
+#color-code-cell2 {
+  border: 2px solid black;
+  background-color: yellow;
+}
+#color-code-cell3 {
+  border: 2px solid black;
+  background-color: red;
+}
+
+#con-label {
+  th {
+    border: none;
+  }
+}
+
+.likelihood-cell {
+  width: $likelihood-cell-width;
+  font-weight: $cell-font-weight;
+  border: solid black 2px;
+  text-align: center;
+  font-size: 18px;
+  @media (max-width: 460px) {
+    width: 10vw;
+    font-size: 8px;
+    padding: 2px;
+  }
+}
+
+.likelihood-label {
+  clear: both;
+  writing-mode: vertical-lr;
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2); /* IE6,IE7 */
+  ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2)"; /* IE8 */
+  -moz-transform: rotate(-180deg); /* FF3.5+ */
+  -o-transform: rotate(-180deg); /* Opera 10.5 */
+  -webkit-transform: rotate(-180deg); /* Safari 3.1+, Chrome */
+  float: left;
+  height: 44.7vh;
+  margin-top: 2px;
+  padding-top: 20.65vh;
+  box-shadow: 0px 0px 0px 2px black;
+  whitespace: nowrap;
+  overflow: hidden;
+  width: $likelihood-label-width;
+}
+
+.explainer {
+  width: 100%;
+}
+
+.explainer-heading {
+  text-align: center;
+}
+
+.criteria-table {
+  margin: 0 auto;
+  width: 25vw;
+}
+
+.crit-table-row > th {
+  text-align: center;
+  font-weight: normal;
+  font-size: 20px;
+}
+
+.crit-table-left-col {
+  width: 20vw;
+  border: solid black 2px;
+}
+.crit-table-right-col {
+  width: 50vw;
+  border: solid black 2px;
+  text-align: left;
+  padding: 10px 0px 10px 5px;
+}
+
+.cons-table-row > th {
+  font-weight: normal;
+  font-size: 20px;
+}
+
+.cons-rating-col {
+  width: 20vw;
+  border: solid black 2px;
+}
+.cons-cost-col {
+  width: 20vw;
+  border: solid black 2px;
+}
+.cons-sched-col {
+  width: 20vw;
+  border: solid black 2px;
+}
+.cons-perf-col {
+  width: 30vw;
+  border: solid black 2px;
+  text-align: left;
+  padding: 10px 0px 10px 5px;
+}
+
+.button-group-2 {
+  display: none;
+}
+
+@media screen and (max-width: 1200px) {
+  .explainer {
+    width: 100%;
+
+    .criteria-table {
+      width: 100%;
+    }
+  }
+
+  .button-group-1 {
+    visibility: hidden;
+  }
+
+  .button-group-2 {
+    visibility: visible;
+    display: flex;
+    justify-content: center;
+  }
+}
