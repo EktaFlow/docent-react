@@ -1,8 +1,11 @@
 
 import { IonPage, IonContent, IonGrid, IonRow, IonCol, IonButton, IonItem, IonLabel, IonInput, IonTitle, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent, IonIcon, IonHeader, IonToolbar, } from '@ionic/react';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import './Login.scss';
 import Header from '../../Framework/LoginHeader';
+import {mail, lockClosedOutline} from "ionicons/icons";
+
+
 
 const Login: React.FC = () => {
   return (
@@ -22,24 +25,24 @@ const Login: React.FC = () => {
                   </IonCardHeader>
                   <IonCardContent>
                     <IonItem>
-                      <IonLabel position="floating"><IonIcon name="mail"></IonIcon>Email</IonLabel>
+                      <IonLabel position="floating"><IonIcon icon={mail}></IonIcon> Email</IonLabel>
                       <IonInput type="email" placeholder=""></IonInput>
                     </IonItem>
                     <IonItem>
-                      <IonLabel position="floating"><IonIcon name="lock-closed-outline"></IonIcon>Password</IonLabel>
+                      <IonLabel position="floating"><IonIcon icon={lockClosedOutline}></IonIcon>Password</IonLabel>
                       <IonInput placeholder=""></IonInput>
                     </IonItem>
                     <IonButton color="dsb">Log in to Docent Portal</IonButton>
                   </IonCardContent>
                 </IonCard>
                 <div className="bottom-container">
-                      <p> If you have issues registering or logging into the Docent tool, please contact
-                        <a href="mailto:support@mfgdocent.com?Subject=Support%20Request" target="_top"> support@mfgdocent.com.</a>
-                      </p>
+                  <p> If you have issues registering or logging into the Docent tool, please contact
+                    <a href="mailto:support@mfgdocent.com?Subject=Support%20Request" target="_top"> support@mfgdocent.com.</a>
+                  </p>
                 </div>
                 <div className="bottom-container">
-                    <h6 id="forgot-password"><a href="/password-reset"> Forgot Password? </a> </h6>
-                  </div>
+                  <h6 id="forgot-password"><a href="/password-reset"> Forgot Password? </a> </h6>
+                </div>
               </IonCol>
             </IonRow>
           </IonGrid>
