@@ -1,23 +1,29 @@
-import { IonPage, IonContent, IonGrid, IonRow, IonCol, IonButton, IonItem, IonLabel, IonInput, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent } from '@ionic/react';
+import { IonPage, IonContent, IonGrid, IonRow, IonCol, IonButton, IonItem, IonLabel, IonInput,IonIcon, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCardContent } from '@ionic/react';
 import './PasswordReset.scss';
+import Header from '../../Framework/LoginHeader';
 
 const PasswordReset: React.FC = () => {
   return (
     <IonPage>
+      <Header />
       <IonContent>
         <div className="password-wrapper">
           <IonGrid>
             <IonRow>
-              <IonCol size="12">
-                <div className="top-container">
-                  <h1>Reset Password</h1>
-                </div>
-
+              <IonCol class="logo"  size="6">
+                <img src="assets/docentLogo.png" width="400" height="120"></img>
+              </IonCol>
+              <IonCol size="6">
                 <div className="password-container">
                   <IonRow>
+                    <IonCol size="12">  
+                      <div className="top-container">
+                        <h1>Reset Password</h1>
+                      </div>
+                    </IonCol>
                     <IonCol size="12">
-                      <IonItem color="dark">
-                        <IonLabel position="floating">Email</IonLabel>
+                      <IonItem>
+                        <IonLabel position="floating"><IonIcon name="mail"></IonIcon>Email</IonLabel>
                         <IonInput type="email" placeholder=""></IonInput>
                       </IonItem>
                     </IonCol>
