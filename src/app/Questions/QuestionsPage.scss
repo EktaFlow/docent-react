@@ -4,7 +4,6 @@
   background-color: white;
   color: black;
   padding-left: 15px;
-
 }
 
 .title-wrapper {
@@ -64,6 +63,9 @@ div.attachments-content {
 div.attachments-table {
   display: flex;
   justify-content: center;
+}
+
+#file-upload {
 }
 
 @media screen and (min-width: 992px) {

@@ -4,9 +4,8 @@ import './RiskAssessment.scss';
 import React, { useState, useEffect } from 'react';
 
 import RiskPopover from './RiskPopover';
-import qmark from './qmark.png';
 
-const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Function, getRiskScore: Function }> = ({ getLikelihood, getConsequence, getRiskScore }) => {
+const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Function, getRiskScore: Function, getRiskResponse: Function, getMMPSummary: Function, getGreatestImpact: Function, greatest_impact: string, risk_response: string, mmp_summary: string }> = ({ getLikelihood, getConsequence, getRiskScore, getRiskResponse, getMMPSummary, getGreatestImpact, greatest_impact, risk_response, mmp_summary }) => {
   const [likelihood, setLikelihood] = useState<number>();
   const [consequence, setConsequence] = useState<number>();
 
@@ -73,7 +72,7 @@ const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Functi
                 </IonItem>
               </IonCol>
               <IonCol size="2" className="qmark-col">
-                <img src={qmark}
+                <img src="assets/qmark.png"
                   alt=""
                   height="20"
                   onClick={() => showLikelihoodDescription()}>
@@ -92,8 +91,7 @@ const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Functi
                 </IonItem>
               </IonCol>
               <IonCol size="2" className="qmark-col">
-                <img
-                  src={qmark}
+                <img src="assets/qmark.png"
                   alt=""
                   height="20"
                   onClick={() => showConsequenceDescription()}>
@@ -124,8 +122,7 @@ const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Functi
 
             <IonModal isOpen={descriptionModal}
               className="full-screen"
-              onDidDismiss={() => setDescriptionModal(false)}
-            >
+              onDidDismiss={() => setDescriptionModal(false)}>
               <IonContent>
                 <RiskPopover
                   description={modalDescription}
@@ -138,16 +135,22 @@ const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Functi
 
             <IonItem color="dark">
               <IonLabel position="floating">Greatest Impact</IonLabel>
-              <IonSelect interface="popover">
+              <IonSelect
+                value={greatest_impact}
+                interface="popover"
+                onIonChange={e => getGreatestImpact(e.detail.value)}>
                 <IonSelectOption value="cost">Cost</IonSelectOption>
                 <IonSelectOption value="schedule">Schedule</IonSelectOption>
                 <IonSelectOption value="performance">Performance</IonSelectOption>
               </IonSelect>
-            </IonItem> 
+            </IonItem>
 
             <IonItem color="dark">
               <IonLabel position="floating">Risk Response</IonLabel>
-              <IonSelect interface="popover">
+              <IonSelect
+                value={risk_response}
+                interface="popover"
+                onIonChange={e => getRiskResponse(e.detail.value)}>
                 <IonSelectOption value="accept">Accept</IonSelectOption>
                 <IonSelectOption value="transfer">Transfer</IonSelectOption>
                 <IonSelectOption value="avoid">Avoid</IonSelectOption>
@@ -157,7 +160,10 @@ const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Functi
 
             <IonItem color="dark">
               <IonLabel position="floating">MMP Summary</IonLabel>
-              <IonTextarea placeholder=""></IonTextarea>
+              <IonTextarea
+                value={mmp_summary}
+                placeholder=""
+                onIonChange={e => getMMPSummary(e.detail.value)}></IonTextarea>
             </IonItem>
 
           </IonCol>

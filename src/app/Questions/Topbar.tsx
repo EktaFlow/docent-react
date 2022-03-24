@@ -26,7 +26,13 @@ const Topbar: React.FC = () => {
 
     const clickSubheader = (index: any) => {
         setThreadIndex(index);
-        showSubheader(!subheader);
+        if (index !== threadIndex) {
+            showSubheader(true);
+
+        }
+        else {
+            showSubheader(!subheader);
+        }
     }
 
     return (
