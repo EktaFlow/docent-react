@@ -3,11 +3,14 @@ import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
 import Home from './app/Dashboard/Home/Home';
+import New from './app/Dashboard/New/New';
 
-import New from './app/Dashboard/New/New'
+// authentication pages
 import Login from './app/Dashboard/Account/Login';
 import Register from './app/Dashboard/Account/Register';
 import PasswordReset from './app/Dashboard/Account/PasswordReset';
+
+// reports pages
 import Review from './app/Reports/Review/Review';
 import Comprehensive from './app/Reports/Comprehensive/Comprehensive';
 import RiskSummary from './app/Reports/RiskSummary/RiskSummary';
@@ -15,6 +18,15 @@ import ActionItems from './app/Reports/ActionItems/ActionItems';
 import DetailedRisk from './app/Reports/DetailedRisk/DetailedRisk';
 import QuestionsList from './app/Reports/QuestionsList/QuestionsList';
 
+// help pages
+import Definitions from './app/Help/Definitions/Definitions';
+import Acronyms from './app/Help/Acronyms/Acronyms';
+import FAQs from './app/Help/Faqs/Faqs';
+import Criteria from './app/Help/Criteria/Criteria';
+
+// other pages
+import Edit from './app/Dashboard/Edit/Edit';
+import Settings from './app/Dashboard/Settings/Settings';
 
 import { setupIonicReact } from '@ionic/react';
 
@@ -83,6 +95,24 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/questions-list">
           <QuestionsList />
+        </Route>
+        <Route exact path="/definitions">
+          <Definitions />
+        </Route>
+        <Route exact path="/acronyms">
+          <Acronyms />
+        </Route>
+        <Route exact path="/faqs">
+          <FAQs />
+        </Route>
+        <Route exact path="/criteria">
+          <Criteria />
+        </Route>
+        <Route exact path="/edit-assessment">
+          <Edit />
+        </Route>
+        <Route exact path="/settings">
+          <Settings />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>
