@@ -4,6 +4,7 @@ import { IonReactRouter } from '@ionic/react-router';
 
 import Home from './app/Dashboard/Home/Home';
 import New from './app/Dashboard/New/New';
+import Questions from './app/Questions/QuestionsPage';
 
 // authentication pages
 import Login from './app/Dashboard/Account/Login';
@@ -78,6 +79,9 @@ const App: React.FC = () => (
         <Route exact path="/password-reset">
           <PasswordReset />
         </Route>
+        <Route exact path="/questions">
+          <Questions />
+	</Route>
         <Route exact path="/review-report">
           <Review />
         </Route>

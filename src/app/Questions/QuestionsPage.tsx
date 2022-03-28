@@ -1,14 +1,41 @@
 import { IonPage, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonHeader, IonToolbar, IonTitle, IonRow, IonCol, IonContent, IonGrid, IonTextarea, IonInput, IonDatetime, IonModal, IonText, IonPopover } from '@ionic/react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import Header from '../Framework/Header';
 import './QuestionsPage.scss';
+
+import { format, parseISO } from 'date-fns';
+import { createAnswers, grabAnswers } from '../../api/api'
 
 import Topbar from './Topbar';
 import RiskAssessment from './RiskAssessment/RiskAssessment';
 import RiskMatrix from './RiskAssessment/RiskMatrix';
 
 const QuestionsPage: React.FC = () => {
+  const [answers, setAnswers] = useState({
+    answer: '',
+    likelihood: '',
+    consequence: '',
+    risk_response: '',
+    greatest_impact: '',
+    mmp_summary: '',
+    objective_evidence: '',
+    assumptions_yes: '',
+    notes_yes: '',
+    what: '',
+    when: '',
+    who: '',
+    risk: '',
+    reason: '',
+    assumptions_no: '',
+    documentation_no: '',
+    assumptions_na: '',
+    assumptions_skipped: '',
+    notes_skipped: '',
+    notes_no: '',
+    notes_na: '',
+  });
+
   const [explanationText, showExplanationText] = useState(false);
 
   const [yes, setYes] = useState(false);
@@ -19,38 +46,57 @@ const QuestionsPage: React.FC = () => {
   const [consequence, setConsequence] = useState<number>();
   const [riskScore, setRiskScore] = useState<number>();
 
-  useEffect(() => {
-    if (likelihood) {
-      console.log("Likelihood: " + likelihood);
-    }
+  const [selectedDate, setSelectedDate] = useState('');
 
-  }, [likelihood]);
+  const fileInput = useRef(null);
 
   useEffect(() => {
-    if (consequence) {
-      console.log("Consequence: " + consequence);
+    async function getAnswers() {
+      var ans = await grabAnswers();
+      console.log(ans)
     }
+    getAnswers()
+  }, []);
 
-  }, [consequence]);
+  async function saveAnswers() {
+    var ans = await createAnswers(answers)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
 
-
-  useEffect(() => {
-    if (riskScore) {
-      console.log("Risk Score: " + riskScore);
-    }
-
-  }, [riskScore]);
+  const handleAnswerChange = (e: any) => {
+    setAnswers({
+      ...answers,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const getLikelihood = (data: any) => {
     setLikelihood(data);
+    setAnswers({
+      ...answers,
+      likelihood: data
+    });
   }
 
   const getConsequence = (data: any) => {
     setConsequence(data);
+    setAnswers({
+      ...answers,
+      consequence: data
+    });
   }
 
   const getRiskScore = (data: any) => {
     setRiskScore(data);
+    setAnswers({
+      ...answers,
+      risk: data
+    });
   }
 
   const changeInterface = (answer: any) => {
@@ -58,18 +104,118 @@ const QuestionsPage: React.FC = () => {
       setYes(true);
       setNo(false);
       setNA(false);
+      setAnswers({
+        ...answers,
+        answer: 'yes'
+      });
     }
     else if (answer === "no") {
       setYes(false);
       setNo(true);
       setNA(false);
+      setAnswers({
+        ...answers,
+        answer: 'no'
+      });
     }
     else if (answer === "n/a") {
       setYes(false);
       setNo(false);
       setNA(true);
+      setAnswers({
+        ...answers,
+        answer: 'na'
+      });
     }
   }
+
+  const getWhen = (value: any) => {
+    setAnswers({
+      ...answers,
+      when: value
+    });
+  }
+
+  const getRiskResponse = (value: any) => {
+    setAnswers({
+      ...answers,
+      risk_response: value
+    });
+  }
+
+  const getMMPSummary = (value: any) => {
+    setAnswers({
+      ...answers,
+      mmp_summary: value
+    });
+  }
+
+  const getGreatestImpact = (value: any) => {
+    setAnswers({
+      ...answers,
+      greatest_impact: value
+    });
+  }
+
+  const getAssumptions = (value: any) => {
+    if (yes) {
+      setAnswers({
+        ...answers,
+        assumptions_yes: value,
+        assumptions_no: '',
+        assumptions_na: ''
+      });
+    }
+    else if (no) {
+      setAnswers({
+        ...answers,
+        assumptions_yes: '',
+        assumptions_no: value,
+        assumptions_na: ''
+      });
+    }
+    else if (na) {
+      setAnswers({
+        ...answers,
+        assumptions_yes: '',
+        assumptions_no: '',
+        assumptions_na: value
+      });
+    }
+  }
+
+  const getNotes = (value: any) => {
+    if (yes) {
+      setAnswers({
+        ...answers,
+        notes_yes: value,
+        notes_no: '',
+        notes_na: ''
+      });
+    }
+    else if (no) {
+      setAnswers({
+        ...answers,
+        notes_yes: '',
+        notes_no: value,
+        notes_na: ''
+      });
+    }
+    else if (na) {
+      setAnswers({
+        ...answers,
+        notes_yes: '',
+        notes_no: '',
+        notes_na: value
+      });
+    }
+  }
+
+  const formatDate = (value: any) => {
+    let formattedDate = format(parseISO(value), 'MMM dd yyyy');
+    setSelectedDate(formattedDate);
+    return formattedDate;
+  };
 
   return (
     <IonPage className="question-page-wrapper">
@@ -86,7 +232,7 @@ const QuestionsPage: React.FC = () => {
                   <div>
                     <IonButton color="dsb">Previous</IonButton>
                     <IonButton color="dsb">Next</IonButton>
-                    <IonButton color="dsb">Save</IonButton>
+                    <IonButton color="dsb" onClick={() => saveAnswers()}>Save</IonButton>
                   </div>
                 </div>
               </IonCol>
@@ -94,7 +240,11 @@ const QuestionsPage: React.FC = () => {
               <IonCol size="12" size-lg="5">
                 <IonItem color="dark">
                   <IonLabel position="floating">Select Answer</IonLabel>
-                  <IonSelect interface="popover" onIonChange={e => changeInterface(e.detail.value)}>
+                  <IonSelect
+                    name="answer"
+                    value={answers.answer}
+                    interface="popover"
+                    onIonChange={e => changeInterface(e.detail.value)}>
                     <IonSelectOption value="yes">Yes</IonSelectOption>
                     <IonSelectOption value="no">No</IonSelectOption>
                     <IonSelectOption value="n/a">N/A</IonSelectOption>
@@ -120,11 +270,15 @@ const QuestionsPage: React.FC = () => {
                   </p>
                 </div>}
 
-
                 {yes && <div>
                   <IonItem color="dark">
                     <IonLabel position="floating">Objective Evidence</IonLabel>
-                    <IonTextarea placeholder="What needs to be done to meet this objective?"></IonTextarea>
+                    <IonTextarea
+                      name="objective_evidence"
+                      value={answers.objective_evidence}
+                      placeholder="What needs to be done to meet this objective?"
+                      onIonChange={handleAnswerChange}>
+                    </IonTextarea>
                   </IonItem>
                 </div>}
 
@@ -134,53 +288,90 @@ const QuestionsPage: React.FC = () => {
                     <IonCol size="12" size-lg="6" className="ion-no-padding">
                       <IonItem color="dark">
                         <IonLabel position="floating">Owner</IonLabel>
-                        <IonInput placeholder=""></IonInput>
+                        <IonInput
+                          name="who"
+                          value={answers.who}
+                          onIonChange={handleAnswerChange}>
+                        </IonInput>
                       </IonItem>
                     </IonCol>
                     <IonCol size="12" size-lg="6" className="ion-no-padding due-date-col">
-
                       <IonItem button={true} color="dark" id="open-date-input">
                         <IonLabel>Due Date</IonLabel>
+                        <IonText slot="end">{selectedDate}</IonText>
                         <IonPopover trigger="open-date-input" showBackdrop={false}>
                           <IonDatetime
                             presentation="date"
-
-                          />
+                            onIonChange={e => getWhen(formatDate(e.detail.value))} />
                         </IonPopover>
                       </IonItem>
-
                     </IonCol>
                   </IonRow>
 
                   <IonItem color="dark">
                     <IonLabel position="floating">Action Item</IonLabel>
-                    <IonTextarea placeholder="What needs to be done to meet this objective?"></IonTextarea>
+                    <IonTextarea
+                      name="what"
+                      value={answers.what}
+                      placeholder="What needs to be done to meet this objective?"
+                      onIonChange={handleAnswerChange}>
+                    </IonTextarea>
                   </IonItem>
                   <IonItem color="dark">
                     <IonLabel position="floating">Reason</IonLabel>
-                    <IonTextarea placeholder="Reason that the criteria is not met..."></IonTextarea>
+                    <IonTextarea
+                      name="reason"
+                      value={answers.reason}
+                      placeholder="Reason that the criteria is not met..."
+                      onIonChange={handleAnswerChange}>
+                    </IonTextarea>
                   </IonItem>
                 </div>}
 
                 {na && <div>
                   <IonItem color="dark">
                     <IonLabel position="floating">Documentation</IonLabel>
-                    <IonTextarea placeholder="Document why this question is not applicable..."></IonTextarea>
+                    <IonTextarea
+                      name="documentation_no"
+                      value={answers.documentation_no}
+                      placeholder="Document why this question is not applicable..."
+                      onIonChange={handleAnswerChange}>
+                    </IonTextarea>
                   </IonItem>
                 </div>}
 
-
                 <IonItem color="dark">
                   <IonLabel position="floating">Assumptions</IonLabel>
-                  <IonTextarea placeholder="Enter any assumptions here..."></IonTextarea>
+                  <IonTextarea
+                    name="assumptions"
+                    placeholder="Enter any assumptions here..."
+                    onIonChange={e => getAssumptions(e.detail.value)}>
+                  </IonTextarea>
                 </IonItem>
 
                 <IonItem color="dark">
                   <IonLabel position="floating">Notes</IonLabel>
-                  <IonTextarea placeholder="Enter any notes here..."></IonTextarea>
+                  <IonTextarea
+                    name="notes"
+                    placeholder="Enter any notes here..."
+                    onIonChange={e => getNotes(e.detail.value)}>
+                  </IonTextarea>
                 </IonItem>
 
-                <IonButton color="dsb">Attach File</IonButton>
+                <IonButton
+                  color="dsb"
+                  onClick={() => {
+                    // @ts-ignore
+                    fileInput?.current?.click();
+                  }}>
+                  Attach File
+                </IonButton>
+
+                <input
+                  type="file"
+                  ref={fileInput}
+                  hidden>
+                </input>
 
                 <IonHeader>
                   <IonToolbar className="toolbar">
@@ -208,10 +399,22 @@ const QuestionsPage: React.FC = () => {
                 </div>
               </IonCol>
               <IonCol size="12" size-lg="3">
-                <RiskAssessment getLikelihood={getLikelihood} getConsequence={getConsequence} getRiskScore={getRiskScore} />
+                <RiskAssessment
+                  getLikelihood={getLikelihood}
+                  getConsequence={getConsequence}
+                  getRiskScore={getRiskScore}
+                  getRiskResponse={getRiskResponse}
+                  getMMPSummary={getMMPSummary}
+                  getGreatestImpact={getGreatestImpact}
+                  greatest_impact={answers.greatest_impact}
+                  risk_response={answers.risk_response}
+                  mmp_summary={answers.mmp_summary}
+                />
               </IonCol>
               <IonCol size="12" size-lg="4">
-                <RiskMatrix likelihood={likelihood} consequence={consequence} riskScore={riskScore} />
+                <RiskMatrix
+                  likelihood={likelihood} consequence={consequence} riskScore={riskScore}
+                />
               </IonCol>
             </IonRow>
           </IonGrid>
