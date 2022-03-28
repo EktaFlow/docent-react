@@ -1,0 +1,61 @@
+.settings-wrapper {
+  min-height: 100%;
+  width: 100%;
+  background-color: white;
+  color: black;
+  padding: 20px 25px;
+
+  ion-button {
+    margin: 0;
+  }
+
+  .mobile {
+    display: none;
+  }
+
+  .user-settings {
+    border-bottom: 0.5px solid lightgray;
+    padding-bottom: 30px;
+  }
+
+  .upload-download {
+    #upload-deskbook {
+      margin-left: 10px;
+    }
+  }
+}
+
+ion-modal.settings-modal {
+  --width: 50%;
+}
+
+.upload-popover-wrapper {
+  padding-left: 20px;
+  padding-top: 10px;
+  background-color: white;
+  color: black;
+  min-height: 100%;
+}
+
+@media screen and (max-width: 1024px) {
+  .settings-wrapper {
+    .desktop {
+      display: none;
+    }
+
+    .upload-download {
+      #upload-button {
+        margin-left: 0px;
+        margin-top: 5px;
+      }
+    }
+
+    .mobile {
+      display: inherit;
+    }
+  }
+
+  ion-modal.settings-modal {
+    --width: 90%;
+  }
+}

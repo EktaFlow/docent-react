@@ -25,8 +25,14 @@ const Topbar: React.FC = () => {
         "Quality Management", "Mfg Personnel", "Facilities", "Mfg Management"]);
 
     const clickSubheader = (index: any) => {
+        if (index !== threadIndex) {
+            showSubheader(true);
+
+        }
+        else {
+            showSubheader(!subheader);
+        }
         setThreadIndex(index);
-        showSubheader(!subheader);
     }
 
     return (

@@ -19,7 +19,7 @@ const AssessmentItem: React.FC = () => {
         <IonButton size="small" expand="full" color="light">MRL Summary</IonButton>
         <IonButton size="small" expand="full" color="light">Action Items</IonButton>
         <IonButton size="small" expand="full" color="light">Invite Team Members</IonButton>
-        <IonButton size="small" expand="full" color="light">Edit Assessment Info</IonButton>
+        <IonButton size="small" expand="full" color="light" routerLink="edit-assessment">Edit Assessment Info</IonButton>
         <IonButton size="small" expand="full" color="light">Delete Assessment</IonButton>
         <IonButton size="small" expand="full" color="light">Export Assessment</IonButton>
       </div>
