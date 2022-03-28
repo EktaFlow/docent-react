@@ -67,12 +67,9 @@ const App: React.FC = () => (
         <Route exact path="/start-new">
           <New />
         </Route>
-<<<<<<< HEAD
-=======
         <Route exact path="/questions">
           <Questions />
         </Route>
->>>>>>> main
         <Route exact path="/login">
           <Login />
         </Route>
@@ -102,8 +99,6 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/questions-list">
           <QuestionsList />
-<<<<<<< HEAD
-=======
         </Route>
         <Route exact path="/definitions">
           <Definitions />
@@ -122,7 +117,6 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/settings">
           <Settings />
->>>>>>> main
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>

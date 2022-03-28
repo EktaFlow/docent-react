@@ -3,7 +3,7 @@ import './ChooseThreads.scss'
 const ChooseThreads: React.FC = () => {
   return(
     <div className="choose-threads-wrapper">
-      <h3>ChooseThreads</h3>
+      <h3>Choose Threads</h3>
       <p>Unselecting a thread will remove it from your MRA. Typically, all threads are selected.</p>
       <div className="choose-threads-inner">
         <div className="left-side-picks">
