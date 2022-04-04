@@ -6,7 +6,7 @@ import Header from '../../Framework/Header';
 import './New.scss';
 import ChooseThreads from './ChooseThreads';
 import { format, parseISO } from 'date-fns';
-import { createAssessment, createTeamMember } from '../../../api/api'
+import { createAssessment } from '../../../api/api'
 
 const New: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState('');
@@ -18,11 +18,14 @@ const New: React.FC = () => {
     level_switching: '',
     target: null,
     location: '',
-    deskbook_version: ''
+    deskbook_version: '',
+    team_members: ''
   });
-  const [tempTM, setNewTempTM] = useState({
+  const [tempTM, setTempTM] = useState({
+    email: '',
     role: ''
   })
+  const [tms, setTms] = useState<any>([])
 
   function handleChange(e: Event) {
     // const { name, value } = e.currentTarget
@@ -44,15 +47,34 @@ const New: React.FC = () => {
     });
   }
 
-  const getRole = (value: any) => {
-    setNewTempTM({
+  function updateTM(e: any){
+    setTempTM({
       ...tempTM,
-      role: value
+      [e.target.name]: e.target.value
     });
   }
 
+  function saveTeamMember() {
+    var ts:any = [...tms, tempTM]
+    setTms(ts)
+    setTempTM({email: '', role: ''})
+  }
+
+  // useEffect(() => {
+  //   console.log(tms)
+  // }, [tms])
+
+  function removeIcon(spot:any){
+    var t = [...tms]
+    t.splice(spot, 1)
+    setTms(t)
+  }
+
   async function saveAssessment() {
-    var assm = await createAssessment(newAssessment)
+    var nA = newAssessment
+    nA["team_members"] = tms
+    console.log(nA)
+    var assm = await createAssessment(nA)
       .then((res) => {
         console.log(res)
       })
@@ -61,15 +83,7 @@ const New: React.FC = () => {
       })
   }
 
-  async function saveTeamMember() {
-    var team = await createTeamMember(tempTM)
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }
+
 
   const formatDate = (value: string) => {
     let formattedDate = format(parseISO(value), 'MMM dd yyyy');
@@ -178,6 +192,8 @@ const New: React.FC = () => {
                 <IonLabel position="floating">Member Email</IonLabel>
                 <IonInput
                   name="email"
+                  value={tempTM.email}
+                  onIonChange={updateTM}
                 ></IonInput>
               </IonItem>
               <IonItem color="dark">
@@ -185,7 +201,7 @@ const New: React.FC = () => {
                 <IonInput
                   name="role"
                   value={tempTM.role}
-                  onIonChange={e => getRole(e.detail.value)}
+                  onIonChange={updateTM}
                   placeholder="">
                 </IonInput>
               </IonItem>
@@ -193,18 +209,14 @@ const New: React.FC = () => {
             <IonButton color="dsb" expand='full' onClick={() => saveTeamMember()}>Add Team Member</IonButton>
 
             <div className="added-members">
-              <IonChip color="light">
-                <IonLabel color="light">Email: <b>user1@company.com</b> Role: <b>circuitry</b></IonLabel>
-                <IonIcon icon={closeCircle} />
-              </IonChip>
-              <IonChip color="light">
-                <IonLabel color="light">Email: <b>user2@company.com</b> Role: <b>hardware</b></IonLabel>
-                <IonIcon icon={closeCircle} />
-              </IonChip>
-              <IonChip color="light">
-                <IonLabel color="light">Email: <b>user3@company.com</b> Role: <b>design</b></IonLabel>
-                <IonIcon icon={closeCircle} />
-              </IonChip>
+              { tms.length > 0 && tms.map((tm:any, index:any) => (
+                <IonChip color="light">
+                  <IonLabel color="light">Email: <b>{tm.email}</b> Role: <b>{tm.role}</b></IonLabel>
+                  <span onClick={() => removeIcon(index)}><IonIcon  icon={closeCircle} /></span>
+                </IonChip>
+              ))
+              }
+
             </div>
             <ChooseThreads />
 
