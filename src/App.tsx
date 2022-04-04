@@ -10,6 +10,7 @@ import Questions from './app/Questions/QuestionsPage';
 import Login from './app/Dashboard/Account/Login';
 import Register from './app/Dashboard/Account/Register';
 import PasswordReset from './app/Dashboard/Account/PasswordReset';
+import Stripe from './app/Dashboard/Account/Stripe';
 
 // reports pages
 import Review from './app/Reports/Review/Review';
@@ -72,6 +73,9 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/login">
           <Login />
+        </Route>
+        <Route exact path="/purchase">
+          <Stripe />
         </Route>
         <Route exact path="/register">
           <Register />
