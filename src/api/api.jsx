@@ -37,11 +37,11 @@ export async function createAnswers(data) {
   return result.data
 }
 
-export async function createTeamMember(data) {
-  const result = await axios({
-    method: 'post',
-    url: `${apiUrl}/team_members`,
-    data: data
-  })
-  return result.data
-}
+// export async function createTeamMember(data) {
+//   const result = await axios({
+//     method: 'post',
+//     url: `${apiUrl}/team_members`,
+//     data: data
+//   })
+//   return result.data
+// }
