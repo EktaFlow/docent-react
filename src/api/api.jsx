@@ -4,19 +4,22 @@ import { apiUrl } from './constants.js';
 export async function grabAssessments() {
   const result = await axios.get(
     `${apiUrl}/assessments`
-  ).then(res => res.data)
+  )
+  return result.data
 }
 
 export async function grabTeamMembers() {
   const result = await axios.get(
     `${apiUrl}/team_members`
-  ).then(res => res.data)
+  )
+  return result.data
 }
 
 export async function grabAnswers() {
   const result = await axios.get(
     `${apiUrl}/answers`
-  ).then(res => res.data)
+  )
+  return result.data
 }
 
 export async function createAssessment(data) {
