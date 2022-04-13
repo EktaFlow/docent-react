@@ -6,7 +6,8 @@ import Header from '../../Framework/Header';
 import './New.scss';
 import ChooseThreads from './ChooseThreads';
 import { format, parseISO } from 'date-fns';
-import { createAssessment } from '../../../api/api'
+import { createAssessment } from '../../../api/api';
+import {useHistory} from "react-router-dom";
 
 const New: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState('');
@@ -25,7 +26,22 @@ const New: React.FC = () => {
     email: '',
     role: ''
   })
-  const [tms, setTms] = useState<any>([])
+  const [tms, setTms] = useState<any>([]);
+  let history = useHistory();
+
+  useEffect(() => {
+    setNewAssessment({
+      name: '',
+      scope: '',
+      target_mrl: null,
+      current_mrl: null,
+      level_switching: '',
+      target: null,
+      location: '',
+      deskbook_version: '',
+      team_members: ''
+    })
+  }, [])
 
   function handleChange(e: Event) {
     // const { name, value } = e.currentTarget
@@ -76,7 +92,8 @@ const New: React.FC = () => {
     console.log(nA)
     var assm = await createAssessment(nA)
       .then((res) => {
-        console.log(res)
+        console.log(res);
+        history.push('/home');
       })
       .catch((error) => {
         console.log(error)
