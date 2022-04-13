@@ -1,4 +1,5 @@
 import { IonPage, IonContent, IonRow, IonCol, IonButton, IonItem, IonLabel, IonSelect, IonSelectOption, IonCard, IonCardHeader, IonCardTitle } from '@ionic/react';
+import React, { useState } from 'react';
 
 import './Questions.scss';
 import Header from '../../Framework/Header';
@@ -6,6 +7,45 @@ import InfoCard from '../InfoCard';
 import ReportsTopbar from '../ReportsTopbar';
 
 const QuestionsList: React.FC = () => {
+  const data = [
+    {
+      name: 'Technology & Industrial Base',
+      mr_level: '4',
+      subthread: [{
+        name: 'A.1 - Technology Transition to Production',
+        questions: [
+          {
+            question_text: "Have industrial base capabilities and gaps/risks been identified for key technologies, components, and/or key processes?",
+            current_answer: "yes",
+            skipped: false,
+            answered: true,
+            subthread_id: 1
+          },
+          {
+            question_text: "Have pertinent Manufacturing Science (MS) and Advanced Manufacturing Technology requirements been identified?",
+            current_answer: "no",
+            skipped: false,
+            answered: true,
+            subthread_id: 2
+          }
+        ]
+      }]
+    },
+  ];
+
+  const [segmentData, setSegmentData] = useState(data);
+
+  const [MRLevel, setMRLevel] = useState('all-levels');
+  const [answerType, setAnswerType] = useState('all-answers');
+
+  const [MRFilter, setMRFilter] = useState('all-levels');
+  const [answerFilter, setAnswerFilter] = useState('all-answers');
+
+  const setFilter = () => {
+    setMRFilter(MRLevel);
+    setAnswerFilter(answerType);
+  };
+
   return (
     <IonPage>
       <Header />
@@ -22,7 +62,7 @@ const QuestionsList: React.FC = () => {
             <IonCol size="12" size-lg="3" className="filter-item">
               <IonItem color="dark">
                 <IonLabel position="floating">Filter MR Level</IonLabel>
-                <IonSelect interface="popover">
+                <IonSelect value={MRLevel} interface="popover" onIonChange={e => setMRLevel(e.detail.value)}>
                   <IonSelectOption value="all-levels">All Levels</IonSelectOption>
                   <IonSelectOption value="1">1</IonSelectOption>
                   <IonSelectOption value="2">2</IonSelectOption>
@@ -41,7 +81,8 @@ const QuestionsList: React.FC = () => {
             <IonCol size="12" size-lg="3" className="filter-item">
               <IonItem color="dark">
                 <IonLabel position="floating">Filter Answer Type</IonLabel>
-                <IonSelect interface="popover">
+                <IonSelect value={answerType} interface="popover" onIonChange={e => setAnswerType(e.detail.value)}>
+                  <IonSelectOption value="all-answers">All Answers</IonSelectOption>
                   <IonSelectOption value="yes">Yes</IonSelectOption>
                   <IonSelectOption value="no">No</IonSelectOption>
                   <IonSelectOption value="n/a">N/A</IonSelectOption>
@@ -50,7 +91,7 @@ const QuestionsList: React.FC = () => {
             </IonCol>
 
             <IonCol size="6" size-lg="1" className="filter-button2">
-              <IonButton expand="block" color="dsb" className="filter-buttons">Filter</IonButton>
+              <IonButton expand="block" color="dsb" className="filter-buttons" onClick={() => setFilter}>Filter</IonButton>
             </IonCol>
             <IonCol size="6" size-lg="1" className="filter-button3">
               <IonButton expand="block" color="dsb" className="filter-buttons">Clear</IonButton>
@@ -58,49 +99,44 @@ const QuestionsList: React.FC = () => {
           </IonRow>
 
           <div className="thread">
-            <IonCard className="thread-card" color="dark">
-              <IonCardHeader>
-                <IonCardTitle><img src="assets/if_icon-arrow-down.png" className="down-arrow"></img>Cost & Funding</IonCardTitle>
-              </IonCardHeader>
-              <IonCard className="subthread-card" color="dark">
+            {segmentData.map((segment, index) => (
+              <IonCard className="thread-card" color="dark">
                 <IonCardHeader>
-                  <IonCardTitle><img src="assets/if_icon-arrow-down.png" className="down-arrow"></img>C.1 - Production Cost Knowledge (Cost modeling)</IonCardTitle>
+                  <IonCardTitle><img src="assets/if_icon-arrow-down.png" className="down-arrow"></img>{segment.name}</IonCardTitle>
                 </IonCardHeader>
-                <div className="mrl">
-                  <h6><b>MR Level 1:</b></h6>
-                  <div className="question">
-                    <h5 className="navigate-links">
-                      <span>
-                        <IonButton size="small" className="status-button ion-no-padding">
-                          Unanswered
-                        </IonButton>
-                      </span>
-                      Have hypotheses been developed regarding technology impact on affordability?
-                    </h5>
+                {segment.subthread.map((subthread, index) => (
+                  <div>
+                    <IonCard className="subthread-card" color="dark">
+                      <IonCardHeader>
+                        <IonCardTitle><img src="assets/if_icon-arrow-down.png" className="down-arrow"></img>{subthread.name}</IonCardTitle>
+                      </IonCardHeader>
+                      <div className="mrl">
+                        <h6><b>MR Level {segment.mr_level}:</b></h6>
+                        {subthread.questions.map((question, index) => (
+                          <div className="question">
+                            <h5 className="navigate-links">
+                              <span>
+                                {question.current_answer === 'yes' &&
+                                  <IonButton size="small" className="status-button green-button ion-no-padding">Yes</IonButton>
+                                }
+                                {question.current_answer === 'no' &&
+                                  <IonButton size="small" color="danger" className="status-button ion-no-padding">No</IonButton>
+                                }
+                                {question.current_answer === 'na' &&
+                                  <IonButton size="small" className="status-button ion-no-padding">Unanswered</IonButton>
+                                }
+                              </span>
+                              {question.question_text}
+                            </h5>
+                          </div>
+                        ))}
+                      </div>
+                    </IonCard>
                   </div>
-                </div>
+                ))}
               </IonCard>
-              <IonCard className="subthread-card" color="dark">
-                <IonCardHeader>
-                  <IonCardTitle><img src="assets/if_icon-arrow-down.png" className="down-arrow"></img>C.2 - Cost Analysis</IonCardTitle>
-                </IonCardHeader>
-                <div className="mrl">
-                  <h6><b>MR Level 1:</b></h6>
-                  <div className="question">
-                    <h5 className="navigate-links">
-                      <span>
-                        <IonButton size="small" className="status-button ion-no-padding">
-                          Unanswered
-                        </IonButton>
-                      </span>
-                      Have initial manufacturing and quality costs been identified?
-                    </h5>
-                  </div>
-                </div>
-              </IonCard>
-            </IonCard>
+            ))}
           </div>
-
         </div>
       </IonContent>
     </IonPage>

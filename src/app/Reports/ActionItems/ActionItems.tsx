@@ -1,9 +1,87 @@
+// @ts-nocheck
 import { IonPage, IonContent, IonRow, IonCol, IonButton, IonItem, IonLabel, IonSelect, IonSelectOption } from '@ionic/react';
+
+import DataTable from 'react-data-table-component'
 
 import './ActionItems.scss';
 import Header from '../../Framework/Header';
 import InfoCard from '../InfoCard';
 import ReportsTopbar from '../ReportsTopbar';
+
+const columns = [
+  {
+    name: 'MRL',
+    selector: row => row.thread.mrl_level,
+    sortable: true,
+  },
+  {
+    name: 'Threads',
+    selector: row => row.thread.name,
+    sortable: true,
+    wrap: true,
+  },
+  {
+    name: 'Subthreads',
+    selector: row => row.subthread.name, 
+    sortable: true,
+    wrap: true,
+  },
+  {
+    name: 'Questions',
+    selector: row => row.question.question_text,
+    width: '200px',
+    sortable: true,
+    wrap: true,
+  },
+  {
+    name: 'Answer',
+    selector: row => row.answers.answer,
+    sortable: true,
+  },
+  {
+    name: 'Action',
+    selector: row => row.answers.what,
+    sortable: true,
+  },
+  {
+    name: 'Due',
+    selector: row => row.answers.when,
+    sortable: true,
+  },
+  {
+    name: 'Owner',
+    selector: row => row.answers.who,
+    sortable: true,
+  },
+  {
+    name: 'Risk',
+    selector: row => row.answers.risk,
+    sortable: true,
+  },
+];
+
+const data = [
+  {
+    id: 1,
+    question: {
+      question_text: 'Have global trends in emerging industrial base capabilities been identified?',
+    },
+    thread: {
+      name: 'Technology & Industrial Base',
+      mrl_level: '1',
+    },
+    subthread: {
+      name: "A.1 - Technology Transition to Production"
+    },
+    answers: {
+      answer: 'no',
+      who: 'null',
+      what: 'null',
+      when: '03/02/22',
+      risk: 23
+    },
+  }
+]
 
 const ActionItems: React.FC = () => {
   return (
@@ -47,8 +125,7 @@ const ActionItems: React.FC = () => {
             </IonCol>
           </IonRow>
 
-          <table>
-
+          {/* <table>
             <tr>
               <th className="action-header">MRL</th>
               <th className="action-header thread">Threads</th>
@@ -61,12 +138,9 @@ const ActionItems: React.FC = () => {
               <th className="action-header">Risk</th>
             </tr>
 
-
-
             <tr className="action-row">
               <td className="row-border">1</td>
               <td className="row-border">Technology & Industrial Base</td>
-
               <td className="row-border">A.1 - Technology Transition to Production</td>
               <td className="row-border">Have global trends in emerging industrial base capabilities been identified?</td>
               <td className="row-border">No</td>
@@ -75,8 +149,12 @@ const ActionItems: React.FC = () => {
               <td className="row-border">null</td>
               <td className="row-border"></td>
             </tr>
-          </table>
+          </table> */}
 
+          <DataTable
+            columns={columns}
+            data={data}
+          />
         </div>
       </IonContent>
     </IonPage>

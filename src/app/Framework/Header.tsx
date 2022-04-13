@@ -16,7 +16,7 @@ const Header: React.FC = () => {
         {/* {inAssessment && <IonButton expand='full' color="light" onClick={() => setShowPopover(!showPopover)}>Reports</IonButton>} */}
 
         <IonPopover trigger="trigger-reports">
-          <IonButton color="light" expand="full">MRL Summary</IonButton>
+          <IonButton color="light" expand="full" routerLink="mrl-summary">MRL Summary</IonButton>
           <IonButton color="light" expand="full" routerLink="questions-list">Questions List</IonButton>
           <IonButton color="light" expand="full" routerLink="review-report">Review</IonButton>
           <IonButton color="light" expand="full" routerLink="comprehensive-report">Comprehensive</IonButton>

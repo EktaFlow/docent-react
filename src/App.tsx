@@ -14,7 +14,7 @@ import RiskSummary from './app/Reports/RiskSummary/RiskSummary';
 import ActionItems from './app/Reports/ActionItems/ActionItems';
 import DetailedRisk from './app/Reports/DetailedRisk/DetailedRisk';
 import QuestionsList from './app/Reports/QuestionsList/QuestionsList';
-
+import MRLSummary from './app/Reports/MRLSummary/MRLSummary';
 
 import { setupIonicReact } from '@ionic/react';
 
@@ -65,7 +65,7 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/questions">
           <Questions />
-	</Route>
+        </Route>
         <Route exact path="/review-report">
           <Review />
         </Route>
@@ -83,6 +83,9 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/questions-list">
           <QuestionsList />
+        </Route>
+        <Route exact path="/mrl-summary">
+          <MRLSummary />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>

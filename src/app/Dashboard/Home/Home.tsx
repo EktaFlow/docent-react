@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { IonContent, IonIcon, IonAccordionGroup, IonAccordion, IonItem, IonLabel, IonList, IonButton, IonInput, IonPage } from '@ionic/react';
 
@@ -7,20 +7,26 @@ import './Home.scss';
 import AssessmentItem from './AssessmentItem';
 import Sidebar from './Sidebar';
 
-import {grabAssessments} from '../../../api/api'
+import { grabAssessments } from '../../../api/api'
 
 const Home: React.FC = () => {
 
-  const [assessments, setAssessments] = useState(null);
+  const [assessments, setAssessments] = useState([]);
 
   useEffect(() => {
-    async function getAssessments(){
+    async function getAssessments() {
       var asts = await grabAssessments();
-      console.log(asts)
+      setAssessments(asts.assessments);
     }
 
     getAssessments()
   }, [])
+
+  // useEffect(() => {
+  //   if (assessments) {
+  //     console.log(assessments)
+  //   }
+  // }, [assessments])
 
   return (
     <IonPage className="home-page-wrapper">
@@ -35,7 +41,17 @@ const Home: React.FC = () => {
             </div>
           </div>
           <IonAccordionGroup className="assessments-accordion">
-            <IonAccordion value="assessment1" color="secondary">
+            {assessments.map((assessment, index) => (
+              <IonAccordion color="secondary">
+                <IonItem slot="header">
+                  <IonLabel>Assessment Name: xxx</IonLabel>
+                </IonItem>
+                <IonItem slot="content" color="dark">
+                  <AssessmentItem assessmentInfo={assessment} />
+                </IonItem>
+              </IonAccordion>
+            ))}
+            {/* <IonAccordion value="assessment1" color="secondary">
               <IonItem slot="header">
                 <IonLabel>Assessment Name: xxx</IonLabel>
               </IonItem>
@@ -66,7 +82,7 @@ const Home: React.FC = () => {
               <IonItem slot="content" color="dark">
                 <AssessmentItem />
               </IonItem>
-            </IonAccordion>
+            </IonAccordion> */}
           </IonAccordionGroup>
         </div>
         <Sidebar />
@@ -76,3 +92,5 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+
+
