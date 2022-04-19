@@ -10,7 +10,8 @@ import Questions from './app/Questions/QuestionsPage';
 import Login from './app/Dashboard/Account/Login';
 import Register from './app/Dashboard/Account/Register';
 import PasswordReset from './app/Dashboard/Account/PasswordReset';
-import Stripe from './app/Dashboard/Account/Stripe';
+import CCForm from './app/Dashboard/Account/Stripe';
+import StripeAPI from './app/Dashboard/Account/StripeApi';
 
 // reports pages
 import Review from './app/Reports/Review/Review';
@@ -55,6 +56,7 @@ setupIonicReact({
   mode: 'md'
 });
 
+
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
@@ -75,7 +77,10 @@ const App: React.FC = () => (
           <Login />
         </Route>
         <Route exact path="/purchase">
-          <Stripe />
+          <CCForm />
+        </Route>
+        <Route exact path="/purchase_api">
+          <StripeAPI />
         </Route>
         <Route exact path="/register">
           <Register />

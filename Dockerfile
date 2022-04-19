@@ -4,7 +4,7 @@ COPY . /usr/src/app
 RUN apt-get update &&\
     apt-get install -y python
 RUN npm install && \ 
-    npm install styled-components && \
+    npm install styled-components &&\
     npm run build
 FROM nginx
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
