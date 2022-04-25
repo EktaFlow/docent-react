@@ -1,0 +1,30 @@
+.stripe-wrapper {
+    min-height: 100%;
+    width: 100%;
+    // background-color: white;
+    background-color: #F7FAFC;
+
+    // display: flex;
+    // align-items: start;
+    // flex-direction: column;
+
+    padding-top: 20px;
+
+    ion-card {
+        background-color: white;
+        width: 40%;
+        margin: 15px auto;
+    }
+
+    #payment-form {
+        margin-top: 10px;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .stripe-wrapper {
+        ion-card {
+            width: 85%;
+        }
+    }
+}

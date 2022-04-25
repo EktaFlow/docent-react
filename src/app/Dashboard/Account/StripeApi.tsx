@@ -1,22 +1,48 @@
+import { IonPage, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonButton } from '@ionic/react';
+
 import React, { useState, useEffect } from 'react';
+import Header from '../../Framework/Header';
+
+import './StripeApi.scss';
 
 const ProductDisplay = () => (
-  <section>
-    <div className="product">
-      <Logo />
-      <div className="description">
-        <h3>Premium Plan</h3>
-        <h5>$100.00 / month</h5>
+  <IonPage>
+    <Header />
+    <IonContent>
+      <div className="stripe-api-wrapper">
+        <IonCard color="dark">
+          <IonCardHeader>
+            <Logo />
+            <IonCardTitle>Premium Plan</IonCardTitle>
+            <IonCardSubtitle>$100.00 / month</IonCardSubtitle>
+          </IonCardHeader>
+          <IonCardContent>
+            <form action="api/payment_intent" method="POST">
+              <input type="hidden" name="lookup_key" value="test_prem_plan" />
+              <IonButton size="small" color="dsb" id="checkout-and-portal-button" type="submit">Checkout</IonButton>
+            </form>
+          </IonCardContent>
+        </IonCard>
       </div>
-    </div>
-    <form action="api/payment_intent" method="POST">
-      {/* Add a hidden field with the lookup_key of your Price */}
-      <input type="hidden" name="lookup_key" value="test_prem_plan" />
-      <button id="checkout-and-portal-button" type="submit">
-        Checkout
-      </button>
-    </form>
-  </section>
+    </IonContent>
+  </IonPage>
+
+  // <section>
+  //   <div className="product">
+  //     <Logo />
+  //     <div className="description">
+  //       <h3>Premium Plan</h3>
+  //       <h5>$100.00 / month</h5>
+  //     </div>
+  //   </div>
+  //   <form action="api/payment_intent" method="POST">
+  //     {/* Add a hidden field with the lookup_key of your Price */}
+  //     <input type="hidden" name="lookup_key" value="test_prem_plan" />
+  //     <button id="checkout-and-portal-button" type="submit">
+  //       Checkout
+  //     </button>
+  //   </form>
+  // </section>
 );
 
 const SuccessDisplay = ({ sessionId }) => {

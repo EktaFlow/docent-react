@@ -79,7 +79,7 @@ const App: React.FC = () => (
         <Route exact path="/purchase">
           <CCForm />
         </Route>
-        <Route exact path="/purchase_api">
+        <Route exact path="/purchase-api">
           <StripeAPI />
         </Route>
         <Route exact path="/register">
@@ -90,7 +90,7 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/questions">
           <Questions />
-	</Route>
+        </Route>
         <Route exact path="/review-report">
           <Review />
         </Route>
