@@ -245,8 +245,3 @@ const New: React.FC = () => {
 }
 export default New;
 
-// <IonItem color="dark">
-// <IonLabel position="floating">Date to Achieve Target MRL</IonLabel>
-// <IonInput placeholder=""></IonInput>
-//
-// </IonItem>

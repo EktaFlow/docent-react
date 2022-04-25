@@ -22,6 +22,25 @@ export async function grabAnswers() {
   return result.data
 }
 
+export async function grabQuestions() {
+  const result = await axios.get(
+    `${apiUrl}/questions`
+  )
+  return result.data
+}
+
+export async function grabThreads() {
+  const response = await axios.get(`${apiUrl}/mr_threads`);
+  return response.data;
+}
+
+export async function grabSubthreads() {
+  const result = await axios.get(
+    `${apiUrl}/subthreads`
+  )
+  return result.data
+}
+
 export async function createAssessment(data) {
   const result = await axios({
     method: 'post',
@@ -40,11 +59,19 @@ export async function createAnswers(data) {
   return result.data
 }
 
-// export async function createTeamMember(data) {
-//   const result = await axios({
-//     method: 'post',
-//     url: `${apiUrl}/team_members`,
-//     data: data
-//   })
-//   return result.data
-// }
+export async function createTeamMember(data) {
+  const result = await axios({
+    method: 'post',
+    url: `${apiUrl}/team_members`,
+    data: data
+  })
+  return result.data
+}
+
+export async function deleteAssessment(id) {
+  const result = await axios({
+    method: 'delete',
+    url: `${apiUrl}/assessments/${id}`,
+  })
+  return result.data
+}

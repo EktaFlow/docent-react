@@ -1,17 +1,29 @@
 import { IonPage, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonHeader, IonToolbar, IonTitle, IonRow, IonCol, IonContent, IonGrid, IonTextarea, IonInput, IonDatetime, IonModal, IonText, IonPopover } from '@ionic/react';
 import React, { useState, useEffect, useRef } from 'react';
 
+import { RouteComponentProps } from 'react-router-dom';
+
 import Header from '../Framework/Header';
 import './QuestionsPage.scss';
 
 import { format, parseISO } from 'date-fns';
-import { createAnswers, grabAnswers } from '../../api/api'
+import { createAnswers, grabAnswers } from '../../api/api';
+
+import { assessmentId } from '../../variables.jsx'
 
 import Topbar from './Topbar';
 import RiskAssessment from './RiskAssessment/RiskAssessment';
 import RiskMatrix from './RiskAssessment/RiskMatrix';
 
 const QuestionsPage: React.FC = () => {
+  const questions = ['Have industrial base capabilities and gaps/risks been identified for key technologies, components, and/or key processes?',
+    'Have pertinent Manufacturing Science (MS) and Advanced Manufacturing Technology requirements been identified?',
+    'Are initial producibility and manufacturability assessments of preferred systems concepts completed?',
+    'Are the results of the producibility and manufacturability assessment being considered in the selection of preferred design concepts?'
+  ];
+
+  const [questionList, setQuestionList] = useState(questions);
+
   const [answers, setAnswers] = useState({
     answer: '',
     likelihood: '',
@@ -36,6 +48,8 @@ const QuestionsPage: React.FC = () => {
     notes_na: '',
   });
 
+  const [questionCount, setQuestionCount] = useState(0);
+
   const [explanationText, showExplanationText] = useState(false);
 
   const [yes, setYes] = useState(false);
@@ -56,6 +70,10 @@ const QuestionsPage: React.FC = () => {
       console.log(ans)
     }
     getAnswers()
+  }, []);
+
+  useEffect(() => {
+    // console.log(match.params.id)
   }, []);
 
   async function saveAnswers() {
@@ -211,6 +229,20 @@ const QuestionsPage: React.FC = () => {
     }
   }
 
+  const handlePreviousPageClick = () => {
+    if (questionCount > 0) {
+      let questionNum = questionCount - 1;
+      setQuestionCount(questionNum);
+    }
+  }
+
+  const handleNextPageClick = () => {
+    if (questionCount < 3) {
+      let questionNum = questionCount + 1;
+      setQuestionCount(questionNum);
+    }
+  }
+
   const formatDate = (value: any) => {
     let formattedDate = format(parseISO(value), 'MMM dd yyyy');
     setSelectedDate(formattedDate);
@@ -219,19 +251,19 @@ const QuestionsPage: React.FC = () => {
 
   return (
     <IonPage className="question-page-wrapper">
-      <Header />
+      <Header showReportsTab={true} />
       <Topbar />
       <IonContent>
 
         <div className="content-wrapper">
           <IonGrid>
             <IonRow>
-              <IonCol size="12">
+              <IonCol size="9"><h2>{questionList[questionCount]}</h2></IonCol>
+              <IonCol size="3">
                 <div className="title-wrapper">
-                  <h2>Is the Technology Readiness at TRL 1 or greater?</h2>
                   <div>
-                    <IonButton color="dsb">Previous</IonButton>
-                    <IonButton color="dsb">Next</IonButton>
+                    <IonButton color="dsb" onClick={() => handlePreviousPageClick()}>Previous</IonButton>
+                    <IonButton color="dsb" onClick={() => handleNextPageClick()}>Next</IonButton>
                     <IonButton color="dsb" onClick={() => saveAnswers()}>Save</IonButton>
                   </div>
                 </div>

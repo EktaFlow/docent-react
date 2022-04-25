@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { IonContent, IonIcon, IonAccordionGroup, IonAccordion, IonItem, IonLabel, IonList, IonButton, IonInput, IonPage, IonPopover } from '@ionic/react';
 
@@ -8,7 +8,7 @@ import AssessmentItem from './AssessmentItem';
 import Sidebar from './Sidebar';
 import FilterPopover from './FilterPopover'
 
-import {grabAssessments} from '../../../api/api'
+import { grabAssessments } from '../../../api/api'
 
 const Home: React.FC = () => {
 
@@ -20,7 +20,7 @@ const Home: React.FC = () => {
   })
 
   useEffect(() => {
-    async function getAssessments(){
+    async function getAssessments() {
       var asts = await grabAssessments();
       console.log(asts)
       var ats = asts.assessments.assessments
@@ -35,7 +35,7 @@ const Home: React.FC = () => {
 
   return (
     <IonPage className="home-page-wrapper">
-      <Header />
+      <Header showReportsTab={false} />
       <div className="content-wrapper">
         <div className="home-ls">
           <div className="assessment-toolbar">
@@ -55,7 +55,7 @@ const Home: React.FC = () => {
                     <IonLabel>Assessment Name: {assessment.assessment.name}</IonLabel>
                   </IonItem>
                   <IonItem slot="content" color="dark">
-                    <AssessmentItem ast={assessment.assessment}/>
+                    <AssessmentItem assessmentInfo={assessment}/>
                   </IonItem>
                 </IonAccordion>
               ))

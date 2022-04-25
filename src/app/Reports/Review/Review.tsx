@@ -1,14 +1,79 @@
 import { IonPage, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonButton, IonItem, IonLabel, IonSelect, IonSelectOption, IonContent } from '@ionic/react';
+import React, { useState, useEffect } from 'react';
 
 import './Review.scss';
 import Header from '../../Framework/Header';
 import InfoCard from '../InfoCard';
 import ReportsTopbar from '../ReportsTopbar';
 
+import { grabAssessments, grabThreads, grabSubthreads, grabQuestions } from '../../../api/api'
+
 const Review: React.FC = () => {
+  const data = [
+    {
+      question: {
+        question_text: "Have industrial base capabilities and gaps/risks been identified for key technologies, components, and/or key processes?",
+        current_answer: "no"
+      },
+      thread: {
+        name: 'Technology & Industrial Base',
+        mr_level: '4',
+      },
+      subthread: {
+        name: 'A.1 - Technology Transition to Production'
+      },
+      answer: {
+        objective_evidence: 'Some objective evidence'
+      }
+    },
+    {
+      question: {
+        question_text: "Have pertinent Manufacturing Science (MS) and Advanced Manufacturing Technology requirements been identified?",
+        current_answer: "yes"
+      },
+      thread: {
+        name: 'Technology & Industrial Base',
+        mr_level: '4',
+      },
+      subthread: {
+        name: 'A.2 - Manufacturing Technology Development'
+      },
+      answer: {
+        objective_evidence: ''
+      }
+    },
+  ];
+
+  const [reviewData, setReviewData] = useState(data);
+
+  useEffect(() => {
+    async function getThreads() {
+      var asts = await grabThreads();
+      if(asts) {
+        console.log(asts);
+        let tempArray = reviewData;
+        // console.log(tempArray.length)
+        
+        // console.log(tempArray);
+        // tempArray[0].thread.name = asts.threads[0].name
+        // tempArray[0].thread.mr_level = asts.threads[0].mr_level
+
+        setReviewData(tempArray)
+      }
+    }
+
+    async function getQuestions() {
+      var questions = await grabQuestions();
+      // console.log(questions);
+    }
+    
+    getThreads();
+    getQuestions();
+  }, [])
+
   return (
     <IonPage>
-      <Header />
+      <Header showReportsTab={true} />
       <ReportsTopbar text="Review" />
       <IonContent>
         <div className="review-wrapper">
@@ -53,57 +118,28 @@ const Review: React.FC = () => {
             </IonCol>
           </IonRow>
 
-          <div className="survey-info">
-            <IonCard className="review-card">
-              <IonCardHeader>
-                <IonCardTitle className="review-header">Is the Technology Readiness at TRL 1 or greater?</IonCardTitle>
-                <IonCardSubtitle className="box yes"><b>Yes</b></IonCardSubtitle>
-              </IonCardHeader>
+          {reviewData.map((review, index) => (
+            <div className="survey-info">
+              <IonCard className="review-card">
+                <IonCardHeader>
+                  <IonCardTitle className="review-header">{review.question.question_text}</IonCardTitle>
+                  {review.question.current_answer === 'yes' && <IonCardSubtitle className="box yes"><b>Yes</b></IonCardSubtitle>}
+                  {review.question.current_answer === 'no' && <IonCardSubtitle className="box no"><b>No</b></IonCardSubtitle>}
+                  {review.question.current_answer === 'na' && <IonCardSubtitle className="box na"><b>N/A</b></IonCardSubtitle>}
+                </IonCardHeader>
 
-              <IonCardContent className="review-card-content">
-                <h4>Thread: Technology Maturity | SubThread: Technology Maturity</h4>
-                <h4>MRLevel: 1</h4>
-                <h2><b>Objective Evidence:</b> No objective evidence given</h2>
-                <h2><b>Attachments:</b> No file attached to this question</h2>
-                <IonButton size="small" color="dsb">Go To Question</IonButton>
-              </IonCardContent>
-            </IonCard>
-          </div>
-
-          <div className="survey-info">
-            <IonCard className="review-card">
-              <IonCardHeader>
-                <IonCardTitle className="review-header">Have global trends in emerging industrial base capabilities been identified?</IonCardTitle>
-                <IonCardSubtitle className="box no"><b>No</b></IonCardSubtitle>
-              </IonCardHeader>
-
-              <IonCardContent className="review-card-content">
-                <h4>Thread: Technology Maturity | SubThread: Technology Maturity</h4>
-                <h4>MRLevel: 1</h4>
-                <h2><b>Attachments:</b> No file attached to this question</h2>
-                <IonButton size="small" color="dsb">Go To Question</IonButton>
-              </IonCardContent>
-            </IonCard>
-          </div>
-
-          <div className="survey-info">
-            <IonCard className="review-card">
-              <IonCardHeader>
-                <IonCardTitle className="review-header">Have global trends in manufacturing science and technology been identified (i.e., concepts, capabilities)?</IonCardTitle>
-                <IonCardSubtitle className="box na"><b>N/A</b></IonCardSubtitle>
-              </IonCardHeader>
-
-              <IonCardContent className="review-card-content">
-                <h4>Thread: Technology Maturity | SubThread: Technology Maturity</h4>
-                <h4>MRLevel: 1</h4>
-                <h2><b>Attachments:</b> No file attached to this question</h2>
-                <IonButton size="small" color="dsb">Go To Question</IonButton>
-              </IonCardContent>
-            </IonCard>
-          </div>
-
+                <IonCardContent className="review-card-content">
+                  <h4>Thread: {review.thread.name} | SubThread: {review.subthread.name}</h4>
+                  <h4>MRLevel: {review.thread.mr_level}</h4>
+                  <h2><b>Objective Evidence:</b> {(review.answer.objective_evidence) ? <span>{review.answer.objective_evidence}</span> : <span>No objective evidence</span>}</h2>
+                  {/* <h2><b>Objective Evidence:</b> {review.answer.objective_evidence}</h2> */}
+                  <h2><b>Attachments:</b> No file attached to this question</h2>
+                  <IonButton size="small" color="dsb">Go To Question</IonButton>
+                </IonCardContent>
+              </IonCard>
+            </div>
+          ))}
         </div>
-
       </IonContent>
     </IonPage>
   )

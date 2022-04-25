@@ -3,7 +3,7 @@ import { IonButton, IonPopover, IonContent } from '@ionic/react'
 
 import React, { useState, useEffect } from 'react';
 
-const Header: React.FC = () => {
+const Header: React.FC<{ showReportsTab?: boolean }> = ({showReportsTab}) => {
   const [inAssessment, setInAssessment] = useState(true);
   // const [popoverState, setShowPopover] = useState({ showPopover: false, event: undefined });
   const [reportsPopover, showReportsPopover] = useState(false);
@@ -14,11 +14,10 @@ const Header: React.FC = () => {
       <h2 className="header-title">docent</h2>
       <div className="header-nav-wrapper">
         <IonButton expand='full' color="light" routerLink="/home">Home</IonButton>
-        {/* {inAssessment && <IonButton id="trigger-reports" expand='full' color="light">Reports</IonButton>} */}
-        {inAssessment && <IonButton expand='full' color="light" onClick={() => showReportsPopover(!reportsPopover)}>Reports</IonButton>}
+        {showReportsTab && <IonButton id="trigger-reports" expand='full' color="light">Reports</IonButton>}
 
-        {/* <IonPopover trigger="trigger-reports">
-          <IonButton color="light" expand="full">MRL Summary</IonButton>
+        <IonPopover trigger="trigger-reports">
+          <IonButton color="light" expand="full" routerLink="mrl-summary">MRL Summary</IonButton>
           <IonButton color="light" expand="full" routerLink="questions-list">Questions List</IonButton>
           <IonButton color="light" expand="full" routerLink="review-report">Review</IonButton>
           <IonButton color="light" expand="full" routerLink="comprehensive-report">Comprehensive</IonButton>
@@ -43,7 +42,7 @@ const Header: React.FC = () => {
 
         <IonButton expand='full' color="light" onClick={() => showHelpPopover(!helpPopover)}>Help</IonButton>
 
-        <IonPopover 
+        <IonPopover
           className="help-popover"
           isOpen={helpPopover}
           onDidDismiss={() => showHelpPopover(!helpPopover)}

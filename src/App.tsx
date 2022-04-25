@@ -18,6 +18,7 @@ import RiskSummary from './app/Reports/RiskSummary/RiskSummary';
 import ActionItems from './app/Reports/ActionItems/ActionItems';
 import DetailedRisk from './app/Reports/DetailedRisk/DetailedRisk';
 import QuestionsList from './app/Reports/QuestionsList/QuestionsList';
+import MRLSummary from './app/Reports/MRLSummary/MRLSummary';
 
 // help pages
 import Definitions from './app/Help/Definitions/Definitions';
@@ -81,7 +82,7 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/questions">
           <Questions />
-	</Route>
+        </Route>
         <Route exact path="/review-report">
           <Review />
         </Route>
@@ -100,6 +101,10 @@ const App: React.FC = () => (
         <Route exact path="/questions-list">
           <QuestionsList />
         </Route>
+<<<<<<< HEAD
+        <Route exact path="/mrl-summary">
+          <MRLSummary />
+=======
         <Route exact path="/definitions">
           <Definitions />
         </Route>
@@ -117,6 +122,7 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/settings">
           <Settings />
+>>>>>>> main
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>
