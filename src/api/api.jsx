@@ -15,6 +15,13 @@ export async function grabTeamMembers() {
   return result.data
 }
 
+export async function grabNextQuestion(assessment_id) {
+  const result = await axios.get(
+    `${apiUrl}/next_question?assessment_id=${assessment_id}`
+  )
+  return result.data
+}
+
 export async function grabAnswers() {
   const result = await axios.get(
     `${apiUrl}/answers`
@@ -39,6 +46,8 @@ export async function createAnswers(data) {
   })
   return result.data
 }
+
+
 
 // export async function createTeamMember(data) {
 //   const result = await axios({

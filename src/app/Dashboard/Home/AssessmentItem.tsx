@@ -1,6 +1,7 @@
 import './Components.scss';
 import {IonButton} from '@ionic/react';
-import {grabQuestion} from '../../../api/api'
+import {useHistory} from 'react-router-dom'
+
 
 type AIP = {
   ast: {
@@ -17,10 +18,15 @@ type AIP = {
 }
 
 const AssessmentItem: React.FC<AIP> = (props) =>  {
-
+    const history = useHistory();
   async function navigateToPage(){
-    var q_id = await grabQuestionId(props.ast.id)
-    navigate()
+    history.push({
+      pathname: '/questions',
+      state: {
+        assessment_id: props.ast.id as number
+      }
+    })
+
   }
 
   return(
@@ -36,7 +42,7 @@ const AssessmentItem: React.FC<AIP> = (props) =>  {
         <p><b>Team Members: </b>james@ekta.co</p>
       </div>
       <div className="assessment-actions">
-        <IonButton size="small" expand="full" color="light" routerLink="/questions">Continue Assessment</IonButton>
+        <IonButton size="small" expand="full" color="light" onClick={navigateToPage}>Continue Assessment</IonButton>
         <IonButton size="small" expand="full" color="light">MRL Summary</IonButton>
         <IonButton size="small" expand="full" color="light">Action Items</IonButton>
         <IonButton size="small" expand="full" color="light">Invite Team Members</IonButton>

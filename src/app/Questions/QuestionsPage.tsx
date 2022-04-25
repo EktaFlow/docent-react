@@ -1,18 +1,20 @@
 import { IonPage, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonHeader, IonToolbar, IonTitle, IonRow, IonCol, IonContent, IonGrid, IonTextarea, IonInput, IonDatetime, IonModal, IonText, IonPopover } from '@ionic/react';
 import React, { useState, useEffect, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import Header from '../Framework/Header';
 import './QuestionsPage.scss';
 
 import { format, parseISO } from 'date-fns';
-import { createAnswers, grabAnswers } from '../../api/api'
+import { createAnswers, grabAnswers, grabNextQuestion } from '../../api/api';
+
 
 import Topbar from './Topbar';
 import RiskAssessment from './RiskAssessment/RiskAssessment';
 import RiskMatrix from './RiskAssessment/RiskMatrix';
 
-const QuestionsPage: React.FC = () => {
-  const [answers, setAnswers] = useState({
+const QuestionsPage: React.FC = (props) => {
+  const [answer, setAnswer] = useState({
     answer: '',
     likelihood: '',
     consequence: '',
@@ -35,6 +37,7 @@ const QuestionsPage: React.FC = () => {
     notes_no: '',
     notes_na: '',
   });
+  const history = useHistory();
 
   const [explanationText, showExplanationText] = useState(false);
 
@@ -51,15 +54,50 @@ const QuestionsPage: React.FC = () => {
   const fileInput = useRef(null);
 
   useEffect(() => {
-    async function getAnswers() {
-      var ans = await grabAnswers();
-      console.log(ans)
+    console.log(history)
+    var his: any = history
+    var assessment_id = his["location"]["state"]["assessment_id"]
+    if (assessment_id){
+      var question = grabQ(assessment_id)
+      // console.log(question)
     }
-    getAnswers()
+
   }, []);
 
+  async function grabQ(assessment_id: Number) {
+    var next_question = await grabNextQuestion(assessment_id)
+      .then((res) => {
+        console.log(res);
+        return res
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+  function previousQuestion() {
+    console.log('in previous')
+    saveAnswers();
+    getNextQuestion('previous')
+    //need to grab previous Question - send current question id and then
+  }
+
+  function nextQuestion() {
+    saveAnswers();
+    getNextQuestion('next')
+  }
+
+  async function getNextQuestion(action){
+    if (action === 'next'){
+      //will run and grab the right question
+    } else {
+      //will run and grab the right previous question
+    }
+  }
+
+
   async function saveAnswers() {
-    var ans = await createAnswers(answers)
+    var ans = await createAnswers(answer)
       .then((res) => {
         console.log(res)
       })
@@ -69,32 +107,32 @@ const QuestionsPage: React.FC = () => {
   }
 
   const handleAnswerChange = (e: any) => {
-    setAnswers({
-      ...answers,
+    setAnswer({
+      ...answer,
       [e.target.name]: e.target.value
     });
   };
 
   const getLikelihood = (data: any) => {
     setLikelihood(data);
-    setAnswers({
-      ...answers,
+    setAnswer({
+      ...answer,
       likelihood: data
     });
   }
 
   const getConsequence = (data: any) => {
     setConsequence(data);
-    setAnswers({
-      ...answers,
+    setAnswer({
+      ...answer,
       consequence: data
     });
   }
 
   const getRiskScore = (data: any) => {
     setRiskScore(data);
-    setAnswers({
-      ...answers,
+    setAnswer({
+      ...answer,
       risk: data
     });
   }
@@ -104,8 +142,8 @@ const QuestionsPage: React.FC = () => {
       setYes(true);
       setNo(false);
       setNA(false);
-      setAnswers({
-        ...answers,
+      setAnswer({
+        ...answer,
         answer: 'yes'
       });
     }
@@ -113,8 +151,8 @@ const QuestionsPage: React.FC = () => {
       setYes(false);
       setNo(true);
       setNA(false);
-      setAnswers({
-        ...answers,
+      setAnswer({
+        ...answer,
         answer: 'no'
       });
     }
@@ -122,61 +160,61 @@ const QuestionsPage: React.FC = () => {
       setYes(false);
       setNo(false);
       setNA(true);
-      setAnswers({
-        ...answers,
+      setAnswer({
+        ...answer,
         answer: 'na'
       });
     }
   }
 
   const getWhen = (value: any) => {
-    setAnswers({
-      ...answers,
+    setAnswer({
+      ...answer,
       when: value
     });
   }
 
   const getRiskResponse = (value: any) => {
-    setAnswers({
-      ...answers,
+    setAnswer({
+      ...answer,
       risk_response: value
     });
   }
 
   const getMMPSummary = (value: any) => {
-    setAnswers({
-      ...answers,
+    setAnswer({
+      ...answer,
       mmp_summary: value
     });
   }
 
   const getGreatestImpact = (value: any) => {
-    setAnswers({
-      ...answers,
+    setAnswer({
+      ...answer,
       greatest_impact: value
     });
   }
 
   const getAssumptions = (value: any) => {
     if (yes) {
-      setAnswers({
-        ...answers,
+      setAnswer({
+        ...answer,
         assumptions_yes: value,
         assumptions_no: '',
         assumptions_na: ''
       });
     }
     else if (no) {
-      setAnswers({
-        ...answers,
+      setAnswer({
+        ...answer,
         assumptions_yes: '',
         assumptions_no: value,
         assumptions_na: ''
       });
     }
     else if (na) {
-      setAnswers({
-        ...answers,
+      setAnswer({
+        ...answer,
         assumptions_yes: '',
         assumptions_no: '',
         assumptions_na: value
@@ -186,24 +224,24 @@ const QuestionsPage: React.FC = () => {
 
   const getNotes = (value: any) => {
     if (yes) {
-      setAnswers({
-        ...answers,
+      setAnswer({
+        ...answer,
         notes_yes: value,
         notes_no: '',
         notes_na: ''
       });
     }
     else if (no) {
-      setAnswers({
-        ...answers,
+      setAnswer({
+        ...answer,
         notes_yes: '',
         notes_no: value,
         notes_na: ''
       });
     }
     else if (na) {
-      setAnswers({
-        ...answers,
+      setAnswer({
+        ...answer,
         notes_yes: '',
         notes_no: '',
         notes_na: value
@@ -230,8 +268,8 @@ const QuestionsPage: React.FC = () => {
                 <div className="title-wrapper">
                   <h2>Is the Technology Readiness at TRL 1 or greater?</h2>
                   <div>
-                    <IonButton color="dsb">Previous</IonButton>
-                    <IonButton color="dsb">Next</IonButton>
+                    <IonButton color="dsb" onClick={previousQuestion}>Previous</IonButton>
+                    <IonButton color="dsb" onClick={nextQuestion}>Next</IonButton>
                     <IonButton color="dsb" onClick={() => saveAnswers()}>Save</IonButton>
                   </div>
                 </div>
@@ -242,7 +280,7 @@ const QuestionsPage: React.FC = () => {
                   <IonLabel position="floating">Select Answer</IonLabel>
                   <IonSelect
                     name="answer"
-                    value={answers.answer}
+                    value={answer.answer}
                     interface="popover"
                     onIonChange={e => changeInterface(e.detail.value)}>
                     <IonSelectOption value="yes">Yes</IonSelectOption>
@@ -275,7 +313,7 @@ const QuestionsPage: React.FC = () => {
                     <IonLabel position="floating">Objective Evidence</IonLabel>
                     <IonTextarea
                       name="objective_evidence"
-                      value={answers.objective_evidence}
+                      value={answer.objective_evidence}
                       placeholder="What needs to be done to meet this objective?"
                       onIonChange={handleAnswerChange}>
                     </IonTextarea>
@@ -290,7 +328,7 @@ const QuestionsPage: React.FC = () => {
                         <IonLabel position="floating">Owner</IonLabel>
                         <IonInput
                           name="who"
-                          value={answers.who}
+                          value={answer.who}
                           onIonChange={handleAnswerChange}>
                         </IonInput>
                       </IonItem>
@@ -312,7 +350,7 @@ const QuestionsPage: React.FC = () => {
                     <IonLabel position="floating">Action Item</IonLabel>
                     <IonTextarea
                       name="what"
-                      value={answers.what}
+                      value={answer.what}
                       placeholder="What needs to be done to meet this objective?"
                       onIonChange={handleAnswerChange}>
                     </IonTextarea>
@@ -321,7 +359,7 @@ const QuestionsPage: React.FC = () => {
                     <IonLabel position="floating">Reason</IonLabel>
                     <IonTextarea
                       name="reason"
-                      value={answers.reason}
+                      value={answer.reason}
                       placeholder="Reason that the criteria is not met..."
                       onIonChange={handleAnswerChange}>
                     </IonTextarea>
@@ -333,7 +371,7 @@ const QuestionsPage: React.FC = () => {
                     <IonLabel position="floating">Documentation</IonLabel>
                     <IonTextarea
                       name="documentation_no"
-                      value={answers.documentation_no}
+                      value={answer.documentation_no}
                       placeholder="Document why this question is not applicable..."
                       onIonChange={handleAnswerChange}>
                     </IonTextarea>
@@ -406,9 +444,9 @@ const QuestionsPage: React.FC = () => {
                   getRiskResponse={getRiskResponse}
                   getMMPSummary={getMMPSummary}
                   getGreatestImpact={getGreatestImpact}
-                  greatest_impact={answers.greatest_impact}
-                  risk_response={answers.risk_response}
-                  mmp_summary={answers.mmp_summary}
+                  greatest_impact={answer.greatest_impact}
+                  risk_response={answer.risk_response}
+                  mmp_summary={answer.mmp_summary}
                 />
               </IonCol>
               <IonCol size="12" size-lg="4">
