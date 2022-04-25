@@ -16,11 +16,11 @@ const AssessmentItem: React.FC<({ assessmentInfo: any })> = ({ assessmentInfo })
   const [assessment, setAssessment] = useState<any>()
   const [teamMembers, setTeamMembers] = useState<any>()
 
-  // useEffect(() => {
-  //   if (assessment) {
-  //     console.log(assessment)
-  //   }
-  // }, [assessment])
+  useEffect(() => {
+    if (assessment) {
+      console.log(assessment.id)
+    }
+  }, [assessment])
 
   // useEffect(() => {
   //   if (teamMembers) {
@@ -45,7 +45,7 @@ const AssessmentItem: React.FC<({ assessmentInfo: any })> = ({ assessmentInfo })
         <p><b>Team Members: </b>james@ekta.co</p>
       </div>
       <div className="assessment-actions">
-        <IonButton size="small" expand="full" color="light" routerLink="/questions">Continue Assessment</IonButton>
+        <IonButton size="small" expand="full" color="light" routerLink='/questions'>Continue Assessment</IonButton>
         <IonButton size="small" expand="full" color="light" routerLink="/mrl-summary">MRL Summary</IonButton>
         <IonButton size="small" expand="full" color="light" routerLink="/action-items">Action Items</IonButton>
         <IonButton size="small" expand="full" color="light">Invite Team Members</IonButton>

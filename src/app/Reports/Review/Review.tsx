@@ -6,19 +6,9 @@ import Header from '../../Framework/Header';
 import InfoCard from '../InfoCard';
 import ReportsTopbar from '../ReportsTopbar';
 
-import { grabAssessments, grabThreads, grabSubthreads } from '../../../api/api'
+import { grabAssessments, grabThreads, grabSubthreads, grabQuestions } from '../../../api/api'
 
 const Review: React.FC = () => {
-
-  useEffect(() => {
-    async function getAssessments() {
-      var asts = await grabAssessments();
-      console.log(asts);
-    }
-
-    getAssessments();
-  }, [])
-
   const data = [
     {
       question: {
@@ -56,9 +46,34 @@ const Review: React.FC = () => {
 
   const [reviewData, setReviewData] = useState(data);
 
+  useEffect(() => {
+    async function getThreads() {
+      var asts = await grabThreads();
+      if(asts) {
+        console.log(asts);
+        let tempArray = reviewData;
+        // console.log(tempArray.length)
+        
+        // console.log(tempArray);
+        // tempArray[0].thread.name = asts.threads[0].name
+        // tempArray[0].thread.mr_level = asts.threads[0].mr_level
+
+        setReviewData(tempArray)
+      }
+    }
+
+    async function getQuestions() {
+      var questions = await grabQuestions();
+      // console.log(questions);
+    }
+    
+    getThreads();
+    getQuestions();
+  }, [])
+
   return (
     <IonPage>
-      <Header />
+      <Header showReportsTab={true} />
       <ReportsTopbar text="Review" />
       <IonContent>
         <div className="review-wrapper">

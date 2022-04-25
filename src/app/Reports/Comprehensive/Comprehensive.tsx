@@ -1,12 +1,32 @@
 import { IonPage, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonButton, IonItem, IonLabel, IonSelect, IonSelectOption, IonContent } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import './Comprehensive.scss';
 import Header from '../../Framework/Header';
 import InfoCard from '../InfoCard';
 import ReportsTopbar from '../ReportsTopbar';
 
+import { grabThreads, grabSubthreads } from '../../../api/api'
+
 const Comprehensive: React.FC = () => {
+  useEffect(() => {
+    async function getThreads() {
+      var asts = await grabThreads();
+      console.log(asts);
+    }
+  
+    getThreads()
+  }, [])
+
+  useEffect(() => {
+    async function getSubthreads() {
+      var asts = await grabSubthreads();
+      console.log(asts);
+    }
+  
+    getSubthreads()
+  }, [])
+
   const data = [
     {
       question: {
@@ -92,7 +112,7 @@ const Comprehensive: React.FC = () => {
 
   return (
     <IonPage>
-      <Header />
+      <Header showReportsTab={true} />
       <ReportsTopbar text="Comprehensive Report" />
       <IonContent>
         <div className="comprehensive-wrapper">

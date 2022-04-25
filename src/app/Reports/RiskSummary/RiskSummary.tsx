@@ -8,7 +8,7 @@ import ReportsTopbar from '../ReportsTopbar';
 const RiskSummary: React.FC = () => {
   return (
     <IonPage>
-      <Header />
+      <Header showReportsTab={true} />
       <ReportsTopbar text="MRL Risk Summary" />
       <IonContent>
         <div className="risk-summary-wrapper">

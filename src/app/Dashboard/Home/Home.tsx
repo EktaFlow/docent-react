@@ -10,12 +10,12 @@ import Sidebar from './Sidebar';
 import { grabAssessments } from '../../../api/api'
 
 const Home: React.FC = () => {
-
   const [assessments, setAssessments] = useState([]);
 
   useEffect(() => {
     async function getAssessments() {
       var asts = await grabAssessments();
+      console.log(asts);
       setAssessments(asts.assessments);
     }
 
@@ -30,7 +30,7 @@ const Home: React.FC = () => {
 
   return (
     <IonPage className="home-page-wrapper">
-      <Header />
+      <Header showReportsTab={false} />
       <div className="content-wrapper">
         <div className="home-ls">
           <div className="assessment-toolbar">

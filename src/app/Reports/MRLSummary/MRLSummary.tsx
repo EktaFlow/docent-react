@@ -9,14 +9,21 @@ import ReportsTopbar from '../ReportsTopbar';
 const MRLSummary: React.FC = () => {
   // const responseNum = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-  const dataStructure = [
+  const data = [
     {
       thread: {
-        name: 'Name 1'
+        name: 'Thread 1',
       },
-      subthread: {
-        name: "Name 2"
-      }
+      subthread: [
+        {
+          name: "Subthread 1",
+          results: ['yes', 'no', 'na', 'blank', 'blank', 'yes', 'no', 'na', 'blank', 'blank']
+        },
+        {
+          name: "Subthread 2",
+          results: ['yes', 'no', 'na', 'blank', 'blank', 'yes', 'no', 'na', 'blank', 'blank']
+        }
+      ]
     }
   ]
 
@@ -63,9 +70,13 @@ const MRLSummary: React.FC = () => {
     },
   ];
 
+  const mrLevel = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+
+  const [summaryData, setSummaryData] = useState(data);
+
   return (
     <IonPage>
-      <Header />
+      <Header showReportsTab={true} />
       <ReportsTopbar text="MRL Summary" />
       <IonContent>
         <div className="mrl-summary-wrapper">
@@ -106,16 +117,56 @@ const MRLSummary: React.FC = () => {
               <div className="header">
                 <h5><b>MRLs</b></h5>
               </div>
-              {responseData.map((response, index) => (
+              {mrLevel.map((mrLevel, index) => (
                 <div className="answers">
-                  {response.num}
+                  {mrLevel}
                 </div>
               ))}
             </div>
             <hr />
-            <p className="thread"><b>Thread Name</b></p>
-            <hr />
+
+            {summaryData.map((summary, index) => (
+              <div>
+                <p className="thread"><b>{summary.thread.name}</b></p>
+                <hr />
+                {summary.subthread.map((subthread, index) => (
+                  <div className="questions">
+                    <div className="subthread header">{subthread.name}</div>
+                    {subthread.results.map((result, index) => (
+                      <div className="answers">
+                        <div>
+                          {result === 'yes' &&
+                            <div className="yes dashbox">
+                              <img className="dashpic" alt="" src="assets/check-mark-256.png"></img>
+                            </div>
+                          }
+                          {result === 'no' &&
+                            <div className="no dashbox">
+                              <img className="dashpic" src="assets/x-mark-256.ico" alt=""></img>
+                            </div>
+                          }
+                          {result === 'na' &&
+                            <div className="na dashbox">
+                              <img className="dashpic" src="assets/x-mark-256.ico" alt=""></img>
+                            </div>
+                          }
+                          {result === 'blank' &&
+                            <span className="blank dashbox">
+                              <img className="dashpic" src="assets/x-mark-256.ico" alt=""></img>
+                            </span>
+                          }
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            ))}
+
+            {/* 
             <div className="questions">
+              <p className="thread"><b>Summary Thread</b></p>
+              <hr />
               <div className="subthread header">Subthread Name</div>
               {responseData.map((response, index) => (
                 <div className="answers">
@@ -141,18 +192,59 @@ const MRLSummary: React.FC = () => {
                   }
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
 
           <div className="mobile">
-            {/* question set */}
-            <div className="single-thread">
+            {summaryData.map((summary, index) => (
+              <div className="single-thread">
+                <h3>{summary.thread.name}</h3>
+
+                {summary.subthread.map((subthread, index) => (
+                  <div className="questions">
+                    <h6>{subthread.name}</h6>
+
+                    <div className="answer-row">
+                      {subthread.results.map((result, index) => (
+                        <div className="answers">
+                          <p className="level-num">{index + 1}</p>
+
+                          <div>
+                            {result === 'yes' &&
+                              <div className="yes dashbox">
+                                <img className="dashpic" alt="" src="assets/check-mark-256.png"></img>
+                              </div>
+                            }
+                            {result === 'no' &&
+                              <div className="no dashbox">
+                                <img className="dashpic" src="assets/x-mark-256.ico" alt=""></img>
+                              </div>
+                            }
+                            {result === 'na' &&
+                              <div className="na dashbox">
+                                <img className="dashpic" src="assets/x-mark-256.ico" alt=""></img>
+                              </div>
+                            }
+                            {result === 'blank' &&
+                              <span className="blank dashbox">
+                                <img className="dashpic" src="assets/x-mark-256.ico" alt=""></img>
+                              </span>
+                            }
+                          </div>
+
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
+
+            {/* <div className="single-thread">
               <h3>Thread Name</h3>
-              {/* question list */}
               <div className="questions">
                 <h6>Subthread Name</h6>
                 <div className="answer-row">
-                  {/* answers list */}
                   {responseData.map((response, index) => (
                     <div className="answers">
                       <p className="level-num">{response.num}</p>
@@ -180,7 +272,7 @@ const MRLSummary: React.FC = () => {
                   ))}
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
 
         </div>

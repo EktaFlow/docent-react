@@ -24,7 +24,7 @@ const InfoCard: React.FC = () => {
   useEffect(() => {
     async function getAssessments() {
       var asts = await grabAssessments();
-      console.log(asts);
+      // console.log(asts);
       setAssessment(asts.assessments[0].assessment);
       setTeamMembers(asts.assessments[0].team_members);
     }

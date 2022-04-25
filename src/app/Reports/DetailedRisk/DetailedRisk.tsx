@@ -46,7 +46,7 @@ const DetailedRisk: React.FC = () => {
 
   return (
     <IonPage>
-      <Header />
+      <Header showReportsTab={true} />
       <ReportsTopbar text="Detailed Risk Report" />
       <IonContent>
         <div className="detailed-risk-wrapper">

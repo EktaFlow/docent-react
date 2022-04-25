@@ -3,7 +3,7 @@
   width: 100%;
   background-color: white;
   color: black;
-
+  padding-bottom: 20px;
 
   hr {
     height: 1px !important;
@@ -111,6 +111,10 @@
     display: flex;
     flex-direction: column;
   }
+
+  .answers {
+    padding-bottom: 5px;
+  }
 }
 
 @media screen and (max-width: 1024px) {
@@ -126,6 +130,7 @@
 
     .mobile {
       display: inherit;
+      margin-left: 20px;
     }
 
     h3 {

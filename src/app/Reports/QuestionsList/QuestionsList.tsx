@@ -48,7 +48,7 @@ const QuestionsList: React.FC = () => {
 
   return (
     <IonPage>
-      <Header />
+      <Header showReportsTab={true} />
       <ReportsTopbar text="Questions List" />
       <IonContent>
         <div className="questions-list-wrapper">

@@ -86,7 +86,7 @@ const data = [
 const ActionItems: React.FC = () => {
   return (
     <IonPage>
-      <Header />
+      <Header showReportsTab={true} />
       <ReportsTopbar text="Action Items" />
       <IonContent>
         <div className="action-items-wrapper">

@@ -3,17 +3,14 @@ import { IonButton, IonPopover, IonContent } from '@ionic/react'
 
 import React, { useState, useEffect } from 'react';
 
-const Header: React.FC = () => {
-  const [inAssessment, setInAssessment] = useState(true);
-  // const [showPopover, setShowPopover] = useState(false);
+const Header: React.FC<{ showReportsTab?: boolean }> = ({showReportsTab}) => {
 
   return (
     <div className="header-wrapper">
       <h2 className="header-title">docent</h2>
       <div className="header-nav-wrapper">
         <IonButton expand='full' color="light" routerLink="/home">Home</IonButton>
-        {inAssessment && <IonButton id="trigger-reports" expand='full' color="light">Reports</IonButton>}
-        {/* {inAssessment && <IonButton expand='full' color="light" onClick={() => setShowPopover(!showPopover)}>Reports</IonButton>} */}
+        {showReportsTab && <IonButton id="trigger-reports" expand='full' color="light">Reports</IonButton>}
 
         <IonPopover trigger="trigger-reports">
           <IonButton color="light" expand="full" routerLink="mrl-summary">MRL Summary</IonButton>

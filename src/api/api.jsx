@@ -25,7 +25,8 @@ export async function grabAnswers() {
 export async function grabQuestions() {
   const result = await axios.get(
     `${apiUrl}/questions`
-  ).then(res => res.data)
+  )
+  return result.data
 }
 
 export async function grabThreads() {
@@ -36,7 +37,8 @@ export async function grabThreads() {
 export async function grabSubthreads() {
   const result = await axios.get(
     `${apiUrl}/subthreads`
-  ).then(res => res.data)
+  )
+  return result.data
 }
 
 export async function createAssessment(data) {

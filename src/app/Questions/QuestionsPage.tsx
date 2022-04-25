@@ -1,11 +1,15 @@
 import { IonPage, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonHeader, IonToolbar, IonTitle, IonRow, IonCol, IonContent, IonGrid, IonTextarea, IonInput, IonDatetime, IonModal, IonText, IonPopover } from '@ionic/react';
 import React, { useState, useEffect, useRef } from 'react';
 
+import { RouteComponentProps } from 'react-router-dom';
+
 import Header from '../Framework/Header';
 import './QuestionsPage.scss';
 
 import { format, parseISO } from 'date-fns';
-import { createAnswers, grabAnswers } from '../../api/api'
+import { createAnswers, grabAnswers } from '../../api/api';
+
+import { assessmentId } from '../../variables.jsx'
 
 import Topbar from './Topbar';
 import RiskAssessment from './RiskAssessment/RiskAssessment';
@@ -66,6 +70,10 @@ const QuestionsPage: React.FC = () => {
       console.log(ans)
     }
     getAnswers()
+  }, []);
+
+  useEffect(() => {
+    // console.log(match.params.id)
   }, []);
 
   async function saveAnswers() {
@@ -243,7 +251,7 @@ const QuestionsPage: React.FC = () => {
 
   return (
     <IonPage className="question-page-wrapper">
-      <Header />
+      <Header showReportsTab={true} />
       <Topbar />
       <IonContent>
 
