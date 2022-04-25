@@ -12,6 +12,16 @@
   // width: 30%;
 }
 
+ion-popover.reports-popover {
+  --offset-x: 380px;
+  --offset-y: -290px;
+}
+
+ion-popover.help-popover {
+  --offset-x: 460px;
+  --offset-y: -290px;
+}
+
 .header-nav-wrapper {
   display: flex;
   justify-content: space-around;
@@ -24,5 +34,53 @@
     padding: 10px 15px;
     font-weight: bold;
     margin: 0 10px;
+  }
+}
+
+@media screen and (max-width: 1140px) {
+  ion-popover.reports-popover {
+    --offset-x: 260px;
+    --offset-y: -290px;
+  }
+
+  ion-popover.help-popover {
+    --offset-x: 340px;
+    --offset-y: -290px;
+  }
+}
+
+@media screen and (max-width: 960px) {
+  ion-popover.reports-popover {
+    --offset-x: 150px;
+    --offset-y: -290px;
+  }
+
+  ion-popover.help-popover {
+    --offset-x: 230px;
+    --offset-y: -290px;
+  }
+}
+
+@media screen and (max-width: 720px) {
+  ion-popover.reports-popover {
+    --offset-x: -50px;
+    --offset-y: -290px;
+  }
+
+  ion-popover.help-popover {
+    --offset-x: 30px;
+    --offset-y: -290px;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  ion-popover.reports-popover {
+    --offset-x: 30px;
+    --offset-y: -290px;
+  }
+
+  ion-popover.help-popover {
+    --offset-x: 30px;
+    --offset-y: -290px;
   }
 }

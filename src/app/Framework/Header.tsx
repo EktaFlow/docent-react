@@ -4,6 +4,10 @@ import { IonButton, IonPopover, IonContent } from '@ionic/react'
 import React, { useState, useEffect } from 'react';
 
 const Header: React.FC<{ showReportsTab?: boolean }> = ({showReportsTab}) => {
+  const [inAssessment, setInAssessment] = useState(true);
+  // const [popoverState, setShowPopover] = useState({ showPopover: false, event: undefined });
+  const [reportsPopover, showReportsPopover] = useState(false);
+  const [helpPopover, showHelpPopover] = useState(false);
 
   return (
     <div className="header-wrapper">
@@ -20,29 +24,35 @@ const Header: React.FC<{ showReportsTab?: boolean }> = ({showReportsTab}) => {
           <IonButton color="light" expand="full" routerLink="action-items">Action Items</IonButton>
           <IonButton color="light" expand="full" routerLink="risk-summary">MRL Risk Summary</IonButton>
           <IonButton color="light" expand="full" routerLink="detailed-risk">Detailed Risk Report</IonButton>
+        </IonPopover> */}
+
+        <IonPopover
+          className="reports-popover"
+          isOpen={reportsPopover}
+          onDidDismiss={() => showReportsPopover(!reportsPopover)}
+        >
+          <IonButton color="light" expand="full">MRL Summary</IonButton>
+          <IonButton color="light" expand="full">Questions List</IonButton>
+          <IonButton color="light" expand="full" routerLink="review-report">Review</IonButton>
+          <IonButton color="light" expand="full" routerLink="comprehensive-report">Comprehensive</IonButton>
+          <IonButton color="light" expand="full" routerLink="action-items">Action Items</IonButton>
+          <IonButton color="light" expand="full" routerLink="risk-summary">MRL Risk Summary</IonButton>
+          <IonButton color="light" expand="full" routerLink="detailed-risk">Detailed Risk Report</IonButton>
         </IonPopover>
-{/* 
-       {showPopover &&
-          <IonPopover>
-            <IonButton color="light" expand="full">MRL Summary</IonButton>
-            <IonButton color="light" expand="full">Questions List</IonButton>
-            <IonButton color="light" expand="full" routerLink="review-report">Review</IonButton>
-            <IonButton color="light" expand="full" routerLink="comprehensive-report">Comprehensive</IonButton>
-            <IonButton color="light" expand="full" routerLink="action-items">Action Items</IonButton>
-            <IonButton color="light" expand="full" routerLink="risk-summary">MRL Risk Summary</IonButton>
-            <IonButton color="light" expand="full" routerLink="detailed-risk">Detailed Risk Report</IonButton>
-          </IonPopover>
-       } */}
 
-        <IonButton id="trigger-help" expand='full' color="light">Help</IonButton>
+        <IonButton expand='full' color="light" onClick={() => showHelpPopover(!helpPopover)}>Help</IonButton>
 
-        <IonPopover trigger="trigger-help">
-          <IonButton color="light" expand="full">Criteria</IonButton>
-          <IonButton color="light" expand="full">Definitions</IonButton>
-          <IonButton color="light" expand="full">Acronyms</IonButton>
-          <IonButton color="light" expand="full">FAQs</IonButton>
+        <IonPopover
+          className="help-popover"
+          isOpen={helpPopover}
+          onDidDismiss={() => showHelpPopover(!helpPopover)}
+        >
+          <IonButton color="light" expand="full" routerLink="criteria">Criteria</IonButton>
+          <IonButton color="light" expand="full" routerLink="definitions">Definitions</IonButton>
+          <IonButton color="light" expand="full" routerLink="acronyms">Acronyms</IonButton>
+          <IonButton color="light" expand="full" routerLink="faqs">FAQs</IonButton>
           <IonButton color="light" expand="full">User's Guide</IonButton>
-          <IonButton color="light" expand="full">MRL Deskbook</IonButton>
+          <IonButton color="light" expand="full" href="http://www.dodmrl.com/MRL%20Deskbook%20V2020.pdf">MRL Deskbook</IonButton>
         </IonPopover>
 
         <IonButton expand='full' color="light">Logout</IonButton>
