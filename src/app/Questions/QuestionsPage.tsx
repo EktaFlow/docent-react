@@ -8,21 +8,17 @@ import Header from '../Framework/Header';
 import './QuestionsPage.scss';
 
 import { format, parseISO } from 'date-fns';
-<<<<<<< HEAD
-import { createAnswers, grabAnswers } from '../../api/api';
 
 import { assessmentId } from '../../variables.jsx'
-=======
+
 import { createAnswers, grabAnswers, grabNextQuestion } from '../../api/api';
 
->>>>>>> 61637a6acce4c357ca14ce25ab500be5cb64e3fb
 
 import Topbar from './Topbar';
 import RiskAssessment from './RiskAssessment/RiskAssessment';
 import RiskMatrix from './RiskAssessment/RiskMatrix';
 
-<<<<<<< HEAD
-const QuestionsPage: React.FC = () => {
+const QuestionsPage: React.FC = (props) => {
   const questions = ['Have industrial base capabilities and gaps/risks been identified for key technologies, components, and/or key processes?',
     'Have pertinent Manufacturing Science (MS) and Advanced Manufacturing Technology requirements been identified?',
     'Are initial producibility and manufacturability assessments of preferred systems concepts completed?',
@@ -30,12 +26,7 @@ const QuestionsPage: React.FC = () => {
   ];
 
   const [questionList, setQuestionList] = useState(questions);
-
-  const [answers, setAnswers] = useState({
-=======
-const QuestionsPage: React.FC = (props) => {
   const [answer, setAnswer] = useState({
->>>>>>> 61637a6acce4c357ca14ce25ab500be5cb64e3fb
     answer: '',
     likelihood: '',
     consequence: '',
@@ -113,6 +104,9 @@ const QuestionsPage: React.FC = (props) => {
   async function getNextQuestion(action){
     if (action === 'next'){
       //will run and grab the right question
+      saveAnswers();
+      // getNextQuestion('next')
+      async nextQuestion()
     } else {
       //will run and grab the right previous question
     }
@@ -305,13 +299,8 @@ const QuestionsPage: React.FC = (props) => {
               <IonCol size="3">
                 <div className="title-wrapper">
                   <div>
-<<<<<<< HEAD
-                    <IonButton color="dsb" onClick={() => handlePreviousPageClick()}>Previous</IonButton>
-                    <IonButton color="dsb" onClick={() => handleNextPageClick()}>Next</IonButton>
-=======
-                    <IonButton color="dsb" onClick={previousQuestion}>Previous</IonButton>
-                    <IonButton color="dsb" onClick={nextQuestion}>Next</IonButton>
->>>>>>> 61637a6acce4c357ca14ce25ab500be5cb64e3fb
+                    <IonButton color="dsb" onClick={() => grabNextQuestion('prev')}>Previous</IonButton>
+                    <IonButton color="dsb" onClick={() => grabNextQuestion('next')}>Next</IonButton>
                     <IonButton color="dsb" onClick={() => saveAnswers()}>Save</IonButton>
                   </div>
                 </div>

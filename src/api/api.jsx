@@ -82,3 +82,13 @@ export async function deleteAssessment(id) {
   })
   return result.data
 }
+
+export async function nextQuestion(questionId, assessmentId){
+  const result = await axios.get(`${apiUrl}/questions/next?question_id=${questionId}&assessment_id=${assessmentId}`);
+  return result.data
+}
+
+export async function prevQuestion(questionId, assessmentId){
+  const result = await axios.get(`${apiUrl}/questions/prev?question_id=${questionId}&assessment_id=${assessmentId}`);
+  return result.data
+}
