@@ -5,6 +5,7 @@ import { IonButton } from '@ionic/react';
 
 import { deleteAssessment } from '../../../api/api'
 import { id } from 'date-fns/locale';
+import { useHistory } from 'react-router-dom';
 
 const AssessmentItem: React.FC<({ assessmentInfo: any })> = ({ assessmentInfo }) => {
 
@@ -15,6 +16,17 @@ const AssessmentItem: React.FC<({ assessmentInfo: any })> = ({ assessmentInfo })
 
   const [assessment, setAssessment] = useState<any>()
   const [teamMembers, setTeamMembers] = useState<any>()
+  const history = useHistory();
+
+  async function navigateToPage(){
+    history.push({
+      pathname: '/questions',
+      state: {
+        assessment_id: assessment.id as number
+      }
+    })
+
+  }
 
   useEffect(() => {
     if (assessment) {
@@ -45,7 +57,7 @@ const AssessmentItem: React.FC<({ assessmentInfo: any })> = ({ assessmentInfo })
         <p><b>Team Members: </b>james@ekta.co</p>
       </div>
       <div className="assessment-actions">
-        <IonButton size="small" expand="full" color="light" onClick={goToQuestion}>Continue Assessment</IonButton>
+        <IonButton size="small" expand="full" color="light" onClick={navigateToPage}>Continue Assessment</IonButton>
         <IonButton size="small" expand="full" color="light" routerLink="/mrl-summary">MRL Summary</IonButton>
         <IonButton size="small" expand="full" color="light" routerLink="/action-items">Action Items</IonButton>
         <IonButton size="small" expand="full" color="light">Invite Team Members</IonButton>

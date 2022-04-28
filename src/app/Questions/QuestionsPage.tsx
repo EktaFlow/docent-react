@@ -64,7 +64,15 @@ const QuestionsPage: React.FC = (props) => {
   const [riskScore, setRiskScore] = useState<number>();
 
   const [selectedDate, setSelectedDate] = useState('');
-  const [question, setQuestion] = useState({})
+  const [question, setQuestion] = useState({
+    question_text: '',
+    answered: false,
+    assessment_length: 0,
+    current_answer_text: '',
+    current_mrl: 0,
+    position: 0,
+    question_id: 0
+  })
 
   const fileInput = useRef(null);
 
@@ -73,6 +81,7 @@ const QuestionsPage: React.FC = (props) => {
     var his: any = history
     if (his["location"]["state"]){
       var ast_id = his["location"]["state"]["assessment_id"]
+      console.log(ast_id)
       var question = grabQ(ast_id)
     }
   }, []);
@@ -82,6 +91,7 @@ const QuestionsPage: React.FC = (props) => {
     console.log(his)
     if (his["location"]["state"]){
       var ast_id = his["location"]["state"]["assessment_id"]
+      console.log(ast_id)
       var question = grabQ(ast_id)
     }
   }, [history])
@@ -91,7 +101,7 @@ const QuestionsPage: React.FC = (props) => {
     var next_question = await grabNextQuestion(assessment_id)
       .then((res) => {
         console.log(res);
-        setQuestion(res)
+        setQuestion(res.question)
         return res
       })
       .catch((error) => {
@@ -126,7 +136,7 @@ const QuestionsPage: React.FC = (props) => {
 
   async function saveAnswers() {
     var data = {
-      question: '',
+      question_id: question.question_id,
       answer: answer
     }
     var ans = await createAnswers(data)
@@ -310,7 +320,7 @@ const QuestionsPage: React.FC = (props) => {
         <div className="content-wrapper">
           <IonGrid>
             <IonRow>
-              <IonCol size="9"><h2>{questionList[questionCount]}</h2></IonCol>
+              <IonCol size="9"><h2>{question.question_text}</h2></IonCol>
               <IonCol size="3">
                 <div className="title-wrapper">
                   <div>
