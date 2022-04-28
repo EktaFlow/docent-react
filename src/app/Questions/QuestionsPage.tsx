@@ -9,7 +9,7 @@ import './QuestionsPage.scss';
 
 import { format, parseISO } from 'date-fns';
 
-import { assessmentId } from '../../variables.jsx'
+// import { assessmentId } from '../../variables.jsx'
 
 import { createAnswers, grabAnswers, grabNextQuestion } from '../../api/api';
 
@@ -64,24 +64,34 @@ const QuestionsPage: React.FC = (props) => {
   const [riskScore, setRiskScore] = useState<number>();
 
   const [selectedDate, setSelectedDate] = useState('');
+  const [question, setQuestion] = useState({})
 
   const fileInput = useRef(null);
 
   useEffect(() => {
     console.log(history)
     var his: any = history
-    var assessment_id = his["location"]["state"]["assessment_id"]
-    if (assessment_id){
-      var question = grabQ(assessment_id)
-      // console.log(question)
+    if (his["location"]["state"]){
+      var ast_id = his["location"]["state"]["assessment_id"]
+      var question = grabQ(ast_id)
     }
-
   }, []);
 
+  useEffect(() => {
+    var his: any = history
+    console.log(his)
+    if (his["location"]["state"]){
+      var ast_id = his["location"]["state"]["assessment_id"]
+      var question = grabQ(ast_id)
+    }
+  }, [history])
+
   async function grabQ(assessment_id: Number) {
+    console.log(assessment_id)
     var next_question = await grabNextQuestion(assessment_id)
       .then((res) => {
         console.log(res);
+        setQuestion(res)
         return res
       })
       .catch((error) => {
@@ -96,25 +106,30 @@ const QuestionsPage: React.FC = (props) => {
     //need to grab previous Question - send current question id and then
   }
 
-  function nextQuestion() {
+  function nxtQuestion() {
     saveAnswers();
     getNextQuestion('next')
   }
 
-  async function getNextQuestion(action){
+  async function getNextQuestion(action:any){
     if (action === 'next'){
       //will run and grab the right question
       saveAnswers();
       // getNextQuestion('next')
-      async nextQuestion()
+      var q = await grabNextQuestion();
     } else {
       //will run and grab the right previous question
+      console.log('bloo')
     }
   }
 
 
   async function saveAnswers() {
-    var ans = await createAnswers(answer)
+    var data = {
+      question: '',
+      answer: answer
+    }
+    var ans = await createAnswers(data)
       .then((res) => {
         console.log(res)
       })
