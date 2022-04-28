@@ -24,7 +24,7 @@ const Header: React.FC<{ showReportsTab?: boolean }> = ({showReportsTab}) => {
           <IonButton color="light" expand="full" routerLink="action-items">Action Items</IonButton>
           <IonButton color="light" expand="full" routerLink="risk-summary">MRL Risk Summary</IonButton>
           <IonButton color="light" expand="full" routerLink="detailed-risk">Detailed Risk Report</IonButton>
-        </IonPopover> */}
+        </IonPopover>
 
         <IonPopover
           className="reports-popover"

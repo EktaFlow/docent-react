@@ -22,7 +22,7 @@ const columns = [
   },
   {
     name: 'Subthreads',
-    selector: row => row.subthread.name, 
+    selector: row => row.subthread.name,
     sortable: true,
     wrap: true,
   },
@@ -178,39 +178,6 @@ const ActionItems: React.FC = () => {
               <IonButton expand="full" color="dsb" className="filter-buttons">Clear</IonButton>
             </IonCol>
           </IonRow>
-
-<<<<<<< HEAD
-          {/* <table>
-            <tr>
-              <th className="action-header">MRL</th>
-              <th className="action-header thread">Threads</th>
-              <th className="action-header subthread">Subthreads</th>
-              <th className="action-header question">Question</th>
-              <th className="action-header">Answer</th>
-              <th className="action-header">Action</th>
-              <th className="action-header">Due</th>
-              <th className="action-header">Owner</th>
-              <th className="action-header">Risk</th>
-            </tr>
-
-            <tr className="action-row">
-              <td className="row-border">1</td>
-              <td className="row-border">Technology & Industrial Base</td>
-              <td className="row-border">A.1 - Technology Transition to Production</td>
-              <td className="row-border">Have global trends in emerging industrial base capabilities been identified?</td>
-              <td className="row-border">No</td>
-              <td className="row-border">null</td>
-              <td className="row-border"></td>
-              <td className="row-border">null</td>
-              <td className="row-border"></td>
-            </tr>
-          </table> */}
-=======
-          <DataTable
-            columns={columns}
-            data={data}
-          />
->>>>>>> main
 
           <DataTable
             columns={columns}
