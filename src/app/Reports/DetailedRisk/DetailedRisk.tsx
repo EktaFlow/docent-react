@@ -1,11 +1,15 @@
 import { IonPage, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonGrid, IonRow, IonCol, IonButton, IonItem, IonLabel, IonSelect, IonSelectOption } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+import { useHistory } from 'react-router-dom';
 
 import './DetailedRisk.scss';
 import Header from '../../Framework/Header';
 import InfoCard from '../InfoCard';
 import ReportsTopbar from '../ReportsTopbar';
 import { symlinkSync } from 'fs';
+
+import { grabSingleAssessment } from '../../../api/api'
 
 const DetailedRisk: React.FC = () => {
   const data = [
@@ -41,16 +45,43 @@ const DetailedRisk: React.FC = () => {
       ]
     }
   ];
-
+  const history = useHistory();
+  const [assessmentId, setAssessmentId] = useState<number>();
+  const [assessmentData, setAssessmentData] = useState<any>();
   const [reportData, setReportData] = useState(data);
+
+  useEffect(() => {
+    async function getAssessmentInfo() {
+      var his: any = history
+      var assessment_id = his["location"]["state"]["assessment_id"]
+      await setAssessmentId(assessment_id)
+    }
+    getAssessmentInfo()
+  }, []);
+
+  useEffect(() => {
+    async function getAssessment() {
+      if (assessmentId) {
+        var assessmentInfo = await grabSingleAssessment(assessmentId);
+        await setAssessmentData(assessmentInfo)
+      }
+    }
+    getAssessment();
+  }, [assessmentId]);
+
+  useEffect(() => {
+    if (assessmentData) {
+      console.log(assessmentData)
+    }
+  }, [assessmentData]);
 
   return (
     <IonPage>
-      <Header showReportsTab={true} />
+      <Header showAssessment={true} assessmentId={assessmentId} />
       <ReportsTopbar text="Detailed Risk Report" />
       <IonContent>
         <div className="detailed-risk-wrapper">
-          <InfoCard />
+          <InfoCard assessmentId={assessmentId} />
           <h2>Risk Report for MRL Level {reportData[0].mrl_level}</h2>
 
           <IonRow className="detailed-risk-toolbar">
@@ -87,6 +118,42 @@ const DetailedRisk: React.FC = () => {
           </IonRow>
 
           <div className="detailed-card-wrapper">
+            {
+              assessmentData && assessmentData.threads.map((thread: any, index: any) => (
+                <IonCard className="detailed-risk-card" color="dark">
+                  <IonCardHeader>
+                    <IonCardTitle>Thread: {thread.name}</IonCardTitle>
+                  </IonCardHeader>
+                  {thread.subthreads.map((subthread: any, index: any) => (
+                    <IonCard className="subthread-card" color="dark">
+                      <IonCardHeader>
+                        <IonCardTitle>Subthread: {subthread.name}</IonCardTitle>
+                      </IonCardHeader>
+                      {subthread.questions.map((question: any, index: any) => (
+                        <div className="question">
+                          <div>
+                            <h4>{question.question_text}</h4>
+                          </div>
+                          <div>
+                            {(question.answer.risk) ?
+                              <p className="red"><b>Risk Score: </b>{question.answer.risk}</p> : <p><b>Risk Score: </b></p>
+                            }
+                            <div className="extra-risk">
+                              <p><b>Greatest Impact: </b>{question.answer.greatest_impact}</p>
+                              <p><b>Risk Response: </b>{question.answer.risk_response}</p>
+                              <p><b>MMP Summary: </b>{question.answer.mmp_summary}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </IonCard>
+                  ))}
+                </IonCard>
+              ))
+            }
+          </div>
+
+          {/* <div className="detailed-card-wrapper">
             {reportData.map((report, index) => (
               <IonCard className="detailed-risk-card" color="dark">
                 <IonCardHeader>
@@ -118,7 +185,7 @@ const DetailedRisk: React.FC = () => {
                 ))}
               </IonCard>
             ))}
-          </div>
+          </div> */}
 
         </div>
       </IonContent>

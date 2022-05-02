@@ -129,23 +129,6 @@ const New: React.FC = () => {
             </IonItem>
             <IonItem color="dark">
               <IonLabel position="floating">Target MRL*</IonLabel>
-              <IonSelect
-                name="target_mrl"
-                value={newAssessment.target_mrl}
-                onIonChange={handleAssessmentChange}
-                interface="popover"
-              >
-                <IonSelectOption value="1">1</IonSelectOption>
-                <IonSelectOption value="2">2</IonSelectOption>
-                <IonSelectOption value="3">3</IonSelectOption>
-                <IonSelectOption value="4">4</IonSelectOption>
-                <IonSelectOption value="5">5</IonSelectOption>
-                <IonSelectOption value="6">6</IonSelectOption>
-                <IonSelectOption value="7">7</IonSelectOption>
-                <IonSelectOption value="8">8</IonSelectOption>
-                <IonSelectOption value="9">9</IonSelectOption>
-                <IonSelectOption value="10">10</IonSelectOption>
-              </IonSelect>
             </IonItem>
             <IonItem color="dark">
               <IonLabel position="floating">Level Switching</IonLabel>

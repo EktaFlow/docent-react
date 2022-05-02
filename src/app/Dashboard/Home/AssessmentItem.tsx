@@ -6,27 +6,32 @@ import { IonButton } from '@ionic/react';
 import { deleteAssessment } from '../../../api/api'
 import { id } from 'date-fns/locale';
 
-const AssessmentItem: React.FC<({ assessmentInfo: any })> = ({ assessmentInfo }) => {
+import { useHistory } from 'react-router-dom';
 
-  useEffect(() => {
-    setAssessment(assessmentInfo.assessment);
-    setTeamMembers(assessmentInfo.team_members);
-  }, [])
+type AIP = {
+  ast: {
+    id: number,
+    name: string,
+    count: number,
+    length: number,
+    target_mrl: number,
+    target: string,
+    scope: string,
+    level_switching: boolean,
+    location: string,
+  }
+}
 
-  const [assessment, setAssessment] = useState<any>()
-  const [teamMembers, setTeamMembers] = useState<any>()
-
-  useEffect(() => {
-    if (assessment) {
-      console.log(assessment.id)
-    }
-  }, [assessment])
-
-  // useEffect(() => {
-  //   if (teamMembers) {
-  //     console.log(teamMembers)
-  //   }
-  // }, [teamMembers])
+const AssessmentItem: React.FC<AIP> = (props) => {
+  const history = useHistory();
+  async function navigateToPage() {
+    history.push({
+      pathname: '/questions',
+      state: {
+        assessment_id: props.ast.id as number
+      }
+    })
+  }
 
   const removeAssessment = (id: number) => {
     deleteAssessment(id);
@@ -35,22 +40,22 @@ const AssessmentItem: React.FC<({ assessmentInfo: any })> = ({ assessmentInfo })
   return (
     <div className="assessment-inner">
       <div className="assessment-info">
-        <p><b>Name: </b>{assessment && assessment.name}</p>
-        <p><b>3 out of 50 </b>questions answered</p>
-        <p><b>MRL: </b>5</p>
-        <p><b>Target Date: </b>{assessment && assessment.target}</p>
-        <p><b>Additional Information: </b>{assessment && assessment.scope}</p>
-        <p><b>Location: </b>{assessment && assessment.location}</p>
-        <p><b>Level Switching On?: </b>{assessment && assessment.location}</p>
+        <p><b>Name: </b>{props.ast.name}</p>
+        <p><b>{props.ast.count} out of {props.ast.length} </b>questions answered</p>
+        <p><b>MRL: </b>{props.ast.target_mrl}</p>
+        <p><b>Target Date: </b>{props.ast.target}</p>
+        <p><b>Additional Information: </b>{props.ast.scope}</p>
+        <p><b>Location: </b>{props.ast.location}</p>
+        <p><b>Level Switching On?: </b>{props.ast.level_switching ? 'Yes' : 'No'}</p>
         <p><b>Team Members: </b>james@ekta.co</p>
       </div>
       <div className="assessment-actions">
-        <IonButton size="small" expand="full" color="light" routerLink='/questions'>Continue Assessment</IonButton>
-        <IonButton size="small" expand="full" color="light" routerLink="/mrl-summary">MRL Summary</IonButton>
-        <IonButton size="small" expand="full" color="light" routerLink="/action-items">Action Items</IonButton>
+        <IonButton size="small" expand="full" color="light" onClick={navigateToPage}>Continue Assessment</IonButton>
+        <IonButton size="small" expand="full" color="light">MRL Summary</IonButton>
+        <IonButton size="small" expand="full" color="light">Action Items</IonButton>
         <IonButton size="small" expand="full" color="light">Invite Team Members</IonButton>
         <IonButton size="small" expand="full" color="light">Edit Assessment Info</IonButton>
-        <IonButton size="small" expand="full" color="light" onClick={() => removeAssessment(assessment.id)}>Delete Assessment</IonButton>
+        <IonButton size="small" expand="full" color="light" onClick={() => removeAssessment(props.ast.id)}>Delete Assessment</IonButton>
         <IonButton size="small" expand="full" color="light">Export Assessment</IonButton>
       </div>
     </div>

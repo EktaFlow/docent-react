@@ -1,10 +1,14 @@
 import { IonPage, IonContent, IonRow, IonCol, IonButton } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+import { useHistory } from 'react-router-dom';
 
 import './MRLSummary.scss';
 import Header from '../../Framework/Header';
 import InfoCard from '../InfoCard';
 import ReportsTopbar from '../ReportsTopbar';
+
+import { grabSingleAssessment } from '../../../api/api'
 
 const MRLSummary: React.FC = () => {
   // const responseNum = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -72,15 +76,44 @@ const MRLSummary: React.FC = () => {
 
   const mrLevel = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
 
+  const history = useHistory();
+  const [assessmentId, setAssessmentId] = useState<number>();
+  const [assessmentData, setAssessmentData] = useState<any>();
+
   const [summaryData, setSummaryData] = useState(data);
+
+  useEffect(() => {
+    async function getAssessmentInfo() {
+      var his: any = history
+      var assessment_id = his["location"]["state"]["assessment_id"]
+      await setAssessmentId(assessment_id)
+    }
+    getAssessmentInfo()
+  }, []);
+
+  useEffect(() => {
+    async function getAssessment() {
+      if (assessmentId) {
+        var assessmentInfo = await grabSingleAssessment(assessmentId);
+        await setAssessmentData(assessmentInfo)
+      }
+    }
+    getAssessment();
+  }, [assessmentId]);
+
+  useEffect(() => {
+    if (assessmentData) {
+      console.log(assessmentData)
+    }
+  }, [assessmentData]);
 
   return (
     <IonPage>
-      <Header showReportsTab={true} />
+      <Header showAssessment={true} assessmentId={assessmentId} />
       <ReportsTopbar text="MRL Summary" />
       <IonContent>
         <div className="mrl-summary-wrapper">
-          <InfoCard />
+          <InfoCard assessmentId={assessmentId} />
           <IonRow className="mrl-summary-toolbar">
             <IonCol size="12" size-lg="2" className="download-image ion-padding-bottom">
               <IonButton color="dsb">Download Image</IonButton>

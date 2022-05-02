@@ -1,32 +1,15 @@
 import { IonPage, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonButton, IonItem, IonLabel, IonSelect, IonSelectOption, IonContent } from '@ionic/react';
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import './Comprehensive.scss';
 import Header from '../../Framework/Header';
 import InfoCard from '../InfoCard';
 import ReportsTopbar from '../ReportsTopbar';
 
-import { grabThreads, grabSubthreads } from '../../../api/api'
+import { grabSingleAssessment } from '../../../api/api'
 
 const Comprehensive: React.FC = () => {
-  useEffect(() => {
-    async function getThreads() {
-      var asts = await grabThreads();
-      console.log(asts);
-    }
-  
-    getThreads()
-  }, [])
-
-  useEffect(() => {
-    async function getSubthreads() {
-      var asts = await grabSubthreads();
-      console.log(asts);
-    }
-  
-    getSubthreads()
-  }, [])
-
   const data = [
     {
       question: {
@@ -108,15 +91,43 @@ const Comprehensive: React.FC = () => {
     },
   ];
 
+  const history = useHistory();
+  const [assessmentId, setAssessmentId] = useState<number>();
   const [comprehensiveData, setComprehensiveData] = useState(data);
+  const [assessmentData, setAssessmentData] = useState<any>();
+
+  useEffect(() => {
+    async function getAssessmentInfo() {
+      var his: any = history
+      var assessment_id = his["location"]["state"]["assessment_id"]
+      await setAssessmentId(assessment_id)
+    }
+    getAssessmentInfo()
+  }, [])
+
+  useEffect(() => {
+    async function getAssessment() {
+      if (assessmentId) {
+        var assessmentInfo = await grabSingleAssessment(assessmentId);
+        await setAssessmentData(assessmentInfo)
+      }
+    }
+    getAssessment();
+  }, [assessmentId]);
+
+  useEffect(() => {
+    if (assessmentData) {
+      console.log(assessmentData)
+    }
+  }, [assessmentData]);
 
   return (
     <IonPage>
-      <Header showReportsTab={true} />
+      <Header showAssessment={true} assessmentId={assessmentId} />
       <ReportsTopbar text="Comprehensive Report" />
       <IonContent>
         <div className="comprehensive-wrapper">
-          <InfoCard />
+          <InfoCard assessmentId={assessmentId} />
           <IonRow className="comprehensive-filter-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1">
               <IonButton expand="block" color="dsb">Export As XLS</IonButton>
@@ -156,7 +167,86 @@ const Comprehensive: React.FC = () => {
             </IonCol>
           </IonRow>
 
-          {comprehensiveData.map((comprehensive, index) => (
+          {
+            assessmentData && assessmentData.threads.map((thread: any, index: any) => (
+              <div className="survey-info">
+                {thread.subthreads.map((subthread: any, index: any) => (
+                  <span>
+                    {subthread.questions.map((question: any, index: any) => (
+                      question.answer !== "Unanswered" &&
+                      <IonCard className="review-card">
+                        <IonCardHeader>
+                          <IonCardTitle className="review-header">{question.question_text}</IonCardTitle>
+                          {question.answer.answer === 'yes' && <IonCardSubtitle className="box yes"><b>Yes</b></IonCardSubtitle>}
+                          {question.answer.answer === 'no' && <IonCardSubtitle className="box no"><b>No</b></IonCardSubtitle>}
+                          {question.answer.answer === 'na' && <IonCardSubtitle className="box na"><b>N/A</b></IonCardSubtitle>}
+                        </IonCardHeader>
+                        <IonCardContent className="review-card-content">
+                          <h4>Thread: {thread.name} | SubThread: {subthread.name}</h4>
+                          <h4>MRLevel: {assessmentData.info.current_mrl}</h4>
+                          {question.answer.answer === 'yes' &&
+                            <span>
+                              {(question.answer.objective_evidence) ?
+                                <h2><b>Objective Evidence:</b> {question.answer.objective_evidence}</h2> : <h2><b>Objective Evidence:</b> No Objective Evidence Given</h2>
+                              }
+                              {(question.answer.assumptions_yes) ?
+                                <h2><b>Assumptions:</b> {question.answer.assumptions_yes}</h2> : <h2><b>Assumptions:</b> No Assumptions Given</h2>
+                              }
+                              {(question.answer.notes_yes) ?
+                                <h2><b>Notes:</b> {question.answer.notes_yes}</h2> : <h2><b>Notes:</b> No Notes Given</h2>
+                              }
+                            </span>
+                          }
+                          {question.answer.answer === 'no' &&
+                            <span>
+                              {(question.answer.who) ?
+                                <h2><b>Owner:</b> {question.answer.who}</h2> : <h2><b>Owner:</b> No Owner Given</h2>
+                              }
+                              {(question.answer.when) ?
+                                <h2><b>Due Date:</b> {question.answer.when}</h2> : <h2><b>Due Date:</b> No Due Date Given</h2>
+                              }
+                              {(question.answer.what) ?
+                                <h2><b>Action Plan:</b> {question.answer.what}</h2> : <h2><b>Action Plan:</b> No Action Plan Given</h2>
+                              }
+                              {(question.answer.reason) ?
+                                <h2><b>Reason:</b> {question.answer.reason}</h2> : <h2><b>Reason:</b> No Reason Given</h2>
+                              }
+                              {(question.answer.assumptions_no) ?
+                                <h2><b>Assumptions:</b> {question.answer.assumptions_no}</h2> : <h2><b>Assumptions:</b> No Assumptions Given</h2>
+                              }
+                              {(question.answer.notes_no) ?
+                                <h2><b>Notes:</b> {question.answer.notes_no}</h2> : <h2><b>Notes:</b> No Notes Given</h2>
+                              }
+                            </span>
+                          }
+                          <hr />
+                          <h2><i>Risk Assessment</i></h2>
+                          {(question.answer.risk) ?
+                            <h2 id="red-text"><b>Risk Score:</b> {question.answer.risk}</h2> : <h2><b>Risk Score:</b> No Risk Given</h2>
+                          }
+                          {(question.answer.greatest_impact) ?
+                            <h2><b>Greatest Impact:</b> {question.answer.greatest_impact}</h2> : <h2><b>Greatest Impact:</b> No Greatest Impact Given</h2>
+                          }
+                          {(question.answer.risk_response) ?
+                            <h2><b>Risk Response:</b> {question.answer.risk_response}</h2> : <h2><b>Risk Response:</b> No Risk Response Given</h2>
+                          }
+                          {(question.answer.mmp_summary) ?
+                            <h2><b>MMP Summary:</b> {question.answer.mmp_summary}</h2> : <h2><b>MMP Summary:</b> No MMP Summary Given</h2>
+                          }
+                          <hr />
+
+                          <h2><b>Attachments:</b> No file attached to this question</h2>
+                          <IonButton size="small" color="dsb">Go To Question</IonButton>
+                        </IonCardContent>
+                      </IonCard>
+                    ))}
+                  </span>
+                ))}
+              </div>
+            ))
+          }
+
+          {/* {comprehensiveData.map((comprehensive, index) => (
             <div className="survey-info">
               <IonCard className="review-card">
                 <IonCardHeader>
@@ -224,7 +314,7 @@ const Comprehensive: React.FC = () => {
                 </IonCardContent>
               </IonCard>
             </div>
-          ))}
+          ))} */}
         </div>
       </IonContent>
     </IonPage>

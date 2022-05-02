@@ -11,7 +11,6 @@ import FilterPopover from './FilterPopover'
 import { grabAssessments } from '../../../api/api'
 
 const Home: React.FC = () => {
-
   const [assessments, setAssessments] = useState<Array<any>>([]);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
   const [filters, setFilters] = useState<any>({
@@ -35,7 +34,7 @@ const Home: React.FC = () => {
 
   return (
     <IonPage className="home-page-wrapper">
-      <Header showReportsTab={false} />
+      <Header showAssessment={false} />
       <div className="content-wrapper">
         <div className="home-ls">
           <div className="assessment-toolbar">
@@ -43,7 +42,7 @@ const Home: React.FC = () => {
             <div className="filter-toolbar">
               <IonButton expand="full" color="light" id="trigger-button" onClick={openPopover}>Filter</IonButton>
               <IonPopover trigger="trigger-button" isOpen={isPopoverOpen}>
-                <FilterPopover filters={filters} setFilters={setFilters}/>
+                <FilterPopover filters={filters} setFilters={setFilters} />
               </IonPopover>
             </div>
           </div>
@@ -55,7 +54,7 @@ const Home: React.FC = () => {
                     <IonLabel>Assessment Name: {assessment.assessment.name}</IonLabel>
                   </IonItem>
                   <IonItem slot="content" color="dark">
-                    <AssessmentItem assessmentInfo={assessment}/>
+                    <AssessmentItem ast={assessment.assessment} />
                   </IonItem>
                 </IonAccordion>
               ))

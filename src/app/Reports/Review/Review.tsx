@@ -1,12 +1,13 @@
 import { IonPage, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonButton, IonItem, IonLabel, IonSelect, IonSelectOption, IonContent } from '@ionic/react';
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import './Review.scss';
 import Header from '../../Framework/Header';
 import InfoCard from '../InfoCard';
 import ReportsTopbar from '../ReportsTopbar';
 
-import { grabAssessments, grabThreads, grabSubthreads, grabQuestions } from '../../../api/api'
+import { grabSingleAssessment } from '../../../api/api'
 
 const Review: React.FC = () => {
   const data = [
@@ -45,39 +46,43 @@ const Review: React.FC = () => {
   ];
 
   const [reviewData, setReviewData] = useState(data);
+  const [assessmentId, setAssessmentId] = useState<number>();
+  const [assessmentData, setAssessmentData] = useState<any>();
+
+  const history = useHistory();
 
   useEffect(() => {
-    async function getThreads() {
-      var asts = await grabThreads();
-      if(asts) {
-        console.log(asts);
-        let tempArray = reviewData;
-        // console.log(tempArray.length)
-        
-        // console.log(tempArray);
-        // tempArray[0].thread.name = asts.threads[0].name
-        // tempArray[0].thread.mr_level = asts.threads[0].mr_level
+    async function getAssessmentInfo() {
+      var his: any = history
+      var assessment_id = his["location"]["state"]["assessment_id"]
+      await setAssessmentId(assessment_id)
+    }
+    getAssessmentInfo()
+  }, []);
 
-        setReviewData(tempArray)
+  useEffect(() => {
+    async function getAssessment() {
+      if (assessmentId) {
+        var assessmentInfo = await grabSingleAssessment(assessmentId);
+        await setAssessmentData(assessmentInfo)
       }
     }
+    getAssessment();
+  }, [assessmentId]);
 
-    async function getQuestions() {
-      var questions = await grabQuestions();
-      // console.log(questions);
+  useEffect(() => {
+    if (assessmentData) {
+      console.log(assessmentData)
     }
-    
-    getThreads();
-    getQuestions();
-  }, [])
+  }, [assessmentData]);
 
   return (
     <IonPage>
-      <Header showReportsTab={true} />
+      <Header showAssessment={true} assessmentId={assessmentId} />
       <ReportsTopbar text="Review" />
       <IonContent>
         <div className="review-wrapper">
-          <InfoCard />
+          <InfoCard assessmentId={assessmentId} />
           <IonRow className="review-filter-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1">
               <IonButton expand="block" color="dsb">Export As XLS</IonButton>
@@ -118,7 +123,39 @@ const Review: React.FC = () => {
             </IonCol>
           </IonRow>
 
-          {reviewData.map((review, index) => (
+          {
+            assessmentData && assessmentData.threads.map((thread: any, index: any) => (
+              <div className="survey-info">
+                {thread.subthreads.map((subthread: any, index: any) => (
+                  <span>
+                    {subthread.questions.map((question: any, index: any) => (
+                      question.answer !== "Unanswered" &&
+                      <IonCard className="review-card">
+                        <IonCardHeader>
+                          <IonCardTitle className="review-header">{question.question_text}</IonCardTitle>
+                          {question.answer.answer === 'yes' && <IonCardSubtitle className="box yes"><b>Yes</b></IonCardSubtitle>}
+                          {question.answer.answer === 'no' && <IonCardSubtitle className="box no"><b>No</b></IonCardSubtitle>}
+                          {question.answer.answer === 'na' && <IonCardSubtitle className="box na"><b>N/A</b></IonCardSubtitle>}
+                        </IonCardHeader>
+                        <IonCardContent className="review-card-content">
+                          <h4>Thread: {thread.name} | SubThread: {subthread.name}</h4>
+                          <h4>MRLevel: {assessmentData.info.current_mrl}</h4>
+                          {question.answer.answer === 'yes' &&
+                            <h2><b>Objective Evidence:</b> {(question.answer.objective_evidence) ? <span>{question.answer.objective_evidence}</span> : <span>No objective evidence</span>}</h2>
+                          }
+                          <h2><b>Attachments:</b> No file attached to this question</h2>
+                          <IonButton size="small" color="dsb">Go To Question</IonButton>
+                        </IonCardContent>
+                      </IonCard>
+
+                    ))}
+                  </span>
+                ))}
+              </div>
+            ))
+          }
+
+          {/* {reviewData.map((review, index) => (
             <div className="survey-info">
               <IonCard className="review-card">
                 <IonCardHeader>
@@ -132,13 +169,12 @@ const Review: React.FC = () => {
                   <h4>Thread: {review.thread.name} | SubThread: {review.subthread.name}</h4>
                   <h4>MRLevel: {review.thread.mr_level}</h4>
                   <h2><b>Objective Evidence:</b> {(review.answer.objective_evidence) ? <span>{review.answer.objective_evidence}</span> : <span>No objective evidence</span>}</h2>
-                  {/* <h2><b>Objective Evidence:</b> {review.answer.objective_evidence}</h2> */}
                   <h2><b>Attachments:</b> No file attached to this question</h2>
                   <IonButton size="small" color="dsb">Go To Question</IonButton>
                 </IonCardContent>
               </IonCard>
             </div>
-          ))}
+          ))} */}
         </div>
       </IonContent>
     </IonPage>

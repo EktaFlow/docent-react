@@ -68,7 +68,7 @@ const App: React.FC = () => (
         <Route exact path="/start-new">
           <New />
         </Route>
-        <Route exact path="/questions">
+        <Route exact path="/questions/:ast_id">
           <Questions />
         </Route>
         <Route exact path="/login">
@@ -86,6 +86,9 @@ const App: React.FC = () => (
         <Route exact path="/review-report">
           <Review />
         </Route>
+        <Route exact path="/review-report/:ast_id">
+          <Review />
+        </Route>
         <Route exact path="/comprehensive-report">
           <Comprehensive />
         </Route>
@@ -101,10 +104,9 @@ const App: React.FC = () => (
         <Route exact path="/questions-list">
           <QuestionsList />
         </Route>
-<<<<<<< HEAD
         <Route exact path="/mrl-summary">
           <MRLSummary />
-=======
+        </Route>
         <Route exact path="/definitions">
           <Definitions />
         </Route>
@@ -122,7 +124,6 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/settings">
           <Settings />
->>>>>>> main
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>

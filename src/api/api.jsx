@@ -8,9 +8,23 @@ export async function grabAssessments() {
   return result.data
 }
 
+export async function grabSingleAssessment(assessment_id) {
+  const result = await axios.get(
+    `${apiUrl}/get_assessment?id=${assessment_id}`
+  )
+  return result.data
+}
+
 export async function grabTeamMembers() {
   const result = await axios.get(
     `${apiUrl}/team_members`
+  )
+  return result.data
+}
+
+export async function grabNextQuestion(assessment_id) {
+  const result = await axios.get(
+    `${apiUrl}/next_question?assessment_id=${assessment_id}`
   )
   return result.data
 }
@@ -73,5 +87,15 @@ export async function deleteAssessment(id) {
     method: 'delete',
     url: `${apiUrl}/assessments/${id}`,
   })
+  return result.data
+}
+
+export async function nextQuestion(questionId, assessmentId){
+  const result = await axios.get(`${apiUrl}/questions/next?question_id=${questionId}&assessment_id=${assessmentId}`);
+  return result.data
+}
+
+export async function prevQuestion(questionId, assessmentId){
+  const result = await axios.get(`${apiUrl}/questions/prev?question_id=${questionId}&assessment_id=${assessmentId}`);
   return result.data
 }

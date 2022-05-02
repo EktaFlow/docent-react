@@ -1,10 +1,13 @@
 import { IonPage, IonContent, IonRow, IonCol, IonButton, IonItem, IonLabel, IonSelect, IonSelectOption, IonCard, IonCardHeader, IonCardTitle } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import './Questions.scss';
 import Header from '../../Framework/Header';
 import InfoCard from '../InfoCard';
 import ReportsTopbar from '../ReportsTopbar';
+
+import { grabSingleAssessment } from '../../../api/api'
 
 const QuestionsList: React.FC = () => {
   const data = [
@@ -27,6 +30,13 @@ const QuestionsList: React.FC = () => {
             skipped: false,
             answered: true,
             subthread_id: 2
+          },
+          {
+            question_text: "Have pertinent Manufacturing Science (MS) and Advanced Manufacturing Technology requirements been identified?",
+            current_answer: "na",
+            skipped: false,
+            answered: true,
+            subthread_id: 2
           }
         ]
       }]
@@ -34,12 +44,41 @@ const QuestionsList: React.FC = () => {
   ];
 
   const [segmentData, setSegmentData] = useState(data);
+  const [assessmentId, setAssessmentId] = useState<number>();
+  const [assessmentData, setAssessmentData] = useState<any>();
+
+  const history = useHistory();
 
   const [MRLevel, setMRLevel] = useState('all-levels');
   const [answerType, setAnswerType] = useState('all-answers');
 
   const [MRFilter, setMRFilter] = useState('all-levels');
   const [answerFilter, setAnswerFilter] = useState('all-answers');
+
+  useEffect(() => {
+    async function getAssessmentInfo() {
+      var his: any = history
+      var assessment_id = his["location"]["state"]["assessment_id"]
+      await setAssessmentId(assessment_id)
+    }
+    getAssessmentInfo()
+  }, []);
+
+  useEffect(() => {
+    async function getAssessment() {
+      if (assessmentId) {
+        var assessmentInfo = await grabSingleAssessment(assessmentId);
+        await setAssessmentData(assessmentInfo)
+      }
+    }
+    getAssessment();
+  }, [assessmentId]);
+
+  useEffect(() => {
+    if (assessmentData) {
+      console.log(assessmentData)
+    }
+  }, [assessmentData]);
 
   const setFilter = () => {
     setMRFilter(MRLevel);
@@ -48,11 +87,11 @@ const QuestionsList: React.FC = () => {
 
   return (
     <IonPage>
-      <Header showReportsTab={true} />
+      <Header showAssessment={true} assessmentId={assessmentId} />
       <ReportsTopbar text="Questions List" />
       <IonContent>
         <div className="questions-list-wrapper">
-          <InfoCard />
+          <InfoCard assessmentId={assessmentId} />
 
           <IonRow className="questions-list-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1 ion-padding-bottom">
@@ -99,6 +138,45 @@ const QuestionsList: React.FC = () => {
           </IonRow>
 
           <div className="thread">
+            {
+              assessmentData && assessmentData.threads.map((thread: any, index: any) => (
+                <IonCard className="thread-card" color="dark">
+                  <IonCardHeader>
+                    <IonCardTitle><img src="assets/if_icon-arrow-down.png" className="down-arrow"></img>{thread.name}</IonCardTitle>
+                  </IonCardHeader>
+                  {thread.subthreads.map((subthread: any, index: any) => (
+                    <IonCard className="subthread-card" color="dark">
+                      <IonCardHeader>
+                        <IonCardTitle><img src="assets/if_icon-arrow-down.png" className="down-arrow"></img>{subthread.name}</IonCardTitle>
+                      </IonCardHeader>
+                      <div className="mrl">
+                        <h6><b>MR Level: {assessmentData.info.current_mrl}</b></h6>
+                        {subthread.questions.map((question: any, index: any) => (
+                          <div className="question">
+                            <h5 className="navigate-links">
+                              <span>
+                                {question.answer.answer === 'yes' &&
+                                  <IonButton size="small" className="status-button green-button ion-no-padding">Yes</IonButton>
+                                }
+                                {question.answer.answer === 'no' &&
+                                  <IonButton size="small" color="danger" className="status-button ion-no-padding">No</IonButton>
+                                }
+                                {(question.answer.answer === 'na' || question.answer === 'Unanswered' ) &&
+                                  <IonButton size="small" className="status-button ion-no-padding">Unanswered</IonButton>
+                                }
+                              </span>
+                              {question.question_text}
+                            </h5>
+                          </div>
+                        ))}
+                      </div>
+                    </IonCard>
+                  ))}
+                </IonCard>
+              ))}
+          </div>
+
+          {/* <div className="thread">
             {segmentData.map((segment, index) => (
               <IonCard className="thread-card" color="dark">
                 <IonCardHeader>
@@ -136,7 +214,7 @@ const QuestionsList: React.FC = () => {
                 ))}
               </IonCard>
             ))}
-          </div>
+          </div> */}
         </div>
       </IonContent>
     </IonPage>
