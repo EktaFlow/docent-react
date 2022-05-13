@@ -1,5 +1,8 @@
+
 import { IonPage, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonButton, IonItem, IonLabel, IonSelect, IonSelectOption, IonContent } from '@ionic/react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
+import ReactExport from "react-export-excel";
+
 import { useHistory } from 'react-router-dom';
 
 import './Review.scss';
@@ -9,45 +12,23 @@ import ReportsTopbar from '../ReportsTopbar';
 
 import { grabSingleAssessment } from '../../../api/api'
 
-const Review: React.FC = () => {
-  const data = [
-    {
-      question: {
-        question_text: "Have industrial base capabilities and gaps/risks been identified for key technologies, components, and/or key processes?",
-        current_answer: "no"
-      },
-      thread: {
-        name: 'Technology & Industrial Base',
-        mr_level: '4',
-      },
-      subthread: {
-        name: 'A.1 - Technology Transition to Production'
-      },
-      answer: {
-        objective_evidence: 'Some objective evidence'
-      }
-    },
-    {
-      question: {
-        question_text: "Have pertinent Manufacturing Science (MS) and Advanced Manufacturing Technology requirements been identified?",
-        current_answer: "yes"
-      },
-      thread: {
-        name: 'Technology & Industrial Base',
-        mr_level: '4',
-      },
-      subthread: {
-        name: 'A.2 - Manufacturing Technology Development'
-      },
-      answer: {
-        objective_evidence: ''
-      }
-    },
-  ];
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
-  const [reviewData, setReviewData] = useState(data);
+const Review: React.FC = () => {
   const [assessmentId, setAssessmentId] = useState<number>();
   const [assessmentData, setAssessmentData] = useState<any>();
+  const [questionData, setQuestionData] = useState<any>([]);
+  const [filteringData, setFilteringData] = useState<any>([]);
+
+  const [selectedMRL, setSelectedMRL] = useState<string>('all-levels');
+  const [filteredMRL, setFilteredMRL] = useState('all-levels');
+
+  const [selectedAnswer, setSelectedAnswer] = useState<string>('all-answers');
+  const [filteredAnswer, setFilteredAnswer] = useState('all-answers');
+
+  let excelData: Array<any> = [];
 
   const history = useHistory();
 
@@ -55,7 +36,7 @@ const Review: React.FC = () => {
     async function getAssessmentInfo() {
       var his: any = history
       var assessment_id = his["location"]["state"]["assessment_id"]
-      await setAssessmentId(assessment_id)
+      await setAssessmentId(assessment_id);
     }
     getAssessmentInfo()
   }, []);
@@ -64,7 +45,7 @@ const Review: React.FC = () => {
     async function getAssessment() {
       if (assessmentId) {
         var assessmentInfo = await grabSingleAssessment(assessmentId);
-        await setAssessmentData(assessmentInfo)
+        await setAssessmentData(assessmentInfo);
       }
     }
     getAssessment();
@@ -72,9 +53,102 @@ const Review: React.FC = () => {
 
   useEffect(() => {
     if (assessmentData) {
-      console.log(assessmentData)
+      let threadData = assessmentData.threads.map((thread: any) => (
+        thread.subthreads.map((subthread: any) => (
+          subthread.questions.map((question: any) => (
+            question.answer !== "Unanswered" &&
+            excelData.push({
+              MRL: assessmentData.info.current_mrl,
+              question_text: question.question_text,
+              current_answer: question.answer.answer,
+              objective_evidence: question.answer.objective_evidence,
+            })
+          ))
+        ))
+      ));
+
+      let insertQuestionData = assessmentData.threads.map((thread: any) => (
+        thread.subthreads.map((subthread: any) => (
+          subthread.questions.map((question: any) => (
+            question.answer !== "Unanswered" &&
+            setQuestionData((questionData: any) => [...questionData, {
+              thread_name: thread.name,
+              subthread_name: subthread.name,
+              MRL: assessmentData.info.current_mrl,
+              question_text: question.question_text,
+              current_answer: question.answer.answer,
+              objective_evidence: question.answer.objective_evidence,
+            }])
+          ))
+        ))
+      ));
+
+      let insertFilteringData = assessmentData.threads.map((thread: any) => (
+        thread.subthreads.map((subthread: any) => (
+          subthread.questions.map((question: any) => (
+            question.answer !== "Unanswered" &&
+            setFilteringData((questionData: any) => [...questionData, {
+              thread_name: thread.name,
+              subthread_name: subthread.name,
+              MRL: assessmentData.info.current_mrl,
+              question_text: question.question_text,
+              current_answer: question.answer.answer,
+              objective_evidence: question.answer.objective_evidence,
+            }])
+          ))
+        ))
+      ));
     }
   }, [assessmentData]);
+
+  useEffect(() => {
+    if (filteredMRL) {
+      filterData()
+    }
+  }, [filteredMRL]);
+
+  useEffect(() => {
+    if (filteredAnswer) {
+      filterData()
+    }
+  }, [filteredAnswer]);
+
+  const handleMRLevelChange = (value: any) => {
+    setSelectedMRL(value)
+  }
+
+  const handleAnswerChange = (value: any) => {
+    setSelectedAnswer(value);
+  }
+
+  const filterData = () => {
+    if (filteredMRL === 'all-levels') {
+      if (filteredAnswer === 'all-answers') {
+        setQuestionData(filteringData);
+      }
+      else {
+        setQuestionData(filteringData.filter((question: any) => question.current_answer === filteredAnswer))
+      }
+    }
+    else {
+      if (filteredAnswer === 'all-answers') {
+        setQuestionData(filteringData.filter((question: any) => Number(filteredMRL) === assessmentData.info.current_mrl))
+      }
+      else {
+        setQuestionData(filteringData.filter((question: any) => (Number(filteredMRL) === assessmentData.info.current_mrl && question.current_answer === filteredAnswer)))
+      }
+    }
+  }
+
+  const handleFilterClick = () => {
+    setFilteredMRL(selectedMRL);
+    setFilteredAnswer(selectedAnswer);
+  }
+
+  const handleClearClick = () => {
+    setFilteredMRL('all-levels');
+    setFilteredAnswer('all-answers');
+  }
 
   return (
     <IonPage>
@@ -85,12 +159,20 @@ const Review: React.FC = () => {
           <InfoCard assessmentId={assessmentId} />
           <IonRow className="review-filter-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1">
-              <IonButton expand="block" color="dsb">Export As XLS</IonButton>
+              {assessmentData &&
+                <ExcelFile element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
+                  <ExcelSheet data={excelData} name="Review">
+                    <ExcelColumn label="MRL" value="MRL" />
+                    <ExcelColumn label="Question Text" value="question_text" />
+                    <ExcelColumn label="Current Answer" value="current_answer" />
+                    <ExcelColumn label="Objective Evidence" value="objective_evidence" />
+                  </ExcelSheet>
+                </ExcelFile>}
             </IonCol>
             <IonCol size="12" size-lg="3" className="filter-item">
               <IonItem color="dark">
                 <IonLabel position="floating">Filter MR Level</IonLabel>
-                <IonSelect interface="popover">
+                <IonSelect interface="popover" onIonChange={e => handleMRLevelChange(e.detail.value)}>
                   <IonSelectOption value="all-levels">All Levels</IonSelectOption>
                   <IonSelectOption value="1">1</IonSelectOption>
                   <IonSelectOption value="2">2</IonSelectOption>
@@ -108,73 +190,43 @@ const Review: React.FC = () => {
             <IonCol size="12" size-lg="3" className="filter-item">
               <IonItem color="dark">
                 <IonLabel position="floating">Filter Answer Type</IonLabel>
-                <IonSelect interface="popover">
+                <IonSelect interface="popover" onIonChange={e => handleAnswerChange(e.detail.value)}>
+                  <IonSelectOption value="all-answers">All Answers</IonSelectOption>
                   <IonSelectOption value="yes">Yes</IonSelectOption>
                   <IonSelectOption value="no">No</IonSelectOption>
-                  <IonSelectOption value="n/a">N/A</IonSelectOption>
+                  <IonSelectOption value="na">N/A</IonSelectOption>
                 </IonSelect>
               </IonItem>
             </IonCol>
             <IonCol size="6" size-lg="1" className="filter-button2">
-              <IonButton expand="block" color="dsb" className="filter-buttons">Filter</IonButton>
+              <IonButton expand="block" color="dsb" className="filter-buttons" onClick={() => handleFilterClick()}>Filter</IonButton>
             </IonCol>
             <IonCol size="6" size-lg="1" className="filter-button3">
-              <IonButton expand="block" color="dsb" className="filter-buttons">Clear</IonButton>
+              <IonButton expand="block" color="dsb" className="filter-buttons" onClick={() => handleClearClick()}>Clear</IonButton>
             </IonCol>
           </IonRow>
 
-          {
-            assessmentData && assessmentData.threads.map((thread: any, index: any) => (
-              <div className="survey-info">
-                {thread.subthreads.map((subthread: any, index: any) => (
-                  <span>
-                    {subthread.questions.map((question: any, index: any) => (
-                      question.answer !== "Unanswered" &&
-                      <IonCard className="review-card">
-                        <IonCardHeader>
-                          <IonCardTitle className="review-header">{question.question_text}</IonCardTitle>
-                          {question.answer.answer === 'yes' && <IonCardSubtitle className="box yes"><b>Yes</b></IonCardSubtitle>}
-                          {question.answer.answer === 'no' && <IonCardSubtitle className="box no"><b>No</b></IonCardSubtitle>}
-                          {question.answer.answer === 'na' && <IonCardSubtitle className="box na"><b>N/A</b></IonCardSubtitle>}
-                        </IonCardHeader>
-                        <IonCardContent className="review-card-content">
-                          <h4>Thread: {thread.name} | SubThread: {subthread.name}</h4>
-                          <h4>MRLevel: {assessmentData.info.current_mrl}</h4>
-                          {question.answer.answer === 'yes' &&
-                            <h2><b>Objective Evidence:</b> {(question.answer.objective_evidence) ? <span>{question.answer.objective_evidence}</span> : <span>No objective evidence</span>}</h2>
-                          }
-                          <h2><b>Attachments:</b> No file attached to this question</h2>
-                          <IonButton size="small" color="dsb">Go To Question</IonButton>
-                        </IonCardContent>
-                      </IonCard>
-
-                    ))}
-                  </span>
-                ))}
-              </div>
-            ))
-          }
-
-          {/* {reviewData.map((review, index) => (
-            <div className="survey-info">
+          <div className="survey-info">
+            {questionData && questionData.map((question: any, index: any) => (
               <IonCard className="review-card">
                 <IonCardHeader>
-                  <IonCardTitle className="review-header">{review.question.question_text}</IonCardTitle>
-                  {review.question.current_answer === 'yes' && <IonCardSubtitle className="box yes"><b>Yes</b></IonCardSubtitle>}
-                  {review.question.current_answer === 'no' && <IonCardSubtitle className="box no"><b>No</b></IonCardSubtitle>}
-                  {review.question.current_answer === 'na' && <IonCardSubtitle className="box na"><b>N/A</b></IonCardSubtitle>}
+                  <IonCardTitle className="review-header">{question.question_text}</IonCardTitle>
+                  {question.current_answer === 'yes' && <IonCardSubtitle className="box yes"><b>Yes</b></IonCardSubtitle>}
+                  {question.current_answer === 'no' && <IonCardSubtitle className="box no"><b>No</b></IonCardSubtitle>}
+                  {question.current_answer === 'na' && <IonCardSubtitle className="box na"><b>N/A</b></IonCardSubtitle>}
                 </IonCardHeader>
-
                 <IonCardContent className="review-card-content">
-                  <h4>Thread: {review.thread.name} | SubThread: {review.subthread.name}</h4>
-                  <h4>MRLevel: {review.thread.mr_level}</h4>
-                  <h2><b>Objective Evidence:</b> {(review.answer.objective_evidence) ? <span>{review.answer.objective_evidence}</span> : <span>No objective evidence</span>}</h2>
+                  <h4>Thread: {question.thread_name} | SubThread: {question.subthread_name}</h4>
+                  <h4>MRLevel: {question.MRL}</h4>
+                  {question.current_answer === 'yes' &&
+                    <h2><b>Objective Evidence:</b> {(question.objective_evidence) ? <span>{question.objective_evidence}</span> : <span>No objective evidence</span>}</h2>
+                  }
                   <h2><b>Attachments:</b> No file attached to this question</h2>
                   <IonButton size="small" color="dsb">Go To Question</IonButton>
                 </IonCardContent>
               </IonCard>
-            </div>
-          ))} */}
+            ))}
+          </div>
         </div>
       </IonContent>
     </IonPage>

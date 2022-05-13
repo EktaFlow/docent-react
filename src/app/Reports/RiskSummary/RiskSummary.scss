@@ -8,14 +8,16 @@
   flex-direction: column;
 
   table {
+    width: 98%;
     border-width: 1px;
     border-spacing: 2px;
     border-style: outset;
     border-color: gray;
     border-collapse: separate;
     background-color: white;
-    // margin: 0 20px 0 20px;
+    margin: 10px;
   }
+
   table td {
     border-width: 1px;
     padding: 2px;
@@ -91,6 +93,7 @@
 
 @media screen and (max-width: 992px) {
   .risk-summary-wrapper {
+
     .filter-item,
     .filter-button1,
     .filter-button2,

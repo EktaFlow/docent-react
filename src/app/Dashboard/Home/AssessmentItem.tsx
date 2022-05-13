@@ -24,9 +24,9 @@ type AIP = {
 
 const AssessmentItem: React.FC<AIP> = (props) => {
   const history = useHistory();
-  async function navigateToPage() {
+  async function navigateToPage(value: string) {
     history.push({
-      pathname: '/questions',
+      pathname: `/${value}`,
       state: {
         assessment_id: props.ast.id as number
       }
@@ -50,9 +50,9 @@ const AssessmentItem: React.FC<AIP> = (props) => {
         <p><b>Team Members: </b>james@ekta.co</p>
       </div>
       <div className="assessment-actions">
-        <IonButton size="small" expand="full" color="light" onClick={navigateToPage}>Continue Assessment</IonButton>
-        <IonButton size="small" expand="full" color="light">MRL Summary</IonButton>
-        <IonButton size="small" expand="full" color="light">Action Items</IonButton>
+        <IonButton size="small" expand="full" color="light" onClick={() => navigateToPage('questions')}>Continue Assessment</IonButton>
+        <IonButton size="small" expand="full" color="light" onClick={() => navigateToPage('mrl-summary')}>MRL Summary</IonButton>
+        <IonButton size="small" expand="full" color="light" onClick={() => navigateToPage('action-items')}>Action Items</IonButton>
         <IonButton size="small" expand="full" color="light">Invite Team Members</IonButton>
         <IonButton size="small" expand="full" color="light">Edit Assessment Info</IonButton>
         <IonButton size="small" expand="full" color="light" onClick={() => removeAssessment(props.ast.id)}>Delete Assessment</IonButton>

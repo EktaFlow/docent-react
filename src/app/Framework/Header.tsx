@@ -43,6 +43,7 @@ const Header: React.FC<{ showAssessment?: boolean, assessmentId?: number }> = ({
 
         {showAssessment && <IonButton id="" expand='full' color="light" onClick={navigateToAssessment}>Continue Assessment</IonButton>}
         {showAssessment && <IonButton id="trigger-reports" expand='full' color="light">Reports</IonButton>}
+        {/* {showAssessment && <IonButton expand='full' color="light" onClick={() => showReportsPopover(!reportsPopover)}>Reports</IonButton>} */}
 
         <IonPopover trigger="trigger-reports">
           <IonButton color="light" expand="full" onClick={() => navigateToReports("mrl-summary")}>MRL Summary</IonButton>

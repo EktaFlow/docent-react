@@ -1,5 +1,7 @@
 import { IonPage, IonContent, IonRow, IonCol, IonButton, IonItem, IonLabel, IonSelect, IonSelectOption } from '@ionic/react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
+import ReactExport from "react-export-excel";
+
 import { useHistory } from 'react-router-dom';
 
 import './RiskSummary.scss';
@@ -9,10 +11,20 @@ import ReportsTopbar from '../ReportsTopbar';
 
 import { grabSingleAssessment } from '../../../api/api'
 
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+
 const RiskSummary: React.FC = () => {
   const [assessmentId, setAssessmentId] = useState<number>();
-  const history = useHistory();
   const [assessmentData, setAssessmentData] = useState<any>();
+
+  const [selectedMRL, setSelectedMRL] = useState<string>('');
+  const [filteredMRL, setFilteredMRL] = useState('all-levels');
+
+  const history = useHistory();
+
+  let excelData: Array<any> = [];
 
   useEffect(() => {
     async function getAssessmentInfo() {
@@ -35,9 +47,32 @@ const RiskSummary: React.FC = () => {
 
   useEffect(() => {
     if (assessmentData) {
-      console.log(assessmentData)
+      let threadData = assessmentData.threads.map((thread: any) => (
+        thread.subthreads.map((subthread: any) => (
+          subthread.questions.map((question: any) => (
+            excelData.push({
+              MRL: assessmentData.info.current_mrl,
+              thread_name: thread.name,
+              subthread_name: subthread.name,
+              risk_score: question.answer.risk,
+            })
+          ))
+        ))
+      ));
     }
   }, [assessmentData]);
+
+  const handleMRLevelChange = (value: any) => {
+    setSelectedMRL(value)
+  }
+
+  const handleFilterClick = () => {
+    setFilteredMRL(selectedMRL)
+  }
+
+  const handleClearClick = () => {
+    setFilteredMRL('all-levels');
+  }
 
   return (
     <IonPage>
@@ -48,15 +83,21 @@ const RiskSummary: React.FC = () => {
           <InfoCard assessmentId={assessmentId} />
           <IonRow className="summary-filter-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1 ion-padding-bottom">
-              <IonButton expand="block" color="dsb">Export As XLS</IonButton>
+              {assessmentData &&
+                <ExcelFile element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
+                  <ExcelSheet data={excelData} name="Risk Summary">
+                    <ExcelColumn label="MRL" value="MRL" />
+                    <ExcelColumn label="Thread Name" value="thread_name" />
+                    <ExcelColumn label="Subthread Name" value="subthread_name" />
+                    <ExcelColumn label="Risk Score" value="risk_score" />
+                  </ExcelSheet>
+                </ExcelFile>}
             </IonCol>
-            <IonCol size="12" size-lg="3" className="ion-no-padding">
-
-            </IonCol>
+            <IonCol size="12" size-lg="3" className="ion-no-padding"></IonCol>
             <IonCol size="12" size-lg="3" className="filter-item ion-no-padding">
               <IonItem color="dark">
                 <IonLabel position="floating">Filter MR Level</IonLabel>
-                <IonSelect interface="popover">
+                <IonSelect interface="popover" onIonChange={e => handleMRLevelChange(e.detail.value)}>
                   <IonSelectOption value="all-levels">All Levels</IonSelectOption>
                   <IonSelectOption value="1">1</IonSelectOption>
                   <IonSelectOption value="2">2</IonSelectOption>
@@ -72,20 +113,20 @@ const RiskSummary: React.FC = () => {
               </IonItem>
             </IonCol>
             <IonCol size="6" size-lg="1" className="filter-button2 ion-padding-bottom">
-              <IonButton expand="full" color="dsb" className="filter-buttons">Filter</IonButton>
+              <IonButton expand="full" color="dsb" className="filter-buttons" onClick={() => handleFilterClick()}>Filter</IonButton>
             </IonCol>
             <IonCol size="6" size-lg="1" className="filter-button3 ion-padding-bottom">
-              <IonButton expand="full" color="dsb" className="filter-buttons">Clear</IonButton>
+              <IonButton expand="full" color="dsb" className="filter-buttons" onClick={() => handleClearClick()}>Clear</IonButton>
             </IonCol>
           </IonRow>
 
           <table>
             <tr>
-              <th className="summary-title" colSpan={7}>
-                MRL 1 Criteria Summary
+              {assessmentData && <th className="summary-title" colSpan={7}>
+                MRL {assessmentData.info.current_mrl} Criteria Summary
               </th>
+              }
             </tr>
-
             <tr>
               <th className="summary-header thread">Threads</th>
               <th className="summary-header subthread">Subthreads</th>
@@ -96,39 +137,70 @@ const RiskSummary: React.FC = () => {
               <th className="summary-header">Criteria 5</th>
             </tr>
 
-            <tr className="summary-row">
-              <td className="row-border">Technology Maturity</td>
-              <td className="row-border">Technology Maturity</td>
+            {assessmentData && assessmentData.threads.map((thread: any, index: any) => (
+              <Fragment>
+                {filteredMRL === "all-levels" && thread.subthreads.map((subthread: any, index: any) => (
+                  <tr className="summary-row">
+                    <td className="row-border">{thread.name}</td>
+                    <td className="row-border">{subthread.name}</td>
 
-              <td className="row-border risk-score green">5</td>
-              <td className="row-border"></td>
-              <td className="row-border"></td>
-              <td className="row-border"></td>
-              <td className="row-border"></td>
-            </tr>
+                    {!subthread.questions[0] &&
+                      <td className="row-border"></td>
+                    }
+                    {subthread.questions.map((question: any, index: any) => (
+                      <Fragment>
+                        {(question.answer === 'Unanswered' || !question.answer.risk) &&
+                          <td className="row-border"></td>
+                        }
+                        {(Number(question.answer.risk) <= 11 && Number(question.answer.risk) >= 0 && question.answer.risk !== null) &&
+                          <td className="row-border risk-score green">{question.answer.risk}</td>
+                        }
+                        {(Number(question.answer.risk) <= 19 && Number(question.answer.risk) >= 12) &&
+                          <td className="row-border risk-score yellow">{question.answer.risk}</td>
+                        }
+                        {(Number(question.answer.risk) <= 25 && Number(question.answer.risk) >= 20) &&
+                          <td className="row-border risk-score red">{question.answer.risk}</td>
+                        }
+                      </Fragment>
+                    ))}
+                    <td className="row-border"></td>
+                    <td className="row-border"></td>
+                    <td className="row-border"></td>
+                    <td className="row-border"></td>
+                  </tr>
+                ))}
+                {filteredMRL !== "all-levels" && thread.subthreads.filter((data: any) => Number(filteredMRL) === assessmentData.info.current_mrl).map((subthread: any, index: any) => (
+                  <tr className="summary-row">
+                    <td className="row-border">{thread.name}</td>
+                    <td className="row-border">{subthread.name}</td>
 
-            <tr className="summary-row">
-              <td className="row-border">Technology and Industrial Base</td>
-              <td className="row-border">A.1 - Technology Transition to Production</td>
-
-              <td className="row-border risk-score yellow">14</td>
-              <td className="row-border"></td>
-              <td className="row-border"></td>
-              <td className="row-border"></td>
-              <td className="row-border"></td>
-            </tr>
-
-            <tr className="summary-row">
-              <td className="row-border">Cost and Funding</td>
-              <td className="row-border">C.1 - Production Cost Knowledge (Cost modeling)</td>
-
-              <td className="row-border risk-score red">24</td>
-              <td className="row-border"></td>
-              <td className="row-border"></td>
-              <td className="row-border"></td>
-              <td className="row-border"></td>
-            </tr>
-
+                    {!subthread.questions[0] &&
+                      <td className="row-border"></td>
+                    }
+                    {subthread.questions.map((question: any, index: any) => (
+                      <Fragment>
+                        {(question.answer === 'Unanswered' || !question.answer.risk) &&
+                          <td className="row-border"></td>
+                        }
+                        {(Number(question.answer.risk) <= 11 && Number(question.answer.risk) >= 0 && question.answer.risk !== null) &&
+                          <td className="row-border risk-score green">{question.answer.risk}</td>
+                        }
+                        {(Number(question.answer.risk) <= 19 && Number(question.answer.risk) >= 12) &&
+                          <td className="row-border risk-score yellow">{question.answer.risk}</td>
+                        }
+                        {(Number(question.answer.risk) <= 25 && Number(question.answer.risk) >= 20) &&
+                          <td className="row-border risk-score red">{question.answer.risk}</td>
+                        }
+                      </Fragment>
+                    ))}
+                    <td className="row-border"></td>
+                    <td className="row-border"></td>
+                    <td className="row-border"></td>
+                    <td className="row-border"></td>
+                  </tr>
+                ))}
+              </Fragment>
+            ))}
           </table>
         </div>
       </IonContent>

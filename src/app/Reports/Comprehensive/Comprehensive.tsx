@@ -1,5 +1,7 @@
 import { IonPage, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonButton, IonItem, IonLabel, IonSelect, IonSelectOption, IonContent } from '@ionic/react';
 import React, { useState, useEffect } from 'react';
+import ReactExport from "react-export-excel";
+
 import { useHistory } from 'react-router-dom';
 
 import './Comprehensive.scss';
@@ -9,92 +11,24 @@ import ReportsTopbar from '../ReportsTopbar';
 
 import { grabSingleAssessment } from '../../../api/api'
 
-const Comprehensive: React.FC = () => {
-  const data = [
-    {
-      question: {
-        question_text: 'Is the Technology Readiness at TRL 4 or greater?',
-        current_answer: 'yes'
-      },
-      thread: {
-        name: 'Technology Maturity',
-        mr_level: '4',
-      },
-      subthread: {
-        name: 'Technology Maturity'
-      },
-      answers: {
-        objective_evidence: 'Evidence',
-        assumptions: 'Assumptions',
-        notes: 'Notes',
-        who: 'John',
-        when: '02/20/22',
-        what: 'Action Plan',
-        risk: '25',
-        reason: 'reason',
-        greatest_impact: 'Impact',
-        risk_response: 'Response',
-        mmp_summary: 'Summary'
-      }
-    },
-    {
-      question: {
-        question_text: 'Have industrial base capabilities and gaps/risks been identified for key technologies, components, and/or key processes?',
-        current_answer: 'no'
-      },
-      thread: {
-        name: 'Technology & Industrial Base',
-        mr_level: '4',
-      },
-      subthread: {
-        name: 'A.1 - Technology Transition to Production'
-      },
-      answers: {
-        objective_evidence: 'Evidence',
-        assumptions: 'Assumptions',
-        notes: 'Notes',
-        who: 'John',
-        when: '02/20/22',
-        what: 'Action Plan',
-        risk: '',
-        reason: 'reason',
-        greatest_impact: '',
-        risk_response: '',
-        mmp_summary: ''
-      }
-    },
-    {
-      question: {
-        question_text: 'Have pertinent Manufacturing Science (MS) and Advanced Manufacturing Technology requirements been identified?',
-        current_answer: 'na'
-      },
-      thread: {
-        name: 'Technology & Industrial Base',
-        mr_level: '4',
-      },
-      subthread: {
-        name: 'A.2 - Manufacturing Technology Development'
-      },
-      answers: {
-        objective_evidence: 'Evidence',
-        assumptions: 'Assumptions',
-        notes: 'Notes',
-        who: 'John',
-        when: '02/20/22',
-        what: 'Action Plan',
-        risk: '25',
-        reason: 'reason',
-        greatest_impact: 'Impact',
-        risk_response: 'Response',
-        mmp_summary: 'Summary'
-      }
-    },
-  ];
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
+const Comprehensive: React.FC = () => {
   const history = useHistory();
   const [assessmentId, setAssessmentId] = useState<number>();
-  const [comprehensiveData, setComprehensiveData] = useState(data);
   const [assessmentData, setAssessmentData] = useState<any>();
+  const [questionData, setQuestionData] = useState<any>([]);
+  const [filteringData, setFilteringData] = useState<any>([]);
+
+  const [selectedMRL, setSelectedMRL] = useState<string>('all-levels');
+  const [filteredMRL, setFilteredMRL] = useState('all-levels');
+
+  const [selectedAnswer, setSelectedAnswer] = useState<string>('all-answers');
+  const [filteredAnswer, setFilteredAnswer] = useState('all-answers');
+
+  let excelData: Array<any> = [];
 
   useEffect(() => {
     async function getAssessmentInfo() {
@@ -118,8 +52,176 @@ const Comprehensive: React.FC = () => {
   useEffect(() => {
     if (assessmentData) {
       console.log(assessmentData)
+      let threadData = assessmentData.threads.map((thread: any) => (
+        thread.subthreads.map((subthread: any) => (
+          subthread.questions.map((question: any) => (
+            question.answer !== "Unanswered" &&
+            excelData.push({
+              thread_name: thread.name,
+              subthread_name: subthread.name,
+              MRL: assessmentData.info.current_mrl,
+              question_text: question.question_text,
+              current_answer: question.answer.answer,
+              //
+              yes_fields: question.answer.yes_fields,
+              objective_evidence: question.answer.objective_evidence,
+              assumptions_yes: question.answer.assumptions_yes,
+              notes_yes: question.answer.notes_yes,
+              //
+              no_fields: question.answer.no_fields,
+              owner: question.answer.who,
+              due_date: question.answer.when,
+              action_plan: question.answer.what,
+              reason: question.answer.reason,
+              assumptions_no: question.answer.assumptions_no,
+              notes_no: question.answer.notes_no,
+              documentation_no: question.answer.documentation_no,
+              //
+              na_fields: question.answer.na_fields,
+              assumptions_na: question.answer.assumptions_na,
+              notes_na: question.answer.notes_na,
+              //
+              risk_fields: question.answer.risk_fields,
+              risk_score: question.answer.risk,
+              likelihood: question.answer.likelihood,
+              consequence: question.answer.consequence,
+              greatest_impact: question.answer.greatest_impact,
+              risk_response: question.answer.risk_response,
+              mmp_summary: question.answer.mmp_summary,
+            })
+          ))
+        ))
+      ));
+
+      let insertQuestionData = assessmentData.threads.map((thread: any) => (
+        thread.subthreads.map((subthread: any) => (
+          subthread.questions.map((question: any) => (
+            question.answer !== "Unanswered" &&
+            setQuestionData((questionData: any) => [...questionData, {
+              thread_name: thread.name,
+              subthread_name: subthread.name,
+              MRL: assessmentData.info.current_mrl,
+              question_text: question.question_text,
+              current_answer: question.answer.answer,
+              //
+              objective_evidence: question.answer.objective_evidence,
+              assumptions_yes: question.answer.assumptions_yes,
+              notes_yes: question.answer.notes_yes,
+              //
+              owner: question.answer.who,
+              due_date: question.answer.when,
+              action_plan: question.answer.what,
+              reason: question.answer.reason,
+              assumptions_no: question.answer.assumptions_no,
+              notes_no: question.answer.notes_no,
+              documentation_no: question.answer.documentation_no,
+              //
+              assumptions_na: question.answer.assumptions_na,
+              notes_na: question.answer.notes_na,
+              //
+              risk_score: question.answer.risk,
+              likelihood: question.answer.likelihood,
+              consequence: question.answer.consequence,
+              greatest_impact: question.answer.greatest_impact,
+              risk_response: question.answer.risk_response,
+              mmp_summary: question.answer.mmp_summary,
+            }])
+          ))
+        ))
+      ));
+
+      let insertFilteringData = assessmentData.threads.map((thread: any) => (
+        thread.subthreads.map((subthread: any) => (
+          subthread.questions.map((question: any) => (
+            question.answer !== "Unanswered" &&
+            setFilteringData((questionData: any) => [...questionData, {
+              thread_name: thread.name,
+              subthread_name: subthread.name,
+              MRL: assessmentData.info.current_mrl,
+              question_text: question.question_text,
+              current_answer: question.answer.answer,
+              //
+              objective_evidence: question.answer.objective_evidence,
+              assumptions_yes: question.answer.assumptions_yes,
+              notes_yes: question.answer.notes_yes,
+              //
+              owner: question.answer.who,
+              due_date: question.answer.when,
+              action_plan: question.answer.what,
+              reason: question.answer.reason,
+              assumptions_no: question.answer.assumptions_no,
+              notes_no: question.answer.notes_no,
+              documentation_no: question.answer.documentation_no,
+              //
+              assumptions_na: question.answer.assumptions_na,
+              notes_na: question.answer.notes_na,
+              //
+              risk_score: question.answer.risk,
+              likelihood: question.answer.likelihood,
+              consequence: question.answer.consequence,
+              greatest_impact: question.answer.greatest_impact,
+              risk_response: question.answer.risk_response,
+              mmp_summary: question.answer.mmp_summary,
+            }])
+          ))
+        ))
+      ));
     }
   }, [assessmentData]);
+
+  useEffect(() => {
+    if (filteredMRL) {
+      filterData()
+    }
+  }, [filteredMRL]);
+
+  useEffect(() => {
+    if (filteredAnswer) {
+      filterData()
+    }
+  }, [filteredAnswer]);
+
+  const handleMRLevelChange = (value: any) => {
+    setSelectedMRL(value)
+  }
+
+  const handleAnswerChange = (value: any) => {
+    setSelectedAnswer(value);
+  }
+
+  const filterData = () => {
+    console.log(filteringData);
+    if (filteredMRL === 'all-levels') {
+      if (filteredAnswer === 'all-answers') {
+        console.log(1);
+        setQuestionData(filteringData);
+      }
+      else {
+        console.log(2);
+        setQuestionData(filteringData.filter((question: any) => question.current_answer === filteredAnswer))
+      }
+    }
+    else {
+      if (filteredAnswer === 'all-answers') {
+        console.log(3);
+        setQuestionData(filteringData.filter((question: any) => Number(filteredMRL) === assessmentData.info.current_mrl))
+      }
+      else {
+        console.log(4);
+        setQuestionData(filteringData.filter((question: any) => (Number(filteredMRL) === assessmentData.info.current_mrl && question.current_answer === filteredAnswer)))
+      }
+    }
+  }
+
+  const handleFilterClick = () => {
+    setFilteredMRL(selectedMRL)
+    setFilteredAnswer(selectedAnswer);
+  }
+
+  const handleClearClick = () => {
+    setFilteredMRL('all-levels');
+    setFilteredAnswer('all-answers');
+  }
 
   return (
     <IonPage>
@@ -130,12 +232,42 @@ const Comprehensive: React.FC = () => {
           <InfoCard assessmentId={assessmentId} />
           <IonRow className="comprehensive-filter-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1">
-              <IonButton expand="block" color="dsb">Export As XLS</IonButton>
+              {assessmentData &&
+                <ExcelFile element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
+                  <ExcelSheet data={excelData} name="Comprehensive">
+                    <ExcelColumn label="Thread Name" value="thread_name" />
+                    <ExcelColumn label="Subthread Name" value="subthread_name" />
+                    <ExcelColumn label="MRL" value="MRL" />
+                    <ExcelColumn label="Question Text" value="question_text" />
+                    <ExcelColumn label="Current Answer" value="current_answer" />
+                    <ExcelColumn label="Yes Fields" value="yes_fields" />
+                    <ExcelColumn label="Objective Evidence" value="objective_evidence" />
+                    <ExcelColumn label="Yes Assumptions" value="assumptions_yes" />
+                    <ExcelColumn label="Yes Notes" value="notes_yes" />
+                    <ExcelColumn label="No Fields" value="no_fields" />
+                    <ExcelColumn label="Owner" value="owner" />
+                    <ExcelColumn label="Due Date" value="due_date" />
+                    <ExcelColumn label="Action Plan" value="action_plan" />
+                    <ExcelColumn label="Reason" value="reason" />
+                    <ExcelColumn label="Assumptions No" value="assumptions_no" />
+                    <ExcelColumn label="Notes No" value="notes_no" />
+                    <ExcelColumn label="Na Fields" value="na_fields" />
+                    <ExcelColumn label="NA Assumptions" value="assumptions_na" />
+                    <ExcelColumn label="NA Notes" value="notes_na" />
+                    <ExcelColumn label="Risk Fields" value="risk_fields" />
+                    <ExcelColumn label="Risk Score" value="risk_score" />
+                    <ExcelColumn label="Likelihood" value="likelihood" />
+                    <ExcelColumn label="Consequence" value="consequence" />
+                    <ExcelColumn label="Greatest Impact" value="greatest_impact" />
+                    <ExcelColumn label="Risk Response" value="risk_response" />
+                    <ExcelColumn label="MMP Summary" value="mmp_summary" />
+                  </ExcelSheet>
+                </ExcelFile>}
             </IonCol>
             <IonCol size="12" size-lg="3" className="filter-item">
               <IonItem color="dark">
                 <IonLabel position="floating">Filter MR Level</IonLabel>
-                <IonSelect interface="popover">
+                <IonSelect interface="popover" onIonChange={e => handleMRLevelChange(e.detail.value)}>
                   <IonSelectOption value="all-levels">All Levels</IonSelectOption>
                   <IonSelectOption value="1">1</IonSelectOption>
                   <IonSelectOption value="2">2</IonSelectOption>
@@ -152,173 +284,93 @@ const Comprehensive: React.FC = () => {
             <IonCol size="12" size-lg="3" className="filter-item">
               <IonItem color="dark">
                 <IonLabel position="floating">Filter Answer Type</IonLabel>
-                <IonSelect interface="popover">
+                <IonSelect interface="popover" onIonChange={e => handleAnswerChange(e.detail.value)}>
+                  <IonSelectOption value="all-answers">All Answers</IonSelectOption>
                   <IonSelectOption value="yes">Yes</IonSelectOption>
                   <IonSelectOption value="no">No</IonSelectOption>
-                  <IonSelectOption value="n/a">N/A</IonSelectOption>
+                  <IonSelectOption value="na">N/A</IonSelectOption>
                 </IonSelect>
               </IonItem>
             </IonCol>
             <IonCol size="6" size-lg="1" className="filter-button2">
-              <IonButton expand="full" color="dsb" className="filter-buttons">Filter</IonButton>
+              <IonButton expand="full" color="dsb" className="filter-buttons" onClick={() => handleFilterClick()}>Filter</IonButton>
             </IonCol>
             <IonCol size="6" size-lg="1" className="filter-button3">
-              <IonButton expand="full" color="dsb" className="filter-buttons">Clear</IonButton>
+              <IonButton expand="full" color="dsb" className="filter-buttons" onClick={() => handleClearClick()}>Clear</IonButton>
             </IonCol>
           </IonRow>
 
-          {
-            assessmentData && assessmentData.threads.map((thread: any, index: any) => (
-              <div className="survey-info">
-                {thread.subthreads.map((subthread: any, index: any) => (
-                  <span>
-                    {subthread.questions.map((question: any, index: any) => (
-                      question.answer !== "Unanswered" &&
-                      <IonCard className="review-card">
-                        <IonCardHeader>
-                          <IonCardTitle className="review-header">{question.question_text}</IonCardTitle>
-                          {question.answer.answer === 'yes' && <IonCardSubtitle className="box yes"><b>Yes</b></IonCardSubtitle>}
-                          {question.answer.answer === 'no' && <IonCardSubtitle className="box no"><b>No</b></IonCardSubtitle>}
-                          {question.answer.answer === 'na' && <IonCardSubtitle className="box na"><b>N/A</b></IonCardSubtitle>}
-                        </IonCardHeader>
-                        <IonCardContent className="review-card-content">
-                          <h4>Thread: {thread.name} | SubThread: {subthread.name}</h4>
-                          <h4>MRLevel: {assessmentData.info.current_mrl}</h4>
-                          {question.answer.answer === 'yes' &&
-                            <span>
-                              {(question.answer.objective_evidence) ?
-                                <h2><b>Objective Evidence:</b> {question.answer.objective_evidence}</h2> : <h2><b>Objective Evidence:</b> No Objective Evidence Given</h2>
-                              }
-                              {(question.answer.assumptions_yes) ?
-                                <h2><b>Assumptions:</b> {question.answer.assumptions_yes}</h2> : <h2><b>Assumptions:</b> No Assumptions Given</h2>
-                              }
-                              {(question.answer.notes_yes) ?
-                                <h2><b>Notes:</b> {question.answer.notes_yes}</h2> : <h2><b>Notes:</b> No Notes Given</h2>
-                              }
-                            </span>
-                          }
-                          {question.answer.answer === 'no' &&
-                            <span>
-                              {(question.answer.who) ?
-                                <h2><b>Owner:</b> {question.answer.who}</h2> : <h2><b>Owner:</b> No Owner Given</h2>
-                              }
-                              {(question.answer.when) ?
-                                <h2><b>Due Date:</b> {question.answer.when}</h2> : <h2><b>Due Date:</b> No Due Date Given</h2>
-                              }
-                              {(question.answer.what) ?
-                                <h2><b>Action Plan:</b> {question.answer.what}</h2> : <h2><b>Action Plan:</b> No Action Plan Given</h2>
-                              }
-                              {(question.answer.reason) ?
-                                <h2><b>Reason:</b> {question.answer.reason}</h2> : <h2><b>Reason:</b> No Reason Given</h2>
-                              }
-                              {(question.answer.assumptions_no) ?
-                                <h2><b>Assumptions:</b> {question.answer.assumptions_no}</h2> : <h2><b>Assumptions:</b> No Assumptions Given</h2>
-                              }
-                              {(question.answer.notes_no) ?
-                                <h2><b>Notes:</b> {question.answer.notes_no}</h2> : <h2><b>Notes:</b> No Notes Given</h2>
-                              }
-                            </span>
-                          }
-                          <hr />
-                          <h2><i>Risk Assessment</i></h2>
-                          {(question.answer.risk) ?
-                            <h2 id="red-text"><b>Risk Score:</b> {question.answer.risk}</h2> : <h2><b>Risk Score:</b> No Risk Given</h2>
-                          }
-                          {(question.answer.greatest_impact) ?
-                            <h2><b>Greatest Impact:</b> {question.answer.greatest_impact}</h2> : <h2><b>Greatest Impact:</b> No Greatest Impact Given</h2>
-                          }
-                          {(question.answer.risk_response) ?
-                            <h2><b>Risk Response:</b> {question.answer.risk_response}</h2> : <h2><b>Risk Response:</b> No Risk Response Given</h2>
-                          }
-                          {(question.answer.mmp_summary) ?
-                            <h2><b>MMP Summary:</b> {question.answer.mmp_summary}</h2> : <h2><b>MMP Summary:</b> No MMP Summary Given</h2>
-                          }
-                          <hr />
-
-                          <h2><b>Attachments:</b> No file attached to this question</h2>
-                          <IonButton size="small" color="dsb">Go To Question</IonButton>
-                        </IonCardContent>
-                      </IonCard>
-                    ))}
-                  </span>
-                ))}
-              </div>
-            ))
-          }
-
-          {/* {comprehensiveData.map((comprehensive, index) => (
-            <div className="survey-info">
+          <div className="survey-info">
+            {questionData && questionData.map((question: any, index: any) => (
               <IonCard className="review-card">
                 <IonCardHeader>
-                  <IonCardTitle className="review-header">{comprehensive.question.question_text}</IonCardTitle>
-                  {comprehensive.question.current_answer === 'yes' && <IonCardSubtitle className="box yes"><b>Yes</b></IonCardSubtitle>}
-                  {comprehensive.question.current_answer === 'no' && <IonCardSubtitle className="box no"><b>No</b></IonCardSubtitle>}
-                  {comprehensive.question.current_answer === 'na' && <IonCardSubtitle className="box na"><b>N/A</b></IonCardSubtitle>}
+                  <IonCardTitle className="review-header">{question.question_text}</IonCardTitle>
+                  {question.current_answer === 'yes' && <IonCardSubtitle className="box yes"><b>Yes</b></IonCardSubtitle>}
+                  {question.current_answer === 'no' && <IonCardSubtitle className="box no"><b>No</b></IonCardSubtitle>}
+                  {question.current_answer === 'na' && <IonCardSubtitle className="box na"><b>N/A</b></IonCardSubtitle>}
                 </IonCardHeader>
                 <IonCardContent className="review-card-content">
-                  <h4>Thread: {comprehensive.thread.name} | SubThread: {comprehensive.subthread.name}</h4>
-                  <h4>MRLevel: {comprehensive.thread.mr_level}</h4>
-                  {comprehensive.question.current_answer === 'yes' &&
+                  <h4>Thread: {question.thread_name} | SubThread: {question.subthread_name}</h4>
+                  <h4>MRLevel: {question.MRL}</h4>
+                  {question.current_answer === 'yes' &&
                     <span>
-                      {(comprehensive.answers.objective_evidence) ?
-                        <h2><b>Objective Evidence:</b> {comprehensive.answers.objective_evidence}</h2> : <h2><b>Objective Evidence:</b> No Objective Evidence Given</h2>
+                      {(question.objective_evidence) ?
+                        <h2><b>Objective Evidence:</b> {question.objective_evidence}</h2> : <h2><b>Objective Evidence:</b> No Objective Evidence Given</h2>
                       }
-                      {(comprehensive.answers.assumptions) ?
-                        <h2><b>Assumptions:</b> {comprehensive.answers.assumptions}</h2> : <h2><b>Assumptions:</b> No Assumptions Given</h2>
+                      {(question.assumptions_yes) ?
+                        <h2><b>Assumptions:</b> {question.assumptions_yes}</h2> : <h2><b>Assumptions:</b> No Assumptions Given</h2>
                       }
-                      {(comprehensive.answers.notes) ?
-                        <h2><b>Notes:</b> {comprehensive.answers.notes}</h2> : <h2><b>Notes:</b> No Notes Given</h2>
+                      {(question.notes_yes) ?
+                        <h2><b>Notes:</b> {question.notes_yes}</h2> : <h2><b>Notes:</b> No Notes Given</h2>
                       }
                     </span>
                   }
-                  {comprehensive.question.current_answer === 'no' &&
+                  {question.current_answer === 'no' &&
                     <span>
-                      {(comprehensive.answers.who) ?
-                        <h2><b>Owner:</b> {comprehensive.answers.who}</h2> : <h2><b>Owner:</b> No Owner Given</h2>
+                      {(question.owner) ?
+                        <h2><b>Owner:</b> {question.owner}</h2> : <h2><b>Owner:</b> No Owner Given</h2>
                       }
-                      {(comprehensive.answers.when) ?
-                        <h2><b>Due Date:</b> {comprehensive.answers.when}</h2> : <h2><b>Due Date:</b> No Due Date Given</h2>
+                      {(question.due_date) ?
+                        <h2><b>Due Date:</b> {question.due_date}</h2> : <h2><b>Due Date:</b> No Due Date Given</h2>
                       }
-                      {(comprehensive.answers.what) ?
-                        <h2><b>Action Plan:</b> {comprehensive.answers.what}</h2> : <h2><b>Action Plan:</b> No Action Plan Given</h2>
+                      {(question.action_plan) ?
+                        <h2><b>Action Plan:</b> {question.action_plan}</h2> : <h2><b>Action Plan:</b> No Action Plan Given</h2>
                       }
-                      {(comprehensive.answers.reason) ?
-                        <h2><b>Reason:</b> {comprehensive.answers.reason}</h2> : <h2><b>Reason:</b> No Reason Given</h2>
+                      {(question.reason) ?
+                        <h2><b>Reason:</b> {question.reason}</h2> : <h2><b>Reason:</b> No Reason Given</h2>
                       }
-                      {(comprehensive.answers.assumptions) ?
-                        <h2><b>Assumptions:</b> {comprehensive.answers.assumptions}</h2> : <h2><b>Assumptions:</b> No Assumptions Given</h2>
+                      {(question.assumptions_no) ?
+                        <h2><b>Assumptions:</b> {question.assumptions_no}</h2> : <h2><b>Assumptions:</b> No Assumptions Given</h2>
                       }
-                      {(comprehensive.answers.notes) ?
-                        <h2><b>Notes:</b> {comprehensive.answers.notes}</h2> : <h2><b>Notes:</b> No Notes Given</h2>
+                      {(question.notes_no) ?
+                        <h2><b>Notes:</b> {question.notes_no}</h2> : <h2><b>Notes:</b> No Notes Given</h2>
                       }
                     </span>
                   }
                   <hr />
                   <h2><i>Risk Assessment</i></h2>
-                  {(comprehensive.answers.risk) ?
-                    <h2 id="red-text"><b>Risk Score:</b> {comprehensive.answers.risk}</h2> : <h2><b>Risk Score:</b> No Risk Given</h2>
+                  {(question.risk_score) ?
+                    <h2 id="red-text"><b>Risk Score:</b> {question.risk_score}</h2> : <h2><b>Risk Score:</b> No Risk Given</h2>
                   }
-                  {(comprehensive.answers.greatest_impact) ?
-                    <h2><b>Greatest Impact:</b> {comprehensive.answers.greatest_impact}</h2> : <h2><b>Greatest Impact:</b> No Greatest Impact Given</h2>
+                  {(question.greatest_impact) ?
+                    <h2><b>Greatest Impact:</b> {question.greatest_impact}</h2> : <h2><b>Greatest Impact:</b> No Greatest Impact Given</h2>
                   }
-                  {(comprehensive.answers.risk_response) ?
-                    <h2><b>Risk Response:</b> {comprehensive.answers.risk_response}</h2> : <h2><b>Risk Response:</b> No Risk Response Given</h2>
+                  {(question.risk_response) ?
+                    <h2><b>Risk Response:</b> {question.risk_response}</h2> : <h2><b>Risk Response:</b> No Risk Response Given</h2>
                   }
-                  {(comprehensive.answers.mmp_summary) ?
-                    <h2><b>MMP Summary:</b> {comprehensive.answers.mmp_summary}</h2> : <h2><b>MMP Summary:</b> No MMP Summary Given</h2>
+                  {(question.mmp_summary) ?
+                    <h2><b>MMP Summary:</b> {question.mmp_summary}</h2> : <h2><b>MMP Summary:</b> No MMP Summary Given</h2>
                   }
                   <hr />
-
                   <h2><b>Attachments:</b> No file attached to this question</h2>
                   <IonButton size="small" color="dsb">Go To Question</IonButton>
                 </IonCardContent>
               </IonCard>
-            </div>
-          ))} */}
+            ))}
+          </div>
         </div>
       </IonContent>
     </IonPage>
   )
 }
 export default Comprehensive;
-
