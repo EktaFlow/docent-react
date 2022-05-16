@@ -1,5 +1,5 @@
 import { IonPage, IonContent, IonRow, IonCol, IonButton } from '@ionic/react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 
 import { useHistory } from 'react-router-dom';
 
@@ -16,6 +16,8 @@ const MRLSummary: React.FC = () => {
   const history = useHistory();
   const [assessmentId, setAssessmentId] = useState<number>();
   const [assessmentData, setAssessmentData] = useState<any>();
+  const [questionData, setQuestionData] = useState<any>([]);
+
 
   useEffect(() => {
     async function getAssessmentInfo() {
@@ -38,13 +40,56 @@ const MRLSummary: React.FC = () => {
 
   useEffect(() => {
     if (assessmentData) {
-      console.log(assessmentData.info.current_mrl)
+      let answerYes = false;
+      let answerNo = false;
+      let answerArray: { answer: string, subthread_name: string; }[] = [];
+      console.log(assessmentData);
+
+      let insertQuestionData = assessmentData.threads.map((thread: any) => (
+        thread.subthreads.map((subthread: any) => {
+          subthread.questions.map((question: any) => {
+
+            if (question.answer.answer === 'yes') {
+              answerYes = true;
+            }
+            else if (question.answer.answer === 'no') {
+              answerNo = true;
+            }
+          })
+          console.log(subthread);
+          if (answerYes === true && answerNo === false) {
+            answerArray.push(
+              { answer: 'yes', subthread_name: subthread.name }
+            )
+          }
+          else if (answerNo === true) {
+            answerArray.push(
+              { answer: 'no', subthread_name: subthread.name }
+            )
+          }
+          else if (!subthread.questions[0]) {
+            answerArray.push(
+              { answer: '', subthread_name: subthread.name }
+            )
+          }
+          else {
+            answerArray.push(
+              { answer: 'na', subthread_name: subthread.name }
+            )
+          }
+          setQuestionData(answerArray);
+          answerYes = false;
+          answerNo = false
+        })
+      ));
     }
   }, [assessmentData]);
 
-  const handleMRLevelChange = (value: any) => {
-    console.log(value);
-  }
+  useEffect(() => {
+    if (questionData) {
+      console.log(questionData);
+    }
+  }, [questionData]);
 
   return (
     <IonPage>
@@ -55,7 +100,7 @@ const MRLSummary: React.FC = () => {
           <InfoCard assessmentId={assessmentId} />
           <IonRow className="mrl-summary-toolbar">
             <IonCol size="12" size-lg="2" className="download-image ion-padding-bottom">
-              <IonButton color="dsb">Download Image</IonButton>
+              {/* <IonButton color="dsb">Download Image</IonButton>  */}
             </IonCol>
             <IonCol size-lg="2" className="ion-padding-top ion-margin-top">
               <span>subthread passed: </span>
@@ -111,30 +156,26 @@ const MRLSummary: React.FC = () => {
                             <img className="dashpic" src="assets/x-mark-256.ico" alt=""></img>
                           </span>
                         }
-                        {subthread.questions.map((question: any, index: any) => (
+                        {questionData.map((question: any, index: any) => (
                           <div>
-                            {(question.answer.answer === 'yes' && mrLevel === assessmentData.info.current_mrl) &&
+                            {(question.answer === 'yes' && mrLevel === assessmentData.info.current_mrl && question.subthread_name === subthread.name) &&
                               <div className="yes dashbox">
                                 <img className="dashpic" alt="" src="assets/check-mark-256.png"></img>
                               </div>
                             }
-                            {(question.answer.answer === 'no' && mrLevel === assessmentData.info.current_mrl) &&
+                            {(question.answer === 'no' && mrLevel === assessmentData.info.current_mrl && question.subthread_name === subthread.name) &&
                               <div className="no dashbox">
                                 <img className="dashpic" src="assets/x-mark-256.ico" alt=""></img>
                               </div>
                             }
-                            {((question.answer.answer === 'na' || question.answer === 'Unanswered') && mrLevel === assessmentData.info.current_mrl) &&
+                            {((question.answer === 'na' || question.answer === 'Unanswered') && mrLevel === assessmentData.info.current_mrl && question.subthread_name === subthread.name) &&
                               <div className="na dashbox">
                                 <img className="dashpic" src="assets/x-mark-256.ico" alt=""></img>
                               </div>
                             }
-                            {/* {(question.answer === 'Unanswered' && mrLevel === assessmentData.info.current_mrl) &&
-                              <span className="blank dashbox">
-                                <img className="dashpic" src="assets/x-mark-256.ico" alt=""></img>
-                              </span>
-                            } */}
                           </div>
                         ))}
+
                       </div>
                     ))}
                   </div>
@@ -160,28 +201,23 @@ const MRLSummary: React.FC = () => {
                               <img className="dashpic" src="assets/x-mark-256.ico" alt=""></img>
                             </span>
                           }
-                          {subthread.questions.map((question: any, index: any) => (
+                          {questionData.map((question: any, index: any) => (
                             <div>
-                              {(question.answer.answer === 'yes' && mrLevel === assessmentData.info.current_mrl) &&
+                              {(question.answer === 'yes' && mrLevel === assessmentData.info.current_mrl && question.subthread_name === subthread.name) &&
                                 <div className="yes dashbox">
                                   <img className="dashpic" alt="" src="assets/check-mark-256.png"></img>
                                 </div>
                               }
-                              {(question.answer.answer === 'no' && mrLevel === assessmentData.info.current_mrl) &&
+                              {(question.answer === 'no' && mrLevel === assessmentData.info.current_mrl && question.subthread_name === subthread.name) &&
                                 <div className="no dashbox">
                                   <img className="dashpic" src="assets/x-mark-256.ico" alt=""></img>
                                 </div>
                               }
-                              {((question.answer.answer === 'na' || question.answer === 'Unanswered') && mrLevel === assessmentData.info.current_mrl) &&
+                              {((question.answer === 'na' || question.answer === 'Unanswered') && mrLevel === assessmentData.info.current_mrl && question.subthread_name === subthread.name) &&
                                 <div className="na dashbox">
                                   <img className="dashpic" src="assets/x-mark-256.ico" alt=""></img>
                                 </div>
                               }
-                              {/* {(question.answer === 'Unanswered' && mrLevel === assessmentData.info.current_mrl) &&
-                                <span className="blank dashbox">
-                                  <img className="dashpic" src="assets/x-mark-256.ico" alt=""></img>
-                                </span>
-                              } */}
                             </div>
                           ))}
                         </div>
