@@ -3,11 +3,10 @@ import React, { useEffect, useState } from 'react'
 import './Components.scss';
 import { IonButton } from '@ionic/react';
 
-import { deleteAssessment } from '../../../api/api'
 import { id } from 'date-fns/locale';
 import { useHistory } from 'react-router-dom';
 
-const AssessmentItem: React.FC<({ assessmentInfo: any })> = ({ assessmentInfo }) => {
+const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack: any, openInviteTM: any })> = ({ assessmentInfo, deleteAssessmentFromBack, openInviteTM }) => {
 
   useEffect(() => {
     setAssessment(assessmentInfo.assessment);
@@ -41,7 +40,8 @@ const AssessmentItem: React.FC<({ assessmentInfo: any })> = ({ assessmentInfo })
   // }, [teamMembers])
 
   const removeAssessment = (id: number) => {
-    deleteAssessment(id);
+    console.log(id)
+    deleteAssessmentFromBack(id);
   }
 
   return (
@@ -60,7 +60,7 @@ const AssessmentItem: React.FC<({ assessmentInfo: any })> = ({ assessmentInfo })
         <IonButton size="small" expand="full" color="light" onClick={navigateToPage}>Continue Assessment</IonButton>
         <IonButton size="small" expand="full" color="light" routerLink="/mrl-summary">MRL Summary</IonButton>
         <IonButton size="small" expand="full" color="light" routerLink="/action-items">Action Items</IonButton>
-        <IonButton size="small" expand="full" color="light">Invite Team Members</IonButton>
+        <IonButton size="small" expand="full" color="light" onClick={() => openInviteTM(assessment.id)} >Invite Team Members</IonButton>
         <IonButton size="small" expand="full" color="light">Edit Assessment Info</IonButton>
         <IonButton size="small" expand="full" color="light" onClick={() => removeAssessment(assessment.id)}>Delete Assessment</IonButton>
         <IonButton size="small" expand="full" color="light">Export Assessment</IonButton>
