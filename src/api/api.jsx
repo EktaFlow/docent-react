@@ -55,6 +55,13 @@ export async function grabSubthreads() {
   return result.data
 }
 
+export async function grabFiles(assessment_id) {
+  const result = await axios.get(
+    `${apiUrl}/get_files?id=${assessment_id}`
+  )
+  return result.data
+}
+
 export async function createAssessment(data) {
   const result = await axios({
     method: 'post',
@@ -77,6 +84,24 @@ export async function createTeamMember(data) {
   const result = await axios({
     method: 'post',
     url: `${apiUrl}/team_members`,
+    data: data
+  })
+  return result.data
+}
+
+export async function addFileToAssessment(data) {
+  const result = await axios({
+    method: 'post',
+    url: `${apiUrl}/file_attachments`,
+    data: data
+  })
+  return result.data
+}
+
+export async function addFileToQuestion(data) {
+  const result = await axios({
+    method: 'post',
+    url: `${apiUrl}/add_to_question`,
     data: data
   })
   return result.data

@@ -50,8 +50,9 @@ const DetailedRisk: React.FC = () => {
     if (assessmentData) {
       console.log(assessmentData)
       let threadData = assessmentData.threads.map((thread: any) => (
-        thread.subthreads.map((subthread: any) => (
+        thread.subthreads.map((subthread: any) => {
           subthread.questions.map((question: any) => (
+            question.answer !== "Unanswered" &&
             excelData.push({
               thread_name: thread.name,
               subthread_name: subthread.name,
@@ -63,42 +64,55 @@ const DetailedRisk: React.FC = () => {
               mmp_summary: question.answer.mmp_summary,
             })
           ))
-        ))
+        })
       ))
 
       let insertQuestionData = assessmentData.threads.map((thread: any) => (
-        thread.subthreads.map((subthread: any) => (
+        thread.subthreads.map((subthread: any) => {
+          let questionArray: { question_text: string, risk_score: any, greatest_impact: string, risk_response: string, mmp_summary: string; }[] = [];
           subthread.questions.map((question: any) => (
+            question.answer !== "Unanswered" &&
+            questionArray.push({
+              question_text: question.question_text,
+              risk_score: question.answer.risk,
+              greatest_impact: question.answer.greatest_impact,
+              risk_response: question.answer.risk_response,
+              mmp_summary: question.answer.mmp_summary,
+            })
+          ))
+          if (questionArray.length > 0) {
             setQuestionData((questionData: any) => [...questionData, {
               thread_name: thread.name,
               subthread_name: subthread.name,
               MRL: assessmentData.info.current_mrl,
+              questionInfo: questionArray,
+            }])
+          }
+        })
+      ));
+
+      let insertFilteringData = assessmentData.threads.map((thread: any) => (
+        thread.subthreads.map((subthread: any) => {
+          let questionArray: { question_text: string, risk_score: any, greatest_impact: string, risk_response: string, mmp_summary: string; }[] = [];
+          subthread.questions.map((question: any) => (
+            question.answer !== "Unanswered" &&
+            questionArray.push({
               question_text: question.question_text,
               risk_score: question.answer.risk,
               greatest_impact: question.answer.greatest_impact,
               risk_response: question.answer.risk_response,
               mmp_summary: question.answer.mmp_summary,
-            }])
+            })
           ))
-        ))
-      ));
-
-      let insertFilteringData = assessmentData.threads.map((thread: any) => (
-        thread.subthreads.map((subthread: any) => (
-          subthread.questions.map((question: any) => (
-            question.answer !== "Unanswered" &&
+          if (questionArray.length > 0) {
             setFilteringData((questionData: any) => [...questionData, {
               thread_name: thread.name,
               subthread_name: subthread.name,
               MRL: assessmentData.info.current_mrl,
-              question_text: question.question_text,
-              risk_score: question.answer.risk,
-              greatest_impact: question.answer.greatest_impact,
-              risk_response: question.answer.risk_response,
-              mmp_summary: question.answer.mmp_summary,
+              questionInfo: questionArray,
             }])
-          ))
-        ))
+          }
+        })
       ));
     }
   }, [assessmentData]);
@@ -108,6 +122,12 @@ const DetailedRisk: React.FC = () => {
       filterData()
     }
   }, [filteredMRL]);
+
+  useEffect(() => {
+    if (questionData) {
+      console.log(questionData)
+    }
+  }, [questionData]);
 
   const handleMRLevelChange = (value: any) => {
     setSelectedMRL(value)
@@ -193,21 +213,23 @@ const DetailedRisk: React.FC = () => {
                   <IonCardHeader>
                     <IonCardTitle>Subthread: {question.subthread_name}</IonCardTitle>
                   </IonCardHeader>
-                  <div className="question">
-                    <div>
-                      <h4>{question.question_text}</h4>
-                    </div>
-                    <div>
-                      {(question.risk_score) ?
-                        <p className="red"><b>Risk Score: </b>{question.risk_score}</p> : <p><b>Risk Score: </b></p>
-                      }
-                      <div className="extra-risk">
-                        <p><b>Greatest Impact: </b>{question.greatest_impact}</p>
-                        <p><b>Risk Response: </b>{question.risk_response}</p>
-                        <p><b>MMP Summary: </b>{question.mmp_summary}</p>
+                  {question.questionInfo.map((question_info: any, index: any) => (
+                    <div className="question">
+                      <div>
+                        <h4>{question_info.question_text}</h4>
+                      </div>
+                      <div>
+                        {(question_info.risk_score) ?
+                          <p className="red"><b>Risk Score: </b>{question_info.risk_score}</p> : <p><b>Risk Score: </b></p>
+                        }
+                        <div className="extra-risk">
+                          <p><b>Greatest Impact: </b>{question_info.greatest_impact}</p>
+                          <p><b>Risk Response: </b>{question_info.risk_response}</p>
+                          <p><b>MMP Summary: </b>{question_info.mmp_summary}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ))}
                 </IonCard>
               </IonCard>
             ))}

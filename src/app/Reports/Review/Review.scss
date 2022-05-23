@@ -28,7 +28,9 @@ ion-card-title.review-header {
 .review-card {
   margin: 15px auto;
   width: 50%;
+
   .card-content-md {
+
     h2,
     h4 {
       padding: 5px 0;
@@ -39,6 +41,11 @@ ion-card-title.review-header {
 .review-card-content {
   color: black;
   width: 100%;
+
+  .open-file {
+    cursor: pointer;
+    color: blue;
+  }
 }
 
 .box {
@@ -52,10 +59,12 @@ ion-card-title.review-header {
   background-color: green;
   color: white;
 }
+
 .no {
   background-color: red;
   color: white;
 }
+
 .na {
   background-color: darkgrey;
   color: white;
@@ -79,6 +88,7 @@ ion-card-title.review-header {
 
 @media screen and (max-width: 992px) {
   .review-filter-toolbar {
+
     .filter-item,
     .filter-button1,
     .filter-button2,

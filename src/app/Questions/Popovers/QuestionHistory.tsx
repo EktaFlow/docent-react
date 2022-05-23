@@ -56,4 +56,5 @@ const QuestionHistory: React.FC = () => {
     </div>
   )
 }
+
 export default QuestionHistory;

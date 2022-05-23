@@ -18,10 +18,20 @@ const QuestionsList: React.FC = () => {
   const [selectedMRL, setSelectedMRL] = useState<string>('all-levels');
   const [filteredMRL, setFilteredMRL] = useState('all-levels');
 
-  const [selectedAnswer, setSelectedAnswer] = useState<string>('');
+  const [selectedAnswer, setSelectedAnswer] = useState<string>('all-answers');
   const [filteredAnswer, setFilteredAnswer] = useState('all-answers');
 
   const history = useHistory();
+
+  async function navigateToAssessment(questionId: number) {
+    history.push({
+      pathname: '/questions',
+      state: {
+        assessment_id: assessmentId as number,
+        question_id: questionId as number
+      }
+    })
+  }
 
   useEffect(() => {
     async function getAssessmentInfo() {
@@ -45,33 +55,39 @@ const QuestionsList: React.FC = () => {
   useEffect(() => {
     if (assessmentData) {
       let insertQuestionData = assessmentData.threads.map((thread: any) => (
-        thread.subthreads.map((subthread: any) => (
+        thread.subthreads.map((subthread: any) => {
+          let questionArray: { current_answer: string, question_text: string, question_id: number }[] = [];
           subthread.questions.map((question: any) => (
-            question.answer !== "Unanswered" &&
+            // question.answer !== "Unanswered" &&
+            questionArray.push({ current_answer: question.answer.answer, question_text: question.question_text, question_id: question.id })
+          ))
+          if (questionArray.length > 0) {
             setQuestionData((questionData: any) => [...questionData, {
               MRL: assessmentData.info.current_mrl,
               thread_name: thread.name,
               subthread_name: subthread.name,
-              current_answer: question.answer.answer,
-              question_text: question.question_text,
+              questionInfo: questionArray,
             }])
-          ))
-        ))
+          }
+        })
       ));
 
       let insertFilteringData = assessmentData.threads.map((thread: any) => (
-        thread.subthreads.map((subthread: any) => (
+        thread.subthreads.map((subthread: any) => {
+          let questionArray: { current_answer: string, question_text: string, question_id: number  }[] = [];
           subthread.questions.map((question: any) => (
-            question.answer !== "Unanswered" &&
+            // question.answer !== "Unanswered" &&
+            questionArray.push({ current_answer: question.answer.answer, question_text: question.question_text, question_id: question.id })
+          ))
+          if (questionArray.length > 0) {
             setFilteringData((questionData: any) => [...questionData, {
               MRL: assessmentData.info.current_mrl,
               thread_name: thread.name,
               subthread_name: subthread.name,
-              current_answer: question.answer.answer,
-              question_text: question.question_text,
+              questionInfo: questionArray,
             }])
-          ))
-        ))
+          }
+        })
       ));
     }
   }, [assessmentData]);
@@ -103,7 +119,15 @@ const QuestionsList: React.FC = () => {
           await setQuestionData(filteringData);
         }
         else {
-          await setQuestionData(filteringData.filter((question: any) => question.current_answer === filteredAnswer))
+          let questionArray: any[] = [];
+          filteringData.map((question: any) => {
+            question.questionInfo.map((question_info: any) => {
+              if(question_info.current_answer === filteredAnswer) {
+                questionArray.push(question)
+              }
+            })
+          })
+          await setQuestionData(questionArray)
         }
       }
       else {
@@ -111,11 +135,18 @@ const QuestionsList: React.FC = () => {
           await setQuestionData(filteringData.filter((question: any) => Number(filteredMRL) === assessmentData.info.current_mrl))
         }
         else {
-          await setQuestionData(filteringData.filter((question: any) => (Number(filteredMRL) === assessmentData.info.current_mrl && question.current_answer === filteredAnswer)))
+          let questionArray: any[] = [];
+          filteringData.map((question: any) => {
+            question.questionInfo.map((question_info: any) => {
+              if(question_info.current_answer === filteredAnswer && Number(filteredMRL) === assessmentData.info.current_mrl) {
+                questionArray.push(question)
+              }
+            })
+          })
+          await setQuestionData(questionArray)
         }
       }
     }
-
     filter();
   }
 
@@ -191,22 +222,24 @@ const QuestionsList: React.FC = () => {
                   </IonCardHeader>
                   <div className="mrl">
                     <h6><b>MR Level: {question.MRL}</b></h6>
-                    <div className="question">
-                      <h5 className="navigate-links">
-                        <span>
-                          {question.current_answer === 'yes' &&
-                            <IonButton size="small" className="status-button green-button ion-no-padding">Yes</IonButton>
-                          }
-                          {question.current_answer === 'no' &&
-                            <IonButton size="small" color="danger" className="status-button ion-no-padding">No</IonButton>
-                          }
-                          {(question.current_answer === 'na' || question.answer === 'Unanswered') &&
-                            <IonButton size="small" className="status-button ion-no-padding">Unanswered</IonButton>
-                          }
-                        </span>
-                        {question.question_text}
-                      </h5>
-                    </div>
+                    {question.questionInfo.map((question_info: any, index: any) => (
+                      <div className="question">
+                        <h5 className="navigate-links">
+                          <span>
+                            {question_info.current_answer === 'yes' &&
+                              <IonButton size="small" className="status-button green-button ion-no-padding">Yes</IonButton>
+                            }
+                            {question_info.current_answer === 'no' &&
+                              <IonButton size="small" color="danger" className="status-button ion-no-padding">No</IonButton>
+                            }
+                            {(question_info.current_answer === 'na' || question_info.answer === 'Unanswered') &&
+                              <IonButton size="small" className="status-button ion-no-padding">Unanswered</IonButton>
+                            }
+                          </span>
+                          {question_info.question_text}
+                        </h5>
+                      </div>
+                    ))}
                   </div>
                 </IonCard>
               </IonCard>

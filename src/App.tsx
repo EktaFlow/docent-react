@@ -126,9 +126,6 @@ const App: React.FC = () => (
         <Route exact path="/settings">
           <Settings />
         </Route>
-        <Route exact path="/test">
-          <Test />
-        </Route>
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>

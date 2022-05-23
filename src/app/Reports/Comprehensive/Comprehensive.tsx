@@ -1,5 +1,5 @@
 import { IonPage, IonRow, IonCol, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonButton, IonItem, IonLabel, IonSelect, IonSelectOption, IonContent } from '@ionic/react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import ReactExport from "react-export-excel";
 
 import { useHistory } from 'react-router-dom';
@@ -9,7 +9,7 @@ import Header from '../../Framework/Header';
 import InfoCard from '../InfoCard';
 import ReportsTopbar from '../ReportsTopbar';
 
-import { grabSingleAssessment } from '../../../api/api'
+import { grabSingleAssessment, grabFiles } from '../../../api/api'
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -28,13 +28,35 @@ const Comprehensive: React.FC = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<string>('all-answers');
   const [filteredAnswer, setFilteredAnswer] = useState('all-answers');
 
+  const [loadedFiles, setLoadedFiles] = useState<any>([])
+
   let excelData: Array<any> = [];
+
+  async function navigateToAssessment(questionId: number) {
+    history.push({
+      pathname: '/questions',
+      state: {
+        assessment_id: assessmentId as number,
+        question_id: questionId as number
+      }
+    })
+  }
 
   useEffect(() => {
     async function getAssessmentInfo() {
       var his: any = history
       var assessment_id = his["location"]["state"]["assessment_id"]
       await setAssessmentId(assessment_id)
+      loadFiles(assessment_id);
+    }
+    async function loadFiles(assessmentId: any) {
+      await grabFiles(assessmentId).then((res) => {
+        console.log(res.files);
+        setLoadedFiles(res.files);
+      })
+        .catch((error) => {
+          console.log(error)
+        })
     }
     getAssessmentInfo()
   }, [])
@@ -125,6 +147,7 @@ const Comprehensive: React.FC = () => {
               greatest_impact: question.answer.greatest_impact,
               risk_response: question.answer.risk_response,
               mmp_summary: question.answer.mmp_summary,
+              question_id: question.id
             }])
           ))
         ))
@@ -162,6 +185,7 @@ const Comprehensive: React.FC = () => {
               greatest_impact: question.answer.greatest_impact,
               risk_response: question.answer.risk_response,
               mmp_summary: question.answer.mmp_summary,
+              question_id: question.id
             }])
           ))
         ))
@@ -190,27 +214,27 @@ const Comprehensive: React.FC = () => {
   }
 
   const filterData = () => {
-    console.log(filteringData);
+    // console.log(filteringData);
     if (filteredMRL === 'all-levels') {
       if (filteredAnswer === 'all-answers') {
-        console.log(1);
         setQuestionData(filteringData);
       }
       else {
-        console.log(2);
         setQuestionData(filteringData.filter((question: any) => question.current_answer === filteredAnswer))
       }
     }
     else {
       if (filteredAnswer === 'all-answers') {
-        console.log(3);
         setQuestionData(filteringData.filter((question: any) => Number(filteredMRL) === assessmentData.info.current_mrl))
       }
       else {
-        console.log(4);
         setQuestionData(filteringData.filter((question: any) => (Number(filteredMRL) === assessmentData.info.current_mrl && question.current_answer === filteredAnswer)))
       }
     }
+  }
+
+  const openURL = (url: any) => {
+    window.open(url)
   }
 
   const handleFilterClick = () => {
@@ -362,8 +386,17 @@ const Comprehensive: React.FC = () => {
                     <h2><b>MMP Summary:</b> {question.mmp_summary}</h2> : <h2><b>MMP Summary:</b> No MMP Summary Given</h2>
                   }
                   <hr />
-                  <h2><b>Attachments:</b> No file attached to this question</h2>
-                  <IonButton size="small" color="dsb">Go To Question</IonButton>
+                  <h2><b>Attachments:</b> {loadedFiles.map((file: any, index: any) => (
+                      file.questions.length !== 0 &&
+                      <Fragment>
+                        {file.questions[0].id === question.question_id &&
+                          <span><span className="open-file" onClick={() => openURL(file.url)}>{file.name}</span>, </span>
+                        }
+                      </Fragment>
+                    ))}
+
+                  </h2>
+                  <IonButton size="small" color="dsb" onClick={() => navigateToAssessment(question.question_id)}>Go To Question</IonButton>
                 </IonCardContent>
               </IonCard>
             ))}

@@ -34,6 +34,12 @@ ion-card-title.review-header {
 .review-card-content {
   color: black;
   width: 100%;
+
+
+  .open-file {
+    cursor: pointer;
+    color: blue;
+  }
 }
 
 .box {

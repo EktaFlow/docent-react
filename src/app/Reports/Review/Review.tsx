@@ -10,7 +10,7 @@ import Header from '../../Framework/Header';
 import InfoCard from '../InfoCard';
 import ReportsTopbar from '../ReportsTopbar';
 
-import { grabSingleAssessment } from '../../../api/api'
+import { grabSingleAssessment, grabFiles } from '../../../api/api'
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -28,15 +28,37 @@ const Review: React.FC = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<string>('all-answers');
   const [filteredAnswer, setFilteredAnswer] = useState('all-answers');
 
+  const [loadedFiles, setLoadedFiles] = useState<any>([]);
+
   let excelData: Array<any> = [];
 
   const history = useHistory();
+
+  async function navigateToAssessment(questionId: number) {
+    history.push({
+      pathname: '/questions',
+      state: {
+        assessment_id: assessmentId as number,
+        question_id: questionId as number
+      }
+    })
+  }
 
   useEffect(() => {
     async function getAssessmentInfo() {
       var his: any = history
       var assessment_id = his["location"]["state"]["assessment_id"]
       await setAssessmentId(assessment_id);
+      loadFiles(assessment_id);
+    }
+    async function loadFiles(assessmentId: any) {
+      await grabFiles(assessmentId).then((res) => {
+        // console.log(res);
+        setLoadedFiles(res.files);
+      })
+        .catch((error) => {
+          console.log(error)
+        })
     }
     getAssessmentInfo()
   }, []);
@@ -53,6 +75,7 @@ const Review: React.FC = () => {
 
   useEffect(() => {
     if (assessmentData) {
+      console.log(assessmentData);
       let threadData = assessmentData.threads.map((thread: any) => (
         thread.subthreads.map((subthread: any) => (
           subthread.questions.map((question: any) => (
@@ -62,6 +85,7 @@ const Review: React.FC = () => {
               question_text: question.question_text,
               current_answer: question.answer.answer,
               objective_evidence: question.answer.objective_evidence,
+              // question_id: question.id
             })
           ))
         ))
@@ -78,6 +102,7 @@ const Review: React.FC = () => {
               question_text: question.question_text,
               current_answer: question.answer.answer,
               objective_evidence: question.answer.objective_evidence,
+              question_id: question.id
             }])
           ))
         ))
@@ -94,6 +119,7 @@ const Review: React.FC = () => {
               question_text: question.question_text,
               current_answer: question.answer.answer,
               objective_evidence: question.answer.objective_evidence,
+              question_id: question.id,
             }])
           ))
         ))
@@ -112,6 +138,12 @@ const Review: React.FC = () => {
       filterData()
     }
   }, [filteredAnswer]);
+
+  useEffect(() => {
+    if (loadedFiles) {
+      console.log(loadedFiles)
+    }
+  }, [loadedFiles]);
 
   const handleMRLevelChange = (value: any) => {
     setSelectedMRL(value)
@@ -138,6 +170,10 @@ const Review: React.FC = () => {
         setQuestionData(filteringData.filter((question: any) => (Number(filteredMRL) === assessmentData.info.current_mrl && question.current_answer === filteredAnswer)))
       }
     }
+  }
+
+  const openURL = (url: any) => {
+    window.open(url)
   }
 
   const handleFilterClick = () => {
@@ -221,8 +257,17 @@ const Review: React.FC = () => {
                   {question.current_answer === 'yes' &&
                     <h2><b>Objective Evidence:</b> {(question.objective_evidence) ? <span>{question.objective_evidence}</span> : <span>No objective evidence</span>}</h2>
                   }
-                  <h2><b>Attachments:</b> No file attached to this question</h2>
-                  <IonButton size="small" color="dsb">Go To Question</IonButton>
+                  <h2><b>Attachments:</b> {loadedFiles.map((file: any, index: any) => (
+                    file.questions.length !== 0 &&
+                    <Fragment>
+                      {file.questions[0].id === question.question_id &&
+                        <span><span className="open-file" onClick={() => openURL(file.url)}>{file.name}</span>, </span>
+                      }
+                    </Fragment>
+                    //No attachments
+                  ))}
+                  </h2>
+                  <IonButton size="small" color="dsb" onClick={() => navigateToAssessment(question.question_id)}>Go To Question</IonButton>
                 </IonCardContent>
               </IonCard>
             ))}

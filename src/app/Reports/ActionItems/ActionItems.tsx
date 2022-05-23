@@ -50,6 +50,7 @@ const ActionItems: React.FC = () => {
 
   useEffect(() => {
     if (assessmentData) {
+      console.log(assessmentData);
       let insertQuestionData = assessmentData.threads.map((thread: any) => (
         thread.subthreads.map((subthread: any) => (
           subthread.questions.map((question: any) => (

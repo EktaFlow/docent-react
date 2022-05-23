@@ -1,18 +1,30 @@
-import { IonPage, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonHeader, IonToolbar, IonTitle, IonRow, IonCol, IonContent, IonGrid, IonTextarea, IonInput, IonDatetime, IonModal, IonText, IonPopover } from '@ionic/react';
-import React, { useState, useEffect, useRef } from 'react';
+import { IonPage, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonHeader, IonToolbar, IonTitle, IonRow, IonCol, IonContent, IonGrid, IonTextarea, IonInput, IonDatetime, IonPopover, IonText } from '@ionic/react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { useHistory } from 'react-router-dom';
+
+import { RouteComponentProps } from 'react-router-dom';
 
 import Header from '../Framework/Header';
 import './QuestionsPage.scss';
 
 import { format, parseISO } from 'date-fns';
-import { createAnswers, grabAnswers, grabNextQuestion } from '../../api/api';
+
+import { createAnswers, grabAnswers, grabNextQuestion, addFileToAssessment, addFileToQuestion, grabFiles } from '../../api/api';
 
 import Topbar from './Topbar';
 import RiskAssessment from './RiskAssessment/RiskAssessment';
 import RiskMatrix from './RiskAssessment/RiskMatrix';
 
+import FilePopover from './Files/FilePopover';
+
 const QuestionsPage: React.FC = (props) => {
+  const questions = ['Have industrial base capabilities and gaps/risks been identified for key technologies, components, and/or key processes?',
+    'Have pertinent Manufacturing Science (MS) and Advanced Manufacturing Technology requirements been identified?',
+    'Are initial producibility and manufacturability assessments of preferred systems concepts completed?',
+    'Are the results of the producibility and manufacturability assessment being considered in the selection of preferred design concepts?'
+  ];
+
+  const [questionList, setQuestionList] = useState(questions);
   const [answer, setAnswer] = useState({
     answer: '',
     likelihood: '',
@@ -38,6 +50,8 @@ const QuestionsPage: React.FC = (props) => {
   });
   const history = useHistory();
 
+  const [questionCount, setQuestionCount] = useState(0);
+
   const [explanationText, showExplanationText] = useState(false);
 
   const [yes, setYes] = useState(false);
@@ -49,22 +63,42 @@ const QuestionsPage: React.FC = (props) => {
   const [riskScore, setRiskScore] = useState<number>();
 
   const [selectedDate, setSelectedDate] = useState('');
+  const [question, setQuestion] = useState({
+    question_text: '',
+    answered: false,
+    assessment_length: 0,
+    current_answer_text: '',
+    current_mrl: 0,
+    position: 0,
+    question_id: 0
+  })
 
+  const [selectedFile, setSelectedFile] = useState<any>(null);
+  const [loadedFiles, setLoadedFiles] = useState([])
+  const [fileModal, setFileModal] = useState(false);
   const fileInput = useRef(null);
+
   const [assessmentId, setAssessmentId] = useState<number>();
 
   useEffect(() => {
-    async function getAssessmentInfo() {
-      console.log(history)
-      var his: any = history
-      if (his["location"]["state"]) {
-        var ast_id = his["location"]["state"]["assessment_id"]
-        console.log(ast_id)
-        await setAssessmentId(ast_id)
-        var question = grabQ(ast_id)
-      }
+    console.log(history)
+    var his: any = history
+    if (his["location"]["state"]) {
+      console.log(his["location"]["state"])
+      var ast_id = his["location"]["state"]["assessment_id"]
+      console.log(ast_id)
+      setAssessmentId(ast_id)
+      var question = grabQ(ast_id)
+      loadFiles(ast_id)
     }
-    getAssessmentInfo()
+    async function loadFiles(assessmentId: any) {
+      await grabFiles(assessmentId).then((res) => {
+        setLoadedFiles(res.files);
+      })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
   }, []);
 
   useEffect(() => {
@@ -73,12 +107,34 @@ const QuestionsPage: React.FC = (props) => {
     if (his["location"]["state"]) {
       var ast_id = his["location"]["state"]["assessment_id"]
       console.log(ast_id)
+      setAssessmentId(ast_id)
       var question = grabQ(ast_id)
+      loadFiles(ast_id)
     }
-  }, [history]);
+    async function loadFiles(assessmentId: any) {
+      await grabFiles(assessmentId).then((res) => {
+        // console.log(res);
+        setLoadedFiles(res.files);
+      })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
+  }, [history])
+
+  // useEffect(() => {
+  //   if (question) {
+  //     console.log(question);
+  //   }
+  // }, [question]);
+
+  useEffect(() => {
+    if (loadedFiles) {
+      console.log(loadedFiles);
+    }
+  }, [loadedFiles]);
 
   async function grabQ(assessment_id: Number) {
-    console.log(assessment_id)
     var next_question = await grabNextQuestion(assessment_id)
       .then((res) => {
         console.log(res);
@@ -119,6 +175,7 @@ const QuestionsPage: React.FC = (props) => {
       question_id: question.question_id,
       answer: answer
     }
+
     var ans = await createAnswers(data)
       .then((res) => {
         console.log(res)
@@ -126,7 +183,41 @@ const QuestionsPage: React.FC = (props) => {
       .catch((error) => {
         console.log(error)
       })
+
+    if (selectedFile !== null && assessmentId !== undefined) {
+      const formData = new FormData();
+      formData.append('question_id', question.question_id.toString());
+      formData.append('assessment_id', assessmentId.toString());
+      formData.append('file_name', selectedFile.name);
+      formData.append('outside_file', selectedFile);
+
+      var assm = await addFileToAssessment(formData).then((res) => {
+        console.log(res)
+        saveFileToQuestion(res.file.id);
+      })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
   }
+
+  async function saveFileToQuestion(file_id: any) {
+    var data = {
+      question_id: question.question_id,
+      file_id: file_id
+    }
+
+    var ques = await addFileToQuestion(data).then((res) => {
+      console.log(res)
+    })
+      .catch((error) => {
+        console.log(error)
+      })
+  };
+
+  const handleFileChange = (e: any) => {
+    setSelectedFile(e.target.files[0]);
+  };
 
   const handleAnswerChange = (e: any) => {
     setAnswer({
@@ -277,16 +368,6 @@ const QuestionsPage: React.FC = (props) => {
     return formattedDate;
   };
 
-  const [question, setQuestion] = useState({
-    question_text: '',
-    answered: false,
-    assessment_length: 0,
-    current_answer_text: '',
-    current_mrl: 0,
-    position: 0,
-    question_id: 0
-  })
-
   return (
     <IonPage className="question-page-wrapper">
       <Header showAssessment={true} assessmentId={assessmentId} />
@@ -427,21 +508,26 @@ const QuestionsPage: React.FC = (props) => {
                   </IonTextarea>
                 </IonItem>
 
-                <IonButton
-                  color="dsb"
-                  onClick={() => {
-                    // @ts-ignore
-                    fileInput?.current?.click();
-                  }}>
+                <IonButton color="dsb" onClick={() => {
+                  // @ts-ignore
+                  fileInput?.current?.click();
+                }}>
                   Attach File
                 </IonButton>
 
-                <input
-                  type="file"
-                  ref={fileInput}
-                  hidden>
+                <input type="file" ref={fileInput} onChange={handleFileChange} hidden>
                 </input>
 
+                <br />
+
+                <IonButton color="dsb" onClick={() => setFileModal(true)}>Manage Files</IonButton>
+
+                <IonPopover isOpen={fileModal}
+                  onDidDismiss={() => setFileModal(false)} className="file-popover">
+                  <FilePopover files={loadedFiles} question_id={question.question_id} />
+                </IonPopover>
+
+                {/* 
                 <IonHeader>
                   <IonToolbar className="toolbar">
                     <IonTitle>Attachments</IonTitle>
@@ -449,7 +535,7 @@ const QuestionsPage: React.FC = (props) => {
                 </IonHeader>
 
                 <div className="attachments-content">
-                  {/* <table className="attachments-table"> */}
+                  <table className="attachments-table">
                   <IonRow>
                     <IonCol className="ion-no-padding">
                       <IonLabel className="attachment-label file-name-label">File</IonLabel>
@@ -464,9 +550,10 @@ const QuestionsPage: React.FC = (props) => {
                       <IonLabel className="attachment-label delete-label">Delete</IonLabel>
                     </IonCol>
                   </IonRow>
-                  {/* </table> */}
-                </div>
+                  </table>
+                </div> */}
               </IonCol>
+
               <IonCol size="12" size-lg="3">
                 <RiskAssessment
                   getLikelihood={getLikelihood}
@@ -488,7 +575,6 @@ const QuestionsPage: React.FC = (props) => {
             </IonRow>
           </IonGrid>
         </div>
-
       </IonContent>
     </IonPage>
   )

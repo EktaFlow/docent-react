@@ -13,7 +13,7 @@ const Header: React.FC<{ showAssessment?: boolean, assessmentId?: number }> = ({
 
   useEffect(() => {
     if (assessmentId) {
-      console.log("Reports assessment id: " + assessmentId)
+      // console.log("Reports assessment id: " + assessmentId)
     }
   }, [assessmentId]);
 
@@ -21,7 +21,7 @@ const Header: React.FC<{ showAssessment?: boolean, assessmentId?: number }> = ({
     history.push({
       pathname: '/questions',
       state: {
-        assessment_id: assessmentId as number
+        assessment_id: assessmentId as number,
       }
     })
   }
@@ -30,7 +30,7 @@ const Header: React.FC<{ showAssessment?: boolean, assessmentId?: number }> = ({
     history.push({
       pathname: `/${value}`,
       state: {
-        assessment_id: assessmentId as number
+        assessment_id: assessmentId as number,
       }
     })
   }
