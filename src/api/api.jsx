@@ -29,6 +29,13 @@ export async function grabNextQuestion(assessment_id) {
   return result.data
 }
 
+export async function grabNextQuestionAction(assessment_id, action, q_id) {
+  const result = await axios.get(
+    `${apiUrl}/next_action?assessment_id=${assessment_id}&movement=${action}&question_id=${q_id}`
+  )
+  return result.data
+}
+
 export async function grabAnswers() {
   const result = await axios.get(
     `${apiUrl}/answers`
