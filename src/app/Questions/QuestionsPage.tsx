@@ -1,5 +1,6 @@
-import { IonPage, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonHeader, IonToolbar, IonTitle, IonRow, IonCol, IonContent, IonGrid, IonTextarea, IonInput, IonDatetime, IonPopover, IonText } from '@ionic/react';
+
 import React, { useState, useEffect, useRef, Fragment } from 'react';
+import { IonPage, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonHeader, IonToolbar, IonTitle, IonRow, IonCol, IonContent, IonGrid, IonTextarea, IonInput, IonDatetime, IonModal, IonText, IonPopover } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 
 import { RouteComponentProps } from 'react-router-dom';
@@ -91,14 +92,6 @@ const QuestionsPage: React.FC = (props) => {
       var question = grabQ(ast_id)
       loadFiles(ast_id)
     }
-    async function loadFiles(assessmentId: any) {
-      await grabFiles(assessmentId).then((res) => {
-        setLoadedFiles(res.files);
-      })
-        .catch((error) => {
-          console.log(error)
-        })
-    }
   }, []);
 
   useEffect(() => {
@@ -111,28 +104,23 @@ const QuestionsPage: React.FC = (props) => {
       var question = grabQ(ast_id)
       loadFiles(ast_id)
     }
-    async function loadFiles(assessmentId: any) {
-      await grabFiles(assessmentId).then((res) => {
-        // console.log(res);
-        setLoadedFiles(res.files);
-      })
-        .catch((error) => {
-          console.log(error)
-        })
-    }
   }, [history])
-
-  // useEffect(() => {
-  //   if (question) {
-  //     console.log(question);
-  //   }
-  // }, [question]);
 
   useEffect(() => {
     if (loadedFiles) {
       console.log(loadedFiles);
     }
   }, [loadedFiles]);
+
+  async function loadFiles(assessmentId: any) {
+    await grabFiles(assessmentId).then((res) => {
+      // console.log(res);
+      setLoadedFiles(res.files);
+    })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
 
   async function grabQ(assessment_id: Number) {
     var next_question = await grabNextQuestion(assessment_id)
@@ -527,7 +515,7 @@ const QuestionsPage: React.FC = (props) => {
                   <FilePopover files={loadedFiles} question_id={question.question_id} />
                 </IonPopover>
 
-                {/* 
+                {/*
                 <IonHeader>
                   <IonToolbar className="toolbar">
                     <IonTitle>Attachments</IonTitle>

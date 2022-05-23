@@ -5,8 +5,8 @@ import { IonButton } from '@ionic/react';
 
 import { deleteAssessment } from '../../../api/api'
 import { id } from 'date-fns/locale';
-
 import { useHistory } from 'react-router-dom';
+
 
 type AIP = {
   ast: {
@@ -22,6 +22,7 @@ type AIP = {
   }
 }
 
+
 const AssessmentItem: React.FC<AIP> = (props) => {
   const history = useHistory();
   async function navigateToPage(value: string) {
@@ -32,6 +33,19 @@ const AssessmentItem: React.FC<AIP> = (props) => {
       }
     })
   }
+  useEffect(() => {
+    setAssessment(assessmentInfo.assessment);
+    setTeamMembers(assessmentInfo.team_members);
+  }, [])
+
+  const [assessment, setAssessment] = useState<any>()
+  const [teamMembers, setTeamMembers] = useState<any>()
+
+  useEffect(() => {
+    if (assessment) {
+      console.log(assessment.id)
+    }
+  }, [assessment])
 
   const removeAssessment = (id: number) => {
     deleteAssessment(id);
