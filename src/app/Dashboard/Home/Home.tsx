@@ -73,10 +73,7 @@ const Home: React.FC = () => {
           <div className="assessment-toolbar">
             <h2>Assessments</h2>
             <div className="filter-toolbar">
-              <IonButton expand="full" color="light" id="trigger-button" onClick={openPopover}>Filter</IonButton>
-              <IonPopover trigger="trigger-button" isOpen={isPopoverOpen}>
-                <FilterPopover filters={filters} setFilters={setFilters}/>
-              </IonPopover>
+
               <IonPopover trigger="invite-trigger" alignment="center" isOpen={invitePopover} translucent={true} onDidDismiss={() => setInvitePopover(false)}>
                 <InviteTMPopover processNewTM={processNewTM}/>
               </IonPopover>
@@ -112,3 +109,7 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+// <IonButton expand="full" color="light" id="trigger-button" onClick={openPopover}>Filter</IonButton>
+// <IonPopover trigger="trigger-button" isOpen={isPopoverOpen}>
+//   <FilterPopover filters={filters} setFilters={setFilters}/>
+// </IonPopover>

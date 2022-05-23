@@ -1,4 +1,4 @@
-import { IonPage, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonHeader, IonToolbar, IonTitle, IonRow, IonCol, IonContent, IonGrid, IonTextarea, IonInput, IonDatetime, IonModal, IonText, IonPopover } from '@ionic/react';
+import { IonPage, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonHeader, IonToolbar, IonTitle, IonRow, IonCol, IonContent, IonGrid, IonTextarea, IonInput, IonDatetime, IonModal, IonText, IonPopover, IonToast } from '@ionic/react';
 import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ import { format, parseISO } from 'date-fns';
 
 // import { assessmentId } from '../../variables.jsx'
 
-import { createAnswers, grabAnswers, grabNextQuestion } from '../../api/api';
+import { createAnswers, grabAnswers, grabNextQuestion, grabNextQuestionAction } from '../../api/api';
 
 
 import Topbar from './Topbar';
@@ -19,13 +19,8 @@ import RiskAssessment from './RiskAssessment/RiskAssessment';
 import RiskMatrix from './RiskAssessment/RiskMatrix';
 
 const QuestionsPage: React.FC = (props) => {
-  const questions = ['Have industrial base capabilities and gaps/risks been identified for key technologies, components, and/or key processes?',
-    'Have pertinent Manufacturing Science (MS) and Advanced Manufacturing Technology requirements been identified?',
-    'Are initial producibility and manufacturability assessments of preferred systems concepts completed?',
-    'Are the results of the producibility and manufacturability assessment being considered in the selection of preferred design concepts?'
-  ];
 
-  const [questionList, setQuestionList] = useState(questions);
+  // const [questionList, setQuestionList] = useState(questions);
   const [answer, setAnswer] = useState({
     answer: '',
     likelihood: '',
@@ -65,43 +60,49 @@ const QuestionsPage: React.FC = (props) => {
 
   const [selectedDate, setSelectedDate] = useState('');
   const [question, setQuestion] = useState({
-    question_text: '',
-    answered: false,
-    assessment_length: 0,
-    current_answer_text: '',
-    current_mrl: 0,
-    position: 0,
-    question_id: 0
+    question_text: '', answered: false, assessment_length: 0, current_answer_text: '', current_mrl: 0, position: 0, question_id: 0
   })
+  const [subthread, setSubthread] = useState({
+    help_text: '', id: null, name: ''
+  })
+  const [thread, setThread] = useState({
+    id: null, mr_level: null, name: ''
+  })
+  const [assessInfo, setAssessInfo] = useState({
+    targetDate: null, additionalInfo: ''
+  })
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState({message: '', status: ''});
+  const [valuesChanged, setValuesChanged] = useState(false)
 
   const fileInput = useRef(null);
 
   useEffect(() => {
-    console.log(history)
+    // console.log(history)
     var his: any = history
     if (his["location"]["state"]){
       var ast_id = his["location"]["state"]["assessment_id"]
-      console.log(ast_id)
+      // console.log(ast_id)
       var question = grabQ(ast_id)
     }
   }, []);
 
   useEffect(() => {
     var his: any = history
-    console.log(his)
+    // console.log(his)
     if (his["location"]["state"]){
       var ast_id = his["location"]["state"]["assessment_id"]
-      console.log(ast_id)
+      // console.log(ast_id)
       var question = grabQ(ast_id)
     }
   }, [history])
 
   async function grabQ(assessment_id: Number) {
     console.log(assessment_id)
+
     var next_question = await grabNextQuestion(assessment_id)
       .then((res) => {
-        console.log(res);
-        setQuestion(res.question)
+        setUpQuestionsPage(res)
         return res
       })
       .catch((error) => {
@@ -109,27 +110,50 @@ const QuestionsPage: React.FC = (props) => {
       })
   }
 
-  function previousQuestion() {
-    console.log('in previous')
-    saveAnswers();
-    getNextQuestion('previous')
-    //need to grab previous Question - send current question id and then
+
+  async function getNextQuestion(movement_action:any){
+    //will run and grab the right question
+    if (yes == true || no == true || na == true){
+      if (valuesChanged == true) {
+        console.log('in save answers')
+        saveAnswers();
+      }
+    }
+    var his:any = history
+    var ast_id = his["location"]["state"]["assessment_id"]
+    // getNextQuestion('next')
+    console.log('moving on');
+    // console.log(movement_action);
+    setShowToast(true);
+    setToastMessage({message: 'Navigating to Question', status: 'primary'})
+    await grabNextQuestionAction(ast_id, movement_action, question.question_id)
+    .then((res) => {
+      setUpQuestionsPage(res)
+      setShowToast(false);
+    })
+    .catch((err) => {
+      setToastMessage({message: 'Error navigating to next question, please refresh', status: 'danger'})
+      setTimeout(() => {
+        setShowToast(false)
+      }, 2000)
+    })
+
   }
 
-  function nxtQuestion() {
-    saveAnswers();
-    getNextQuestion('next')
-  }
+  function setUpQuestionsPage(res:any) {
+    setQuestion(res.question)
+    setSubthread(res.subthread)
+    setThread(res.thread)
+    setAssessInfo(res.assessment_info)
+    if (res.question.current_answer !== []){
+      setAnswer(res.question.current_answer);
+      console.log(res.question.current_answer)
+      var ci = changeInterface(res.question.current_answer.answer);
+      console.log(ci)
+      if (ci == 'done'){
+        setValuesChanged(false)
+      }
 
-  async function getNextQuestion(action:any){
-    if (action === 'next'){
-      //will run and grab the right question
-      saveAnswers();
-      // getNextQuestion('next')
-      var q = await grabNextQuestion();
-    } else {
-      //will run and grab the right previous question
-      console.log('bloo')
     }
   }
 
@@ -139,12 +163,22 @@ const QuestionsPage: React.FC = (props) => {
       question_id: question.question_id,
       answer: answer
     }
-    var ans = await createAnswers(data)
+    setShowToast(true)
+    setToastMessage({message: 'Answers Saving', status: 'primary'})
+    await createAnswers(data)
       .then((res) => {
-        console.log(res)
+        setToastMessage({message: 'Answers have Saved', status: 'success'})
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000)
+        return res
       })
       .catch((error) => {
-        console.log(error)
+        // setShowToast(true)
+        setToastMessage({message: 'Error saving answers', status: 'danger'})
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000)
       })
   }
 
@@ -153,6 +187,8 @@ const QuestionsPage: React.FC = (props) => {
       ...answer,
       [e.target.name]: e.target.value
     });
+    console.log('values')
+    setValuesChanged(true)
   };
 
   const getLikelihood = (data: any) => {
@@ -161,6 +197,8 @@ const QuestionsPage: React.FC = (props) => {
       ...answer,
       likelihood: data
     });
+    console.log('values')
+    setValuesChanged(true)
   }
 
   const getConsequence = (data: any) => {
@@ -169,6 +207,8 @@ const QuestionsPage: React.FC = (props) => {
       ...answer,
       consequence: data
     });
+    console.log('values')
+    setValuesChanged(true)
   }
 
   const getRiskScore = (data: any) => {
@@ -177,6 +217,8 @@ const QuestionsPage: React.FC = (props) => {
       ...answer,
       risk: data
     });
+    console.log('values')
+    setValuesChanged(true)
   }
 
   const changeInterface = (answer: any) => {
@@ -188,6 +230,9 @@ const QuestionsPage: React.FC = (props) => {
         ...answer,
         answer: 'yes'
       });
+      console.log('values')
+      setValuesChanged(true)
+      return 'done'
     }
     else if (answer === "no") {
       setYes(false);
@@ -197,6 +242,9 @@ const QuestionsPage: React.FC = (props) => {
         ...answer,
         answer: 'no'
       });
+      console.log('values')
+      setValuesChanged(true)
+      return 'done'
     }
     else if (answer === "n/a") {
       setYes(false);
@@ -206,14 +254,20 @@ const QuestionsPage: React.FC = (props) => {
         ...answer,
         answer: 'na'
       });
+      console.log('values')
+      setValuesChanged(true)
+      return 'done'
     }
   }
+
 
   const getWhen = (value: any) => {
     setAnswer({
       ...answer,
       when: value
     });
+    console.log('values')
+    setValuesChanged(true)
   }
 
   const getRiskResponse = (value: any) => {
@@ -221,13 +275,18 @@ const QuestionsPage: React.FC = (props) => {
       ...answer,
       risk_response: value
     });
+    console.log('values')
+    setValuesChanged(true)
   }
 
   const getMMPSummary = (value: any) => {
-    setAnswer({
-      ...answer,
-      mmp_summary: value
-    });
+    console.log(value)
+    // setAnswer({
+    //   ...answer,
+    //   mmp_summary: value
+    // });
+    // console.log('values')
+    // setValuesChanged(true)
   }
 
   const getGreatestImpact = (value: any) => {
@@ -235,6 +294,8 @@ const QuestionsPage: React.FC = (props) => {
       ...answer,
       greatest_impact: value
     });
+    console.log('values')
+    setValuesChanged(true)
   }
 
   const getAssumptions = (value: any) => {
@@ -245,6 +306,8 @@ const QuestionsPage: React.FC = (props) => {
         assumptions_no: '',
         assumptions_na: ''
       });
+      console.log('values')
+      setValuesChanged(true)
     }
     else if (no) {
       setAnswer({
@@ -253,6 +316,8 @@ const QuestionsPage: React.FC = (props) => {
         assumptions_no: value,
         assumptions_na: ''
       });
+      console.log('values')
+      setValuesChanged(true)
     }
     else if (na) {
       setAnswer({
@@ -261,6 +326,8 @@ const QuestionsPage: React.FC = (props) => {
         assumptions_no: '',
         assumptions_na: value
       });
+      console.log('values')
+      setValuesChanged(true)
     }
   }
 
@@ -272,6 +339,8 @@ const QuestionsPage: React.FC = (props) => {
         notes_no: '',
         notes_na: ''
       });
+      console.log('values')
+      setValuesChanged(true)
     }
     else if (no) {
       setAnswer({
@@ -280,6 +349,8 @@ const QuestionsPage: React.FC = (props) => {
         notes_no: value,
         notes_na: ''
       });
+      console.log('values')
+      setValuesChanged(true)
     }
     else if (na) {
       setAnswer({
@@ -288,20 +359,8 @@ const QuestionsPage: React.FC = (props) => {
         notes_no: '',
         notes_na: value
       });
-    }
-  }
-
-  const handlePreviousPageClick = () => {
-    if (questionCount > 0) {
-      let questionNum = questionCount - 1;
-      setQuestionCount(questionNum);
-    }
-  }
-
-  const handleNextPageClick = () => {
-    if (questionCount < 3) {
-      let questionNum = questionCount + 1;
-      setQuestionCount(questionNum);
+      console.log('values')
+      setValuesChanged(true)
     }
   }
 
@@ -314,22 +373,14 @@ const QuestionsPage: React.FC = (props) => {
   return (
     <IonPage className="question-page-wrapper">
       <Header showReportsTab={true} />
-      <Topbar />
+      <Topbar getNextQuestion={getNextQuestion} saveAnswers={saveAnswers} question={question} subthread={subthread} thread={thread} assessInfo={assessInfo}/>
       <IonContent>
 
         <div className="content-wrapper">
           <IonGrid>
             <IonRow>
               <IonCol size="9"><h2>{question.question_text}</h2></IonCol>
-              <IonCol size="3">
-                <div className="title-wrapper">
-                  <div>
-                    <IonButton color="dsb" onClick={() => grabNextQuestion('prev')}>Previous</IonButton>
-                    <IonButton color="dsb" onClick={() => grabNextQuestion('next')}>Next</IonButton>
-                    <IonButton color="dsb" onClick={() => saveAnswers()}>Save</IonButton>
-                  </div>
-                </div>
-              </IonCol>
+
 
               <IonCol size="12" size-lg="5">
                 <IonItem color="dark">
@@ -348,20 +399,7 @@ const QuestionsPage: React.FC = (props) => {
                 <IonButton color="dsb" onClick={() => showExplanationText(!explanationText)}>Explanation Text</IonButton>
 
                 {explanationText && <div className="explanation-text">
-                  <p>TRL 1: Basic principles observed and reported
-                  </p>
-                  <p>
-                    Description:<br />
-                    Lowest level of technology readiness. Scientific research begins to be translated into applied research and development (R&D). Examples might include paper studies of a technology’s basic properties.
-                  </p>
-                  <p>
-                    Supporting Information:
-                    Published research that identifies the principles that underlie this technology. References to who, where, when.
-                  </p>
-                  <p>
-                    Examples of ‘Objective Evidence’:<br />
-                    ● TRA Report is TRL of 1 or greater
-                  </p>
+                  <p>{subthread.help_text}</p>
                 </div>}
 
                 {yes && <div>
@@ -512,6 +550,13 @@ const QuestionsPage: React.FC = (props) => {
               </IonCol>
             </IonRow>
           </IonGrid>
+          <IonToast
+            isOpen={showToast}
+            onDidDismiss={() => setShowToast(false)}
+            position="top"
+            message={toastMessage.message}
+            color={toastMessage.status}
+          />
         </div>
 
       </IonContent>

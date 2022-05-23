@@ -5,26 +5,14 @@ import './Components.scss';
 const Sidebar: React.FC = () => {
   return(
     <div className="home-rs">
-    <div className="rs-top">
-      <IonItem className="search-input">
-        <IonInput placeholder="Search Through Assessments"></IonInput>
-      </IonItem>
-      <IonAccordionGroup className="assessments-accordion">
-        <IonAccordion value="assessment1" color="secondary">
-          <IonItem slot="header">
-            <IonLabel>Docent Metrics</IonLabel>
-          </IonItem>
-          <IonItem slot="content">
-            <div>docent metrics</div>
-          </IonItem>
-        </IonAccordion>
-      </IonAccordionGroup>
-    </div>
+
     <div className="rs-bottom">
       <div className="action-group">
         <IonButton expand="full" color="dark" routerLink="/start-new">Start New Assessment</IonButton>
-        <IonButton expand="full" color="dark">Import</IonButton>
-        <IonButton expand="full" color="dark">Export</IonButton>
+        <div className="port-group">
+          <IonButton expand="full" color="dark">Import</IonButton>
+          <IonButton expand="full" color="dark">Export</IonButton>
+        </div>
       </div>
       <div className="footer">
         <div className="name-section">
@@ -39,3 +27,18 @@ const Sidebar: React.FC = () => {
   )
 }
 export default Sidebar;
+// <div className="rs-top">
+//   <IonItem className="search-input">
+//     <IonInput placeholder="Search Through Assessments"></IonInput>
+//   </IonItem>
+//   <IonAccordionGroup className="assessments-accordion">
+//     <IonAccordion value="assessment1" color="secondary">
+//       <IonItem slot="header">
+//         <IonLabel>Docent Metrics</IonLabel>
+//       </IonItem>
+//       <IonItem slot="content">
+//         <div>docent metrics</div>
+//       </IonItem>
+//     </IonAccordion>
+//   </IonAccordionGroup>
+// </div>
