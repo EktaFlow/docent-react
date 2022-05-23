@@ -54,7 +54,7 @@ const Home: React.FC = () => {
                     <IonLabel>Assessment Name: {assessment.assessment.name}</IonLabel>
                   </IonItem>
                   <IonItem slot="content" color="dark">
-                    <AssessmentItem ast={assessment.assessment} />
+                    <AssessmentItem assessmentInfo={assessment.assessment} />
                   </IonItem>
                 </IonAccordion>
               ))
