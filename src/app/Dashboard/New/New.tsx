@@ -1,4 +1,4 @@
-import { IonButton, IonPage, IonLabel, IonInput, IonItem, IonTextarea, IonSelect, IonSelectOption, IonDatetime, IonText, IonPopover, IonChip, IonIcon } from '@ionic/react';
+import { IonButton, IonPage, IonLabel, IonInput, IonItem, IonTextarea, IonSelect, IonSelectOption, IonDatetime, IonText, IonPopover, IonChip, IonIcon, IonToast } from '@ionic/react';
 import { pin, heart, closeCircle, close } from 'ionicons/icons';
 import React, { useState, useEffect } from 'react';
 
@@ -10,6 +10,7 @@ import { createAssessment } from '../../../api/api';
 import {useHistory} from "react-router-dom";
 
 const New: React.FC = () => {
+  type ThreadsType = {t: boolean, a: boolean, b: boolean, c: boolean, d: boolean, e: boolean, f: boolean, g: boolean, h: boolean, i: boolean}
   const [selectedDate, setSelectedDate] = useState('');
   const [newAssessment, setNewAssessment] = useState({
     name: '',
@@ -28,6 +29,12 @@ const New: React.FC = () => {
   })
   const [tms, setTms] = useState<any>([]);
   let history = useHistory();
+  const [validationErrors, setValidationErrors] = useState({
+    name: false,
+    target_mrl: false
+  });
+  const [threads, setThreads] = useState<ThreadsType>({t: true, a: true, b: true, c: true, d: true, e: true, f: true, g: true, h: true, i: true});
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     setNewAssessment({
@@ -38,18 +45,26 @@ const New: React.FC = () => {
       level_switching: '',
       target: null,
       location: '',
-      deskbook_version: '',
+      deskbook_version: '2020',
       team_members: ''
     })
   }, [])
 
-  function handleChange(e: Event) {
-    // const { name, value } = e.currentTarget
-    console.log(e.target)
-    // setNewAssessment(newAssessment => ({ ...newAssessment, [e.target!.value]: e.target!.value }))
-  }
+  useEffect(() => {
+    console.log(threads);
+  }, [threads])
 
   const handleAssessmentChange = (e: any) => {
+    if (e.target.name == 'name' && validationErrors.name == true) {
+      var v = validationErrors
+      v.name = false;
+      setValidationErrors(v)
+    }
+    if (e.target.name == 'target_mrl' && validationErrors.target_mrl == true) {
+      var v = validationErrors
+      v.target_mrl = false;
+      setValidationErrors(v)
+    }
     setNewAssessment({
       ...newAssessment,
       [e.target.name]: e.target.value
@@ -87,17 +102,44 @@ const New: React.FC = () => {
   }
 
   async function saveAssessment() {
-    var nA = newAssessment
-    nA["team_members"] = tms
-    console.log(nA)
-    var assm = await createAssessment(nA)
-      .then((res) => {
-        console.log(res);
-        history.push('/home');
+    if (newAssessment.name == '' || newAssessment.target_mrl == null){
+      console.log('missing fields!')
+      setValidationErrors({
+        name: newAssessment.name == '' ? true : false,
+        target_mrl: newAssessment.target_mrl == null ? true : false
       })
-      .catch((error) => {
-        console.log(error)
-      })
+    } else {
+      var ths:any = [];
+      var keys = Object.keys(threads);
+      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach((count) => {
+        var thname = keys[count]
+        if (threads[thname as keyof ThreadsType] == true) {
+          ths.push(count);
+        }
+      });
+      console.log(ths);
+
+      var nA = newAssessment
+      nA["team_members"] = tms
+      console.log(nA)
+      setShowToast(true);
+
+      var assm = await createAssessment(nA)
+        .then((res) => {
+          console.log(res);
+          setShowToast(false);
+          history.push({
+            pathname: '/questions',
+            state: {
+              assessment_id: res.assessment_id
+            }
+          })
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
+
   }
 
 
@@ -119,16 +161,35 @@ const New: React.FC = () => {
         <div className="panel-wrappers">
           <div className="assessment-info">
             <h3>Assessment Information</h3>
-            <IonItem color="dark">
-              <IonLabel position="floating">Assessment Name* (0/50)</IonLabel>
+            <IonItem color={validationErrors.name == false ? 'dark' : 'danger'}>
+              <IonLabel position="floating">Assessment Name* (50 characters max)</IonLabel>
               <IonInput
                 name="name"
                 value={newAssessment.name}
                 onIonChange={handleAssessmentChange}
+                maxlength={50}
+                required
               ></IonInput>
             </IonItem>
-            <IonItem color="dark">
+            <IonItem color={validationErrors.target_mrl == false ? 'dark' : 'danger'}>
               <IonLabel position="floating">Target MRL*</IonLabel>
+              <IonSelect
+                name="target_mrl"
+                value={newAssessment.target_mrl}
+                onIonChange={handleAssessmentChange}
+                interface="popover"
+              >
+                <IonSelectOption value="1">1</IonSelectOption>
+                <IonSelectOption value="2">2</IonSelectOption>
+                <IonSelectOption value="3">3</IonSelectOption>
+                <IonSelectOption value="4">4</IonSelectOption>
+                <IonSelectOption value="5">5</IonSelectOption>
+                <IonSelectOption value="6">6</IonSelectOption>
+                <IonSelectOption value="7">7</IonSelectOption>
+                <IonSelectOption value="8">8</IonSelectOption>
+                <IonSelectOption value="9">9</IonSelectOption>
+                <IonSelectOption value="10">10</IonSelectOption>
+              </IonSelect>
             </IonItem>
             <IonItem color="dark">
               <IonLabel position="floating">Level Switching</IonLabel>
@@ -161,11 +222,12 @@ const New: React.FC = () => {
               ></IonInput>
             </IonItem>
             <IonItem color="dark">
-              <IonLabel position="floating">Additional Information/Scope</IonLabel>
+              <IonLabel position="floating">Additional Information/Scope (250 characters max)</IonLabel>
               <IonTextarea
                 name="scope"
                 value={newAssessment.scope}
                 onIonChange={handleAssessmentChange}
+                maxlength={250}
               ></IonTextarea>
             </IonItem>
             <IonItem color="dark">
@@ -218,8 +280,12 @@ const New: React.FC = () => {
               }
 
             </div>
-            <ChooseThreads />
-
+            <ChooseThreads setThreads={setThreads} threads={threads}/>
+            <IonToast
+              isOpen={showToast}
+              onDidDismiss={() => setShowToast(false)}
+              message={`Creating Assessment`}
+            />
           </div>
         </div>
       </div>
@@ -227,4 +293,3 @@ const New: React.FC = () => {
   )
 }
 export default New;
-

@@ -29,6 +29,7 @@ import Criteria from './app/Help/Criteria/Criteria';
 // other pages
 import Edit from './app/Dashboard/Edit/Edit';
 import Settings from './app/Dashboard/Settings/Settings';
+import Test from './app/Dashboard/Settings/Test';
 
 import { setupIonicReact } from '@ionic/react';
 
@@ -84,6 +85,9 @@ const App: React.FC = () => (
           <Questions />
         </Route>
         <Route exact path="/review-report">
+          <Review />
+        </Route>
+        <Route exact path="/review-report/:ast_id">
           <Review />
         </Route>
         <Route exact path="/comprehensive-report">
