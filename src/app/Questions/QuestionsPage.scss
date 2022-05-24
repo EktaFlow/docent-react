@@ -6,11 +6,22 @@
   padding-left: 15px;
 }
 
+ion-popover.file-popover {
+  --width: 70%;
+  --height: 70%;
+  --border-radius: 0;
+}
+
 .title-wrapper {
-  width: 100%;
+  width: 30%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  div {
+    .button {
+
+    }
+  }
 }
 
 .item-input,
@@ -57,15 +68,12 @@ div.attachments-content {
   // display: flex;
   // width: 100%;
   // justify-content: space-around;
-  margin-bottom: 175px;
+  // margin-bottom: 175px;
 }
 
 div.attachments-table {
   display: flex;
   justify-content: center;
-}
-
-#file-upload {
 }
 
 @media screen and (min-width: 992px) {
