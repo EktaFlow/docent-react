@@ -11,10 +11,11 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
   const history = useHistory();
 
   async function navigateToPage(value: string) {
+    console.log(value)
     history.push({
       pathname: `/${value}`,
       state: {
-        assessment_id: assessmentInfo.assessment.id as number
+        assessment_id: assessmentInfo.id as number
       }
     })
   }
