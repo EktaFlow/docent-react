@@ -42,8 +42,8 @@ const Header: React.FC<{ showAssessment?: boolean, assessmentId?: number }> = ({
         <IonButton expand='full' color="light" routerLink="/home">Home</IonButton>
 
         {showAssessment && <IonButton id="" expand='full' color="light" onClick={navigateToAssessment}>Continue Assessment</IonButton>}
-        {showAssessment && <IonButton id="trigger-reports" expand='full' color="light">Reports</IonButton>}
-        {/* {showAssessment && <IonButton expand='full' color="light" onClick={() => showReportsPopover(!reportsPopover)}>Reports</IonButton>} */}
+        {/* {showAssessment && <IonButton id="trigger-reports" expand='full' color="light">Reports</IonButton>} */}
+        {showAssessment && <IonButton expand='full' color="light" onClick={() => showReportsPopover(!reportsPopover)}>Reports</IonButton>}
 
         <IonPopover trigger="trigger-reports">
           <IonButton color="light" expand="full" onClick={() => navigateToReports("mrl-summary")}>MRL Summary</IonButton>
@@ -59,13 +59,13 @@ const Header: React.FC<{ showAssessment?: boolean, assessmentId?: number }> = ({
           isOpen={reportsPopover}
           onDidDismiss={() => showReportsPopover(!reportsPopover)}
         >
-          <IonButton color="light" expand="full">MRL Summary</IonButton>
-          <IonButton color="light" expand="full">Questions List</IonButton>
-          <IonButton color="light" expand="full" routerLink="review-report">Review</IonButton>
-          <IonButton color="light" expand="full" routerLink="comprehensive-report">Comprehensive</IonButton>
-          <IonButton color="light" expand="full" routerLink="action-items">Action Items</IonButton>
-          <IonButton color="light" expand="full" routerLink="risk-summary">MRL Risk Summary</IonButton>
-          <IonButton color="light" expand="full" routerLink="detailed-risk">Detailed Risk Report</IonButton>
+          <IonButton color="light" expand="full" onClick={() => navigateToReports("mrl-summary")}>MRL Summary</IonButton>
+          <IonButton color="light" expand="full" onClick={() => navigateToReports("questions-list")}>Questions List</IonButton>
+          <IonButton color="light" expand="full" onClick={() => navigateToReports("review-report")}>Review</IonButton>
+          <IonButton color="light" expand="full" onClick={() => navigateToReports("comprehensive-report")}>Comprehensive</IonButton>
+          <IonButton color="light" expand="full" onClick={() => navigateToReports("action-items")}>Action Items</IonButton>
+          <IonButton color="light" expand="full" onClick={() => navigateToReports("risk-summary")}>MRL Risk Summary</IonButton>
+          <IonButton color="light" expand="full" onClick={() => navigateToReports("detailed-risk")}>Detailed Risk Report</IonButton>
         </IonPopover>
 
         <IonButton expand='full' color="light" onClick={() => showHelpPopover(!helpPopover)}>Help</IonButton>

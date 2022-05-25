@@ -20,9 +20,6 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
     })
   }
 
-
-
-
   const removeAssessment = (id: number) => {
     console.log(id)
     deleteAssessmentFromBack(id);
@@ -42,7 +39,7 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
       </div>
       <div className="assessment-actions">
         <IonButton size="small" expand="full" color="light" onClick={() => navigateToPage('questions')}>Continue Assessment</IonButton>
-        <IonButton size="small" expand="full" color="light" onClick={() => navigateToPage('mrl_summary')}>MRL Summary</IonButton>
+        <IonButton size="small" expand="full" color="light" onClick={() => navigateToPage('mrl-summary')}>MRL Summary</IonButton>
         <IonButton size="small" expand="full" color="light" onClick={() => navigateToPage('action-items')}>Action Items</IonButton>
         <IonButton size="small" expand="full" color="light" onClick={() => openInviteTM(assessmentInfo.id)} >Invite Team Members</IonButton>
         <IonButton size="small" expand="full" color="light">Edit Assessment Info</IonButton>

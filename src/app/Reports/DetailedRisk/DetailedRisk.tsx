@@ -49,6 +49,9 @@ const DetailedRisk: React.FC = () => {
   useEffect(() => {
     if (assessmentData) {
       console.log(assessmentData)
+      setSelectedMRL(assessmentData.info.current_mrl.toString())
+      setFilteredMRL(assessmentData.info.current_mrl.toString())
+      
       let threadData = assessmentData.threads.map((thread: any) => (
         thread.subthreads.map((subthread: any) => {
           subthread.questions.map((question: any) => (
@@ -179,7 +182,7 @@ const DetailedRisk: React.FC = () => {
             <IonCol size="12" size-lg="3" className="filter-item ion-no-padding">
               <IonItem color="dark">
                 <IonLabel position="floating">Filter MR Level</IonLabel>
-                <IonSelect interface="popover" onIonChange={e => handleMRLevelChange(e.detail.value)}>
+                <IonSelect interface="popover" value={selectedMRL} onIonChange={e => handleMRLevelChange(e.detail.value)}>
                   <IonSelectOption value="all-levels">All Levels</IonSelectOption>
                   <IonSelectOption value="1">1</IonSelectOption>
                   <IonSelectOption value="2">2</IonSelectOption>

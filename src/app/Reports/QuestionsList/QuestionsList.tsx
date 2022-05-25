@@ -54,6 +54,10 @@ const QuestionsList: React.FC = () => {
 
   useEffect(() => {
     if (assessmentData) {
+      console.log(assessmentData)
+      setSelectedMRL(assessmentData.info.current_mrl.toString())
+      setFilteredMRL(assessmentData.info.current_mrl.toString())
+
       let insertQuestionData = assessmentData.threads.map((thread: any) => (
         thread.subthreads.map((subthread: any) => {
           let questionArray: { current_answer: string, question_text: string, question_id: number }[] = [];
@@ -103,6 +107,12 @@ const QuestionsList: React.FC = () => {
       filterData()
     }
   }, [filteredAnswer]);
+
+  useEffect(() => {
+    if (questionData) {
+      console.log(questionData)
+    }
+  }, [questionData]);
 
   const handleMRLevelChange = (value: any) => {
     setSelectedMRL(value)
@@ -169,12 +179,12 @@ const QuestionsList: React.FC = () => {
           <InfoCard assessmentId={assessmentId} />
           <IonRow className="questions-list-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1 ion-padding-bottom">
-              <IonButton expand="block" color="dsb">Close All</IonButton>
+              {/* <IonButton expand="block" color="dsb">Close All</IonButton> */}
             </IonCol>
             <IonCol size="12" size-lg="3" className="filter-item">
               <IonItem color="dark">
                 <IonLabel position="floating">Filter MR Level</IonLabel>
-                <IonSelect interface="popover" onIonChange={e => handleMRLevelChange(e.detail.value)}>
+                <IonSelect interface="popover" value={selectedMRL} onIonChange={e => handleMRLevelChange(e.detail.value)}>
                   <IonSelectOption value="all-levels">All Levels</IonSelectOption>
                   <IonSelectOption value="1">1</IonSelectOption>
                   <IonSelectOption value="2">2</IonSelectOption>
@@ -193,7 +203,7 @@ const QuestionsList: React.FC = () => {
             <IonCol size="12" size-lg="3" className="filter-item">
               <IonItem color="dark">
                 <IonLabel position="floating">Filter Answer Type</IonLabel>
-                <IonSelect interface="popover" onIonChange={e => handleAnswerChange(e.detail.value)}>
+                <IonSelect interface="popover" value={selectedAnswer} onIonChange={e => handleAnswerChange(e.detail.value)}>
                   <IonSelectOption value="all-answers">All Answers</IonSelectOption>
                   <IonSelectOption value="yes">Yes</IonSelectOption>
                   <IonSelectOption value="no">No</IonSelectOption>
@@ -232,7 +242,7 @@ const QuestionsList: React.FC = () => {
                             {question_info.current_answer === 'no' &&
                               <IonButton size="small" color="danger" className="status-button ion-no-padding">No</IonButton>
                             }
-                            {(question_info.current_answer === 'na' || question_info.answer === 'Unanswered') &&
+                            {(question_info.current_answer === 'na' || !question_info.current_answer) &&
                               <IonButton size="small" className="status-button ion-no-padding">Unanswered</IonButton>
                             }
                           </span>
