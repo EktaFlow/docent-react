@@ -1,10 +1,15 @@
+import React, { useState, useEffect, Fragment } from 'react';
 import { IonPage, IonContent, IonGrid, IonRow, IonCol, IonItem } from '@ionic/react'
 
 import './Acronyms.scss';
 import Header from '../../Framework/Header';
 import HelpTopbar from '../HelpTopbar';
 
+import acronyms from "./acronyms.json";
+
 const Acronyms: React.FC = () => {
+  let acronymArray = Object.keys(acronyms)
+
   return (
     <IonPage>
       <Header />
@@ -14,15 +19,36 @@ const Acronyms: React.FC = () => {
         <div className="acronyms-wrapper">
           <IonGrid>
             <IonRow>
-              <IonCol size="6">
-                <IonItem className="acronym odd" color="none">A/W</IonItem>
-              </IonCol>
+              {acronymArray.map((acronym, index) => (
+                <Fragment>
+                  {index % 2 === 0 &&
+                    <Fragment>
+                      <IonCol size="6">
+                        <IonItem className="acronym odd" color="none">{acronym}</IonItem>
+                      </IonCol>
 
-              <IonCol size="6">
-                <IonItem className="spelled-name odd" color="none">Air Worthiness</IonItem>
-              </IonCol>
+                      <IonCol size="6">
+                        {/* @ts-ignore */}
+                        <IonItem className="spelled-name odd" color="none">{acronyms[acronym]}</IonItem>
+                      </IonCol>
+                    </Fragment>
+                  }
+                  {index % 2 === 1 &&
+                    <Fragment>
+                      <IonCol size="6">
+                        <IonItem className="acronym even" color="dark">{acronym}</IonItem>
+                      </IonCol>
 
-              <IonCol size="6">
+                      <IonCol size="6">
+                        {/* @ts-ignore */}
+                        <IonItem className="spelled-name even" color="dark">{acronyms[acronym]}</IonItem>
+                      </IonCol>
+                    </Fragment>
+                  }
+                </Fragment>
+              ))}
+
+              {/* <IonCol size="6">
                 <IonItem className="acronym even" color="dark">AAC</IonItem>
               </IonCol>
 
@@ -44,8 +70,7 @@ const Acronyms: React.FC = () => {
 
               <IonCol size="6">
                 <IonItem className="spelled-name even" color="dark">Advanced Concept Technology Demonstration</IonItem>
-              </IonCol>
-
+              </IonCol> */}
             </IonRow>
           </IonGrid>
         </div>
