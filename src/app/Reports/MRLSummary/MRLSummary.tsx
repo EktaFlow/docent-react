@@ -175,7 +175,6 @@ const MRLSummary: React.FC = () => {
                             }
                           </div>
                         ))}
-
                       </div>
                     ))}
                   </div>

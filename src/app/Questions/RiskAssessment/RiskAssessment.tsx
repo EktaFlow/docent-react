@@ -5,23 +5,20 @@ import React, { useState, useEffect } from 'react';
 
 import RiskPopover from './RiskPopover';
 
-const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Function, getRiskScore: Function, getRiskResponse: Function, getMMPSummary: Function, getGreatestImpact: Function, greatest_impact: string, risk_response: string, mmp_summary: string }> = ({ getLikelihood, getConsequence, getRiskScore, getRiskResponse, getMMPSummary, getGreatestImpact, greatest_impact, risk_response, mmp_summary }) => {
-  const [likelihood, setLikelihood] = useState<number>();
-  const [consequence, setConsequence] = useState<number>();
-
+const RiskAssessment: React.FC<{ answer: any, handleAnswerChange: any, getRiskScore: Function }> = ({ answer, handleAnswerChange, getRiskScore }) => {
   const [riskScore, setRiskScore] = useState<number | null>();
 
   const [descriptionModal, setDescriptionModal] = useState(false);
   const [modalDescription, setModalDescription] = useState<string>('');
 
   useEffect(() => {
-    if (likelihood) {
-      getLikelihood(likelihood);
+    if(answer) {
+      console.log(answer)
     }
-    if (consequence) {
-      getConsequence(consequence);
-    }
-    if (likelihood && consequence) {
+  }, [answer]);
+
+  useEffect(() => {
+    if (answer.likelihood && answer.consequence) {
       let riskMatrix = [
         [null],
         [null, 1, 3, 5, 8, 12],
@@ -30,10 +27,10 @@ const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Functi
         [null, 6, 12, 18, 22, 24],
         [null, 9, 16, 20, 23, 25],
       ];
-      setRiskScore(riskMatrix[likelihood][consequence]);
+      setRiskScore(riskMatrix[answer.likelihood][answer.consequence]);
     }
 
-  }, [likelihood, consequence]);
+  }, [answer.likelihood, answer.consequence]);
 
   useEffect(() => {
     if (riskScore) {
@@ -61,8 +58,8 @@ const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Functi
             <IonRow>
               <IonCol size="10" className="ion-no-padding">
                 <IonItem color="dark">
-                  <IonLabel position="floating" >Likelihood</IonLabel>
-                  <IonSelect interface="popover" onIonChange={e => setLikelihood(e.detail.value)}>
+                  <IonLabel position="floating">Likelihood</IonLabel>
+                  <IonSelect name="likelihood" value={answer.likelihood} interface="popover" onIonChange={handleAnswerChange}>
                     <IonSelectOption value="1">1 - Not Likely</IonSelectOption>
                     <IonSelectOption value="2">2 - Low Likelihood</IonSelectOption>
                     <IonSelectOption value="3">3 - Moderate</IonSelectOption>
@@ -80,8 +77,8 @@ const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Functi
               </IonCol>
               <IonCol size="10" className="ion-no-padding">
                 <IonItem color="dark">
-                  <IonLabel position="floating">Consequence </IonLabel>
-                  <IonSelect interface="popover" onIonChange={e => setConsequence(e.detail.value)}>
+                  <IonLabel position="floating">Consequence</IonLabel>
+                  <IonSelect name="consequence" value={answer.consequence} interface="popover" onIonChange={handleAnswerChange}>
                     <IonSelectOption value="1">1 - Negligible</IonSelectOption>
                     <IonSelectOption value="2">2 - Marginal</IonSelectOption>
                     <IonSelectOption value="3">3 - Moderate</IonSelectOption>
@@ -97,27 +94,6 @@ const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Functi
                   onClick={() => showConsequenceDescription()}>
                 </img>
               </IonCol>
-              {/* <IonCol size="12" size-lg="6">
-                <IonItem color="dark">
-                  <IonLabel position="floating">Greatest Impact</IonLabel>
-                  <IonSelect interface="popover">
-                    <IonSelectOption value="cost">Cost</IonSelectOption>
-                    <IonSelectOption value="schedule">Schedule</IonSelectOption>
-                    <IonSelectOption value="performance">Performance</IonSelectOption>
-                  </IonSelect>
-                </IonItem>
-              </IonCol>
-              <IonCol size="12" size-lg="6">
-                <IonItem color="dark">
-                  <IonLabel position="floating">Risk Response</IonLabel>
-                  <IonSelect interface="popover">
-                    <IonSelectOption value="accept">Accept</IonSelectOption>
-                    <IonSelectOption value="transfer">Transfer</IonSelectOption>
-                    <IonSelectOption value="avoid">Avoid</IonSelectOption>
-                    <IonSelectOption value="mitigate">Mitigate</IonSelectOption>
-                  </IonSelect>
-                </IonItem>
-              </IonCol> */}
             </IonRow>
 
             <IonModal isOpen={descriptionModal}
@@ -136,9 +112,7 @@ const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Functi
             <IonItem color="dark">
               <IonLabel position="floating">Greatest Impact</IonLabel>
               <IonSelect
-                value={greatest_impact}
-                interface="popover"
-                onIonChange={e => getGreatestImpact(e.detail.value)}>
+                name="greatest_impact" value={answer.greatest_impact} interface="popover" onIonChange={handleAnswerChange}>
                 <IonSelectOption value="cost">Cost</IonSelectOption>
                 <IonSelectOption value="schedule">Schedule</IonSelectOption>
                 <IonSelectOption value="performance">Performance</IonSelectOption>
@@ -148,9 +122,7 @@ const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Functi
             <IonItem color="dark">
               <IonLabel position="floating">Risk Response</IonLabel>
               <IonSelect
-                value={risk_response}
-                interface="popover"
-                onIonChange={e => getRiskResponse(e.detail.value)}>
+                name="risk_response" value={answer.risk_response} interface="popover" onIonChange={handleAnswerChange}>
                 <IonSelectOption value="accept">Accept</IonSelectOption>
                 <IonSelectOption value="transfer">Transfer</IonSelectOption>
                 <IonSelectOption value="avoid">Avoid</IonSelectOption>
@@ -161,9 +133,9 @@ const RiskAssessment: React.FC<{ getLikelihood: Function, getConsequence: Functi
             <IonItem color="dark">
               <IonLabel position="floating">MMP Summary</IonLabel>
               <IonTextarea
-                value={mmp_summary}
-                placeholder=""
-                onIonChange={e => getMMPSummary(e.detail.value)}></IonTextarea>
+                name="mmp_summary"
+                value={answer.mmp_summary}
+                onIonChange={handleAnswerChange}></IonTextarea>
             </IonItem>
 
           </IonCol>
