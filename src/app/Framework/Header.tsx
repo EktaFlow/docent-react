@@ -1,5 +1,6 @@
 import './Framework.scss';
-import { IonButton, IonPopover, IonContent } from '@ionic/react'
+import { IonButton, IonPopover, IonContent } from '@ionic/react';
+import {logoutUser} from '../../api/api';
 
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -24,6 +25,14 @@ const Header: React.FC<{ showAssessment?: boolean, assessmentId?: number }> = ({
         assessment_id: assessmentId as number,
       }
     })
+  }
+
+  async function logout(){
+    var logout = await logoutUser();
+    if (logout.data) {
+      localStorage.removeItem("token");
+      history.push('/login')
+    }
   }
 
   async function navigateToReports(value: string) {
@@ -83,7 +92,7 @@ const Header: React.FC<{ showAssessment?: boolean, assessmentId?: number }> = ({
           <IonButton color="light" expand="full" href="http://www.dodmrl.com/MRL%20Deskbook%20V2020.pdf">MRL Deskbook</IonButton>
         </IonPopover>
 
-        <IonButton expand='full' color="light">Logout</IonButton>
+        <IonButton expand='full' color="light" onClick={logout}>Logout</IonButton>
       </div>
     </div>
   )

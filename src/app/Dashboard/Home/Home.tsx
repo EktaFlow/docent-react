@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import { IonContent, IonIcon, IonAccordionGroup, IonAccordion, IonItem, IonLabel, IonList, IonButton, IonInput, IonPage, IonPopover, useIonToast, IonToast } from '@ionic/react';
+import { IonContent, IonIcon, IonAccordionGroup, IonAccordion, IonItem, IonLabel, IonList, IonButton, IonInput, IonPage, IonPopover, IonToast } from '@ionic/react';
 
 import Header from '../../Framework/Header';
 import './Home.scss';
@@ -15,13 +15,12 @@ import { grabAssessments, deleteAssessment, createTeamMember } from '../../../ap
 const Home: React.FC = () => {
   const [assessments, setAssessments] = useState<Array<any>>([]);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [deletedAssess, setDeletedAssess] = useState(null);
-  const [showToast1, setShowToast1] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState({message: '', status: ''})
   const [filters, setFilters] = useState<any>({
     listBy: 'Created At',
 
   });
-  const [present, dismiss] = useIonToast();
   const [invitePopover, setInvitePopover] = useState(false);
   const [currentAssessment, setCurrentAssesment] = useState(null);
 
@@ -49,6 +48,22 @@ const Home: React.FC = () => {
     tm['assessment_id'] = currentAssessment
     var newTm = await createTeamMember(tm);
     console.log(newTm);
+    console.log('***')
+    if (newTm.data.team_member) {
+      console.log('hereee')
+      setInvitePopover(false);
+      var index = assessments.findIndex((ast) => ast.id == tm['assessment_id']);
+      var astclone = Object.create(assessments);
+      astclone[index] = newTm.data.assessment;
+      setAssessments(astclone);
+      setShowToast(true);
+      if (newTm.data.newUser) {
+        setToastMessage({message: `${newTm.data.team_member} has been invited to the assessment: ${newTm.data.assessment.name}`, status: 'success'})
+      } else {
+        setToastMessage({message: `${newTm.data.team_member} has been invited to Docent as a new user and been invited to the assessment: ${newTm.data.assessment.name}`, status: 'success'})
+      }
+
+    }
 
   }
 
@@ -59,8 +74,9 @@ const Home: React.FC = () => {
     var currentAst = assessments.find((assessment) => assessment.assessment.id == id).name
     var ats = assessments.filter((assess) => assess.assessment.id !== id);
     console.log(ats);
-    setDeletedAssess(currentAst);
-    setShowToast1(true);
+    // setDeletedAssess(currentAst);
+    setShowToast(true);
+    setToastMessage({message: `Assessment ${currentAst} has been deleted`, status: 'success'})
     setAssessments(ats);
   }
 
@@ -86,7 +102,7 @@ const Home: React.FC = () => {
                     <IonLabel>Assessment Name: {assessment.assessment.name}</IonLabel>
                   </IonItem>
                   <IonItem slot="content" color="dark">
-                    <AssessmentItem assessmentInfo={assessment.assessment} deleteAssessmentFromBack={deleteAssessmentFromBack} openInviteTM={openInviteTM}/>
+                    <AssessmentItem assessmentInfo={assessment.assessment} teamMembers={assessment.team_members} deleteAssessmentFromBack={deleteAssessmentFromBack} openInviteTM={openInviteTM}/>
                   </IonItem>
                 </IonAccordion>
               ))
@@ -94,9 +110,9 @@ const Home: React.FC = () => {
 
           </IonAccordionGroup>
           <IonToast
-            isOpen={showToast1}
-            onDidDismiss={() => setShowToast1(false)}
-            message={`Assessment ${deletedAssess} has been deleted`}
+            isOpen={showToast}
+            onDidDismiss={() => setShowToast(false)}
+            message={toastMessage.message}
             duration={2000}
           />
 
