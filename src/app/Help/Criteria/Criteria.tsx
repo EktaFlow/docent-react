@@ -50,6 +50,7 @@ const Criteria: React.FC = () => {
     async function getAssessment() {
       if (assessmentId){
         var assessmentInfo = await grabCritiera(assessmentId);
+        console.log(assessmentInfo)
         await setAssessmentData(assessmentInfo)
       }
 
@@ -71,6 +72,7 @@ const Criteria: React.FC = () => {
               MRL: assessmentData.info.current_mrl,
               thread_name: thread.name,
               subthread_name: subthread.name,
+              criteria_text: subthread.criteria_text,
               questionInfo: questionArray,
             }])
           }
@@ -89,7 +91,7 @@ const Criteria: React.FC = () => {
               MRL: assessmentData.info.current_mrl,
               thread_name: thread.name,
               subthread_name: subthread.name,
-              help_text: subthread.help_text,
+              criteria_text: subthread.criteria_text,
               questionInfo: questionArray,
             }])
           }
@@ -227,7 +229,7 @@ const Criteria: React.FC = () => {
                     </IonCardHeader>
                     <div className="mrl">
                       <h6><b>MR Level: {question.MRL}</b></h6>
-                      <p>{question.help_text}</p>
+                      <p>{question.criteria_text}</p>
                     </div>
                   </IonCard>
                 </IonCard>

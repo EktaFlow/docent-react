@@ -3,6 +3,7 @@ import './Login.scss';
 import React, {useState, useEffect} from 'react'
 import {loginUser} from '../../../api/api';
 import { useHistory } from 'react-router-dom';
+import { useIntercom } from 'react-use-intercom';
 
 const Login: React.FC = () => {
   const [newUser, setNewUser] = useState({email: '', password: ''});
@@ -16,9 +17,9 @@ const Login: React.FC = () => {
     })
   }
 
+
   async function loginNewUser() {
     var user = await loginUser(newUser);
-    console.log(user)
     if (user.data.user) {
       localStorage.setItem("token", user.data.token)
       localStorage.setItem("user", JSON.stringify(user.data.user))
