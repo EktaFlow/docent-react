@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { IonPage, IonItem, IonLabel, IonSelect, IonSelectOption, IonButton, IonHeader, IonToolbar, IonTitle, IonRow, IonCol, IonContent, IonGrid, IonTextarea, IonInput, IonDatetime, IonModal, IonText, IonPopover, IonToast } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
@@ -10,7 +9,7 @@ import './QuestionsPage.scss';
 
 import { format, parseISO } from 'date-fns';
 
-import { createAnswers, grabAnswers, grabNextQuestion, addFileToAssessment, addFileToQuestion, grabFiles, grabNextQuestionAction } from '../../api/api';
+import { createAnswers, grabNextQuestion, addFileToAssessment, addFileToQuestion, grabFiles, grabNextQuestionAction } from '../../api/api';
 
 import Topbar from './Topbar';
 import RiskAssessment from './RiskAssessment/RiskAssessment';
@@ -54,13 +53,9 @@ const QuestionsPage: React.FC = (props) => {
   const [no, setNo] = useState(false);
   const [na, setNA] = useState(false);
 
-  const [likelihood, setLikelihood] = useState<number>();
-  const [consequence, setConsequence] = useState<number>();
-  const [riskScore, setRiskScore] = useState<number>();
-
   const [selectedDate, setSelectedDate] = useState('');
-  const [question, setQuestion] = useState({
-    question_text: '', answered: false, assessment_length: 0, current_answer_text: '', current_mrl: 0, position: 0, question_id: 0
+  const [question, setQuestion] = useState<any>({
+    question_text: '', answered: false, assessment_length: 0, current_answer_text: '', current_mrl: 0, position: 0, question_id: 0,
   })
   const [subthread, setSubthread] = useState({
     help_text: '', id: null, name: ''
@@ -72,7 +67,7 @@ const QuestionsPage: React.FC = (props) => {
     targetDate: null, additionalInfo: ''
   })
   const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState({message: '', status: ''});
+  const [toastMessage, setToastMessage] = useState({ message: '', status: '' });
   const [valuesChanged, setValuesChanged] = useState(false)
 
   const [selectedFile, setSelectedFile] = useState<any>(null);
@@ -83,12 +78,10 @@ const QuestionsPage: React.FC = (props) => {
   const [assessmentId, setAssessmentId] = useState<number>();
 
   useEffect(() => {
-    // console.log(history)
     var his: any = history
     if (his["location"]["state"]) {
-      console.log(his["location"]["state"])
+      // console.log(his["location"]["state"]["question_id"]);
       var ast_id = his["location"]["state"]["assessment_id"]
-      console.log(ast_id)
       setAssessmentId(ast_id)
       var question = grabQ(ast_id)
       loadFiles(ast_id)
@@ -98,6 +91,7 @@ const QuestionsPage: React.FC = (props) => {
   useEffect(() => {
     var his: any = history
     if (his["location"]["state"]) {
+      // console.log(his["location"]["state"]["question_id"]);
       var ast_id = his["location"]["state"]["assessment_id"]
       setAssessmentId(ast_id)
       var question = grabQ(ast_id)
@@ -106,10 +100,16 @@ const QuestionsPage: React.FC = (props) => {
   }, [history])
 
   useEffect(() => {
-    if (loadedFiles) {
-      console.log(loadedFiles);
+    if (valuesChanged === true) {
+      console.log("Value changed: " + valuesChanged);
     }
-  }, [loadedFiles]);
+  }, [valuesChanged]);
+
+  useEffect(() => {
+    if (answer) {
+      console.log(answer);
+    }
+  }, [answer]);
 
   async function loadFiles(assessmentId: any) {
     await grabFiles(assessmentId).then((res) => {
@@ -132,44 +132,40 @@ const QuestionsPage: React.FC = (props) => {
       })
   }
 
-
-  async function getNextQuestion(movement_action:any){
+  async function getNextQuestion(movement_action: any) {
     //will run and grab the right question
-    if (yes == true || no == true || na == true){
-      if (valuesChanged == true) {
+    if (yes == true || no == true || na == true) {
+      if (valuesChanged === true) {
         saveAnswers();
       }
     }
     setShowToast(true);
-    setToastMessage({message: 'Navigating to Question', status: 'primary'})
+    setToastMessage({ message: 'Navigating to Question', status: 'primary' })
     await grabNextQuestionAction(assessmentId, movement_action, question.question_id)
-    .then((res) => {
-      setUpQuestionsPage(res)
-      setShowToast(false);
-    })
-    .catch((err) => {
-      setToastMessage({message: 'Error navigating to next question, please refresh', status: 'danger'})
-      setTimeout(() => {
-        setShowToast(false)
-      }, 2000)
-    })
-
+      .then((res) => {
+        setUpQuestionsPage(res)
+        setShowToast(false);
+      })
+      .catch((err) => {
+        setToastMessage({ message: 'Error navigating to next question, please refresh', status: 'danger' })
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000)
+      })
   }
 
-  function setUpQuestionsPage(res:any) {
+  function setUpQuestionsPage(res: any) {
+    console.log(res);
     setQuestion(res.question)
     setSubthread(res.subthread)
     setThread(res.thread)
     setAssessInfo(res.assessment_info)
-    if (res.question.current_answer !== []){
+    if (res.question.current_answer !== []) {
       setAnswer(res.question.current_answer);
-      console.log(res.question.current_answer)
       var ci = changeInterface(res.question.current_answer.answer);
-      console.log(ci)
-      if (ci == 'done'){
+      if (ci == 'done') {
         setValuesChanged(false)
       }
-
     }
   }
 
@@ -179,37 +175,49 @@ const QuestionsPage: React.FC = (props) => {
       answer: answer
     }
     setShowToast(true)
-    setToastMessage({message: 'Answers Saving', status: 'primary'})
-    await createAnswers(data)
-      .then((res) => {
-        setToastMessage({message: 'Answers have Saved', status: 'success'})
-        setTimeout(() => {
-          setShowToast(false)
-        }, 2000)
-        return res
-      })
-      .catch((error) => {
-        // setShowToast(true)
-        setToastMessage({message: 'Error saving answers', status: 'danger'})
-        setTimeout(() => {
-          setShowToast(false)
-        }, 2000)
-      })
 
-    if (selectedFile !== null && assessmentId !== undefined) {
-      const formData = new FormData();
-      formData.append('question_id', question.question_id.toString());
-      formData.append('assessment_id', assessmentId.toString());
-      formData.append('file_name', selectedFile.name);
-      formData.append('outside_file', selectedFile);
+    if (yes === true || no === true || na === true) {
+      console.log("Answer condition activated")
+      if (valuesChanged === true) {
+        setToastMessage({ message: 'Answers Saving', status: 'primary' })
+        await createAnswers(data)
+          .then((res) => {
+            setToastMessage({ message: 'Answers have Saved', status: 'success' })
+            setTimeout(() => {
+              setShowToast(false)
+            }, 2000)
+            return res
+          })
+          .catch((error) => {
+            // setShowToast(true)
+            setToastMessage({ message: 'Error saving answers', status: 'danger' })
+            setTimeout(() => {
+              setShowToast(false)
+            }, 2000)
+          })
+        if (selectedFile !== null && assessmentId !== undefined) {
+          const formData = new FormData();
+          formData.append('question_id', question.question_id.toString());
+          formData.append('assessment_id', assessmentId.toString());
+          formData.append('file_name', selectedFile.name);
+          formData.append('outside_file', selectedFile);
 
-      var assm = await addFileToAssessment(formData).then((res) => {
-        console.log(res)
-        saveFileToQuestion(res.file.id);
-      })
-        .catch((error) => {
-          console.log(error)
-        })
+          var assm = await addFileToAssessment(formData).then((res) => {
+            console.log(res)
+            saveFileToQuestion(res.file.id);
+          })
+            .catch((error) => {
+              console.log(error)
+            })
+        }
+      }
+    }
+    else {
+      console.log("Didn't save answer")
+      setToastMessage({ message: 'Select an answer before saving', status: 'danger' })
+      setTimeout(() => {
+        setShowToast(false)
+      }, 2000)
     }
   }
 
@@ -218,7 +226,6 @@ const QuestionsPage: React.FC = (props) => {
       question_id: question.question_id,
       file_id: file_id
     }
-
     var ques = await addFileToQuestion(data).then((res) => {
       console.log(res)
     })
@@ -232,43 +239,25 @@ const QuestionsPage: React.FC = (props) => {
   };
 
   const handleAnswerChange = (e: any) => {
-    setAnswer({
-      ...answer,
-      [e.target.name]: e.target.value
-    });
+    console.log(e.target.name)
+    if (e.target.name === "answer") {
+      changeInterface(e.target.value)
+    }
+    else if(e.target.name === "assumptions") {
+      getAssumptions(e.target.value)
+    }
+    else if(e.target.name === "notes") {
+      getNotes(e.target.value)
+    }
+    else {
+      setAnswer({
+        ...answer,
+        [e.target.name]: e.target.value
+      });
+    }
     console.log('values')
     setValuesChanged(true)
   };
-
-  const getLikelihood = (data: any) => {
-    setLikelihood(data);
-    setAnswer({
-      ...answer,
-      likelihood: data
-    });
-    console.log('values')
-    setValuesChanged(true)
-  }
-
-  const getConsequence = (data: any) => {
-    setConsequence(data);
-    setAnswer({
-      ...answer,
-      consequence: data
-    });
-    console.log('values')
-    setValuesChanged(true)
-  }
-
-  const getRiskScore = (data: any) => {
-    setRiskScore(data);
-    setAnswer({
-      ...answer,
-      risk: data
-    });
-    console.log('values')
-    setValuesChanged(true)
-  }
 
   const changeInterface = (answer: any) => {
     if (answer === "yes") {
@@ -279,9 +268,6 @@ const QuestionsPage: React.FC = (props) => {
         ...answer,
         answer: 'yes'
       });
-      console.log('values')
-      setValuesChanged(true)
-      return 'done'
     }
     else if (answer === "no") {
       setYes(false);
@@ -291,11 +277,8 @@ const QuestionsPage: React.FC = (props) => {
         ...answer,
         answer: 'no'
       });
-      console.log('values')
-      setValuesChanged(true)
-      return 'done'
     }
-    else if (answer === "n/a") {
+    else if (answer === "na") {
       setYes(false);
       setNo(false);
       setNA(true);
@@ -303,48 +286,8 @@ const QuestionsPage: React.FC = (props) => {
         ...answer,
         answer: 'na'
       });
-      console.log('values')
-      setValuesChanged(true)
-      return 'done'
     }
-  }
-
-
-  const getWhen = (value: any) => {
-    setAnswer({
-      ...answer,
-      when: value
-    });
-    console.log('values')
-    setValuesChanged(true)
-  }
-
-  const getRiskResponse = (value: any) => {
-    setAnswer({
-      ...answer,
-      risk_response: value
-    });
-    console.log('values')
-    setValuesChanged(true)
-  }
-
-  const getMMPSummary = (value: any) => {
-    console.log(value)
-    // setAnswer({
-    //   ...answer,
-    //   mmp_summary: value
-    // });
-    // console.log('values')
-    // setValuesChanged(true)
-  }
-
-  const getGreatestImpact = (value: any) => {
-    setAnswer({
-      ...answer,
-      greatest_impact: value
-    });
-    console.log('values')
-    setValuesChanged(true)
+    return 'done'
   }
 
   const getAssumptions = (value: any) => {
@@ -355,8 +298,6 @@ const QuestionsPage: React.FC = (props) => {
         assumptions_no: '',
         assumptions_na: ''
       });
-      console.log('values')
-      setValuesChanged(true)
     }
     else if (no) {
       setAnswer({
@@ -365,8 +306,6 @@ const QuestionsPage: React.FC = (props) => {
         assumptions_no: value,
         assumptions_na: ''
       });
-      console.log('values')
-      setValuesChanged(true)
     }
     else if (na) {
       setAnswer({
@@ -375,8 +314,6 @@ const QuestionsPage: React.FC = (props) => {
         assumptions_no: '',
         assumptions_na: value
       });
-      console.log('values')
-      setValuesChanged(true)
     }
   }
 
@@ -388,8 +325,6 @@ const QuestionsPage: React.FC = (props) => {
         notes_no: '',
         notes_na: ''
       });
-      console.log('values')
-      setValuesChanged(true)
     }
     else if (no) {
       setAnswer({
@@ -398,8 +333,6 @@ const QuestionsPage: React.FC = (props) => {
         notes_no: value,
         notes_na: ''
       });
-      console.log('values')
-      setValuesChanged(true)
     }
     else if (na) {
       setAnswer({
@@ -408,8 +341,25 @@ const QuestionsPage: React.FC = (props) => {
         notes_no: '',
         notes_na: value
       });
-      setValuesChanged(true)
     }
+  }
+
+  const getWhen = (value: any) => {
+    setAnswer({
+      ...answer,
+      when: value
+    });
+    console.log('values')
+    setValuesChanged(true)
+  }
+
+  const getRiskScore = (data: any) => {
+    setAnswer({
+      ...answer,
+      risk: data
+    });
+    console.log('values')
+    setValuesChanged(true)
   }
 
   const formatDate = (value: any) => {
@@ -420,8 +370,8 @@ const QuestionsPage: React.FC = (props) => {
 
   return (
     <IonPage className="question-page-wrapper">
-      <Header showAssessment={true} assessmentId={assessmentId}/>
-      <Topbar getNextQuestion={getNextQuestion} saveAnswers={saveAnswers} question={question} subthread={subthread} thread={thread} assessInfo={assessInfo}/>
+      <Header showAssessment={true} assessmentId={assessmentId} />
+      <Topbar getNextQuestion={getNextQuestion} saveAnswers={saveAnswers} assessmentId={assessmentId} question={question} subthread={subthread} thread={thread} assessInfo={assessInfo} />
       <IonContent>
         <div className="content-wrapper">
           <IonGrid>
@@ -434,10 +384,10 @@ const QuestionsPage: React.FC = (props) => {
                     name="answer"
                     value={answer.answer}
                     interface="popover"
-                    onIonChange={e => changeInterface(e.detail.value)}>
+                    onIonChange={handleAnswerChange}>
                     <IonSelectOption value="yes">Yes</IonSelectOption>
                     <IonSelectOption value="no">No</IonSelectOption>
-                    <IonSelectOption value="n/a">N/A</IonSelectOption>
+                    <IonSelectOption value="na">N/A</IonSelectOption>
                   </IonSelect>
                 </IonItem>
 
@@ -478,6 +428,8 @@ const QuestionsPage: React.FC = (props) => {
                         <IonText slot="end">{selectedDate}</IonText>
                         <IonPopover trigger="open-date-input" showBackdrop={false}>
                           <IonDatetime
+                            name="when"
+                            value={answer.when}
                             presentation="date"
                             onIonChange={e => getWhen(formatDate(e.detail.value))} />
                         </IonPopover>
@@ -522,7 +474,7 @@ const QuestionsPage: React.FC = (props) => {
                   <IonTextarea
                     name="assumptions"
                     placeholder="Enter any assumptions here..."
-                    onIonChange={e => getAssumptions(e.detail.value)}>
+                    onIonChange={handleAnswerChange}>
                   </IonTextarea>
                 </IonItem>
 
@@ -531,7 +483,7 @@ const QuestionsPage: React.FC = (props) => {
                   <IonTextarea
                     name="notes"
                     placeholder="Enter any notes here..."
-                    onIonChange={e => getNotes(e.detail.value)}>
+                    onIonChange={handleAnswerChange}>
                   </IonTextarea>
                 </IonItem>
 
@@ -583,20 +535,14 @@ const QuestionsPage: React.FC = (props) => {
 
               <IonCol size="12" size-lg="3">
                 <RiskAssessment
-                  getLikelihood={getLikelihood}
-                  getConsequence={getConsequence}
+                  answer={answer}
+                  handleAnswerChange={handleAnswerChange}
                   getRiskScore={getRiskScore}
-                  getRiskResponse={getRiskResponse}
-                  getMMPSummary={getMMPSummary}
-                  getGreatestImpact={getGreatestImpact}
-                  greatest_impact={answer.greatest_impact}
-                  risk_response={answer.risk_response}
-                  mmp_summary={answer.mmp_summary}
                 />
               </IonCol>
               <IonCol size="12" size-lg="4">
                 <RiskMatrix
-                  likelihood={likelihood} consequence={consequence} riskScore={riskScore}
+                  likelihood={Number(answer.likelihood)} consequence={Number(answer.consequence)} riskScore={Number(answer.risk)}
                 />
               </IonCol>
             </IonRow>

@@ -52,83 +52,95 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+import { IntercomProvider, useIntercom } from 'react-use-intercom';
+
+
+
+
 setupIonicReact({
   mode: 'md'
 });
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/home">
-          <Home />
-        </Route>
-        <Route exact path="/">
-          <Redirect to="/home" />
-        </Route>
-        <Route exact path="/start-new">
-          <New />
-        </Route>
-        <Route exact path="/questions/:ast_id">
-          <Questions />
-        </Route>
-        <Route exact path="/login">
-          <Login />
-        </Route>
-        <Route exact path="/register">
-          <Register />
-        </Route>
-        <Route exact path="/password-reset">
-          <PasswordReset />
-        </Route>
-        <Route exact path="/questions">
-          <Questions />
-        </Route>
-        <Route exact path="/review-report">
-          <Review />
-        </Route>
-        <Route exact path="/review-report/:ast_id">
-          <Review />
-        </Route>
-        <Route exact path="/comprehensive-report">
-          <Comprehensive />
-        </Route>
-        <Route exact path="/risk-summary">
-          <RiskSummary />
-        </Route>
-        <Route exact path="/action-items">
-          <ActionItems />
-        </Route>
-        <Route exact path="/detailed-risk">
-          <DetailedRisk />
-        </Route>
-        <Route exact path="/questions-list">
-          <QuestionsList />
-        </Route>
-        <Route exact path="/mrl-summary">
-          <MRLSummary />
-        </Route>
-        <Route exact path="/definitions">
-          <Definitions />
-        </Route>
-        <Route exact path="/acronyms">
-          <Acronyms />
-        </Route>
-        <Route exact path="/faqs">
-          <FAQs />
-        </Route>
-        <Route exact path="/criteria">
-          <Criteria />
-        </Route>
-        <Route exact path="/edit-assessment">
-          <Edit />
-        </Route>
-        <Route exact path="/settings">
-          <Settings />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+
+const App: React.FC = () => {
+  const onShow = () => console.log('Intercom did show the Messenger');
+  const INTERCOM_APP_ID = 'olfft7tm';
+  
+  return (
+  <IntercomProvider appId={INTERCOM_APP_ID} autoBoot onShow={onShow}>
+    <IonApp>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route exact path="/home">
+            <Home />
+          </Route>
+          <Route exact path="/">
+            <Redirect to="/home" />
+          </Route>
+          <Route exact path="/start-new">
+            <New />
+          </Route>
+          <Route exact path="/questions/:ast_id">
+            <Questions />
+          </Route>
+          <Route exact path="/login">
+            <Login />
+          </Route>
+          <Route exact path="/register">
+            <Register />
+          </Route>
+          <Route exact path="/password-reset">
+            <PasswordReset />
+          </Route>
+          <Route exact path="/questions">
+            <Questions />
+          </Route>
+          <Route exact path="/review-report">
+            <Review />
+          </Route>
+          <Route exact path="/review-report/:ast_id">
+            <Review />
+          </Route>
+          <Route exact path="/comprehensive-report">
+            <Comprehensive />
+          </Route>
+          <Route exact path="/risk-summary">
+            <RiskSummary />
+          </Route>
+          <Route exact path="/action-items">
+            <ActionItems />
+          </Route>
+          <Route exact path="/detailed-risk">
+            <DetailedRisk />
+          </Route>
+          <Route exact path="/questions-list">
+            <QuestionsList />
+          </Route>
+          <Route exact path="/mrl-summary">
+            <MRLSummary />
+          </Route>
+          <Route exact path="/definitions">
+            <Definitions />
+          </Route>
+          <Route exact path="/acronyms">
+            <Acronyms />
+          </Route>
+          <Route exact path="/faqs">
+            <FAQs />
+          </Route>
+          <Route exact path="/criteria">
+            <Criteria />
+          </Route>
+          <Route exact path="/edit-assessment">
+            <Edit />
+          </Route>
+          <Route exact path="/settings">
+            <Settings />
+          </Route>
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
+  </IntercomProvider>
+)};
 
 export default App;

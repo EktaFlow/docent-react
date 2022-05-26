@@ -6,7 +6,7 @@ import { IonButton } from '@ionic/react';
 import { id } from 'date-fns/locale';
 import { useHistory } from 'react-router-dom';
 
-const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack: any, openInviteTM: any })> = ({ assessmentInfo, deleteAssessmentFromBack, openInviteTM }) => {
+const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack: any, openInviteTM: any, teamMembers: any })> = ({ assessmentInfo, deleteAssessmentFromBack, openInviteTM, teamMembers }) => {
 
   const history = useHistory();
 
@@ -19,9 +19,6 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
       }
     })
   }
-
-
-
 
   const removeAssessment = (id: number) => {
     console.log(id)
@@ -38,11 +35,18 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
         <p><b>Additional Information: </b>{assessmentInfo.scope}</p>
         <p><b>Location: </b>{assessmentInfo.location}</p>
         <p><b>Level Switching On?: </b>{assessmentInfo.level_switching ? 'Yes' : 'No'}</p>
-        <p><b>Team Members: </b>{assessmentInfo.team_members}</p>
+        <p><b>Team Members: </b>{
+          teamMembers.length == 0 ?
+          <span>No Team Members</span> :
+          teamMembers.map((tm:any, index:number) => (
+            <span>{tm.email} (dev) {index !== teamMembers.length - 1 ? ', ' : ''}</span>
+          ))
+
+        }</p>
       </div>
       <div className="assessment-actions">
         <IonButton size="small" expand="full" color="light" onClick={() => navigateToPage('questions')}>Continue Assessment</IonButton>
-        <IonButton size="small" expand="full" color="light" onClick={() => navigateToPage('mrl_summary')}>MRL Summary</IonButton>
+        <IonButton size="small" expand="full" color="light" onClick={() => navigateToPage('mrl-summary')}>MRL Summary</IonButton>
         <IonButton size="small" expand="full" color="light" onClick={() => navigateToPage('action-items')}>Action Items</IonButton>
         <IonButton size="small" expand="full" color="light" onClick={() => openInviteTM(assessmentInfo.id)} >Invite Team Members</IonButton>
         <IonButton size="small" expand="full" color="light">Edit Assessment Info</IonButton>
