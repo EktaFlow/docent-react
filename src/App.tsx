@@ -54,7 +54,7 @@ import './theme/variables.css';
 
 import { IntercomProvider, useIntercom } from 'react-use-intercom';
 
-
+import React, {useEffect, useState} from 'react'
 
 
 setupIonicReact({
@@ -65,23 +65,23 @@ setupIonicReact({
 const App: React.FC = () => {
   const onShow = () => console.log('Intercom did show the Messenger');
   const INTERCOM_APP_ID = 'olfft7tm';
-  
+
+  const isAuthed = () => {
+    var token = localStorage.getItem("token");
+    if (token) {
+      return true
+    } else {
+      return false
+    }
+  }
+
   return (
   <IntercomProvider appId={INTERCOM_APP_ID} autoBoot onShow={onShow}>
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          <Route exact path="/home">
-            <Home />
-          </Route>
           <Route exact path="/">
             <Redirect to="/home" />
-          </Route>
-          <Route exact path="/start-new">
-            <New />
-          </Route>
-          <Route exact path="/questions/:ast_id">
-            <Questions />
           </Route>
           <Route exact path="/login">
             <Login />
@@ -92,51 +92,132 @@ const App: React.FC = () => {
           <Route exact path="/password-reset">
             <PasswordReset />
           </Route>
-          <Route exact path="/questions">
-            <Questions />
-          </Route>
-          <Route exact path="/review-report">
-            <Review />
-          </Route>
-          <Route exact path="/review-report/:ast_id">
-            <Review />
-          </Route>
-          <Route exact path="/comprehensive-report">
-            <Comprehensive />
-          </Route>
-          <Route exact path="/risk-summary">
-            <RiskSummary />
-          </Route>
-          <Route exact path="/action-items">
-            <ActionItems />
-          </Route>
-          <Route exact path="/detailed-risk">
-            <DetailedRisk />
-          </Route>
-          <Route exact path="/questions-list">
-            <QuestionsList />
-          </Route>
-          <Route exact path="/mrl-summary">
-            <MRLSummary />
-          </Route>
-          <Route exact path="/definitions">
-            <Definitions />
-          </Route>
-          <Route exact path="/acronyms">
-            <Acronyms />
-          </Route>
-          <Route exact path="/faqs">
-            <FAQs />
-          </Route>
-          <Route exact path="/criteria">
-            <Criteria />
-          </Route>
-          <Route exact path="/edit-assessment">
-            <Edit />
-          </Route>
-          <Route exact path="/settings">
-            <Settings />
-          </Route>
+          <Route
+            exact
+            path="/home"
+            render={(props) => {
+              return isAuthed() ? <Home /> : <Login />;
+            }}
+          />
+          <Route
+            exact
+            path="/start-new"
+            render={(props) => {
+              return isAuthed() ? <New /> : <Login />;
+            }}
+          />
+          <Route
+            exact
+            path="/questions/:ast_id"
+            render={(props) => {
+              return isAuthed() ? <Questions /> : <Login />;
+            }}
+          />
+          <Route
+            exact
+            path="/questions"
+            render={(props) => {
+              return isAuthed() ? <Questions /> : <Login />;
+            }}
+          />
+          <Route
+            exact
+            path="/review-report"
+            render={(props) => {
+              return isAuthed() ? <Review /> : <Login />;
+            }}
+          />
+          <Route
+            exact
+            path="/review-report/:ast_id"
+            render={(props) => {
+              return isAuthed() ? <Review /> : <Login />;
+            }}
+          />
+          <Route
+            exact
+            path="/comprehensive-report"
+            render={(props) => {
+              return isAuthed() ? <Comprehensive /> : <Login />;
+            }}
+          />
+          <Route
+            exact
+            path="/risk-summary"
+            render={(props) => {
+              return isAuthed() ? <RiskSummary /> : <Login />;
+            }}
+          />
+          <Route
+            exact
+            path="/action-tiem"
+            render={(props) => {
+              return isAuthed() ? <ActionItems /> : <Login />;
+            }}
+          />
+          <Route
+            exact
+            path="/detailed-risk"
+            render={(props) => {
+              return isAuthed() ? <DetailedRisk /> : <Login />;
+            }}
+          />
+          <Route
+            exact
+            path="/questions-list"
+            render={(props) => {
+              return isAuthed() ? <QuestionsList /> : <Login />;
+            }}
+          />
+          <Route
+            exact
+            path="/mrl-summary"
+            render={(props) => {
+              return isAuthed() ? <MRLSummary /> : <Login />;
+            }}
+          />
+          <Route
+            exact
+            path="/definitions"
+            render={(props) => {
+              return isAuthed() ? <Definitions /> : <Login />;
+            }}
+          />
+          <Route
+            exact
+            path="/acronyms"
+            render={(props) => {
+              return isAuthed() ? <Acronyms /> : <Login />;
+            }}
+          />
+          <Route
+            exact
+            path="/faqs"
+            render={(props) => {
+              return isAuthed() ? <FAQs /> : <Login />;
+            }}
+          />
+          <Route
+            exact
+            path="/criteria"
+            render={(props) => {
+              return isAuthed() ? <Criteria /> : <Login />;
+            }}
+          />
+          <Route
+            exact
+            path="/edit-assessment"
+            render={(props) => {
+              return isAuthed() ? <Edit /> : <Login />;
+            }}
+          />
+          <Route
+            exact
+            path="/settings"
+            render={(props) => {
+              return isAuthed() ? <Settings /> : <Login />;
+            }}
+          />
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>

@@ -48,10 +48,10 @@ const DetailedRisk: React.FC = () => {
 
   useEffect(() => {
     if (assessmentData) {
-      console.log(assessmentData)
+      // console.log(assessmentData)
       setSelectedMRL(assessmentData.info.current_mrl.toString())
       setFilteredMRL(assessmentData.info.current_mrl.toString())
-      
+
       let threadData = assessmentData.threads.map((thread: any) => (
         thread.subthreads.map((subthread: any) => {
           subthread.questions.map((question: any) => (
@@ -152,6 +152,7 @@ const DetailedRisk: React.FC = () => {
   const handleClearClick = () => {
     setFilteredMRL('all-levels');
   }
+  // <InfoCard assessmentId={assessmentId} />
 
   return (
     <IonPage>
@@ -159,7 +160,6 @@ const DetailedRisk: React.FC = () => {
       <ReportsTopbar text="Detailed Risk Report" />
       <IonContent>
         <div className="detailed-risk-wrapper">
-          <InfoCard assessmentId={assessmentId} />
           {assessmentData && <h2>Risk Report for MRL Level {assessmentData.info.current_mrl}</h2>}
 
           <IonRow className="detailed-risk-toolbar">

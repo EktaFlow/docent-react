@@ -27,7 +27,6 @@ const Home: React.FC = () => {
   useEffect(() => {
     async function getAssessments() {
       var asts = await grabAssessments();
-      console.log(asts)
       var ats = asts.assessments.assessments
       setAssessments(asts.assessments)
     }
@@ -40,17 +39,13 @@ const Home: React.FC = () => {
 
   function openInviteTM(assessmentId:any) {
     setCurrentAssesment(assessmentId);
-    console.log('opening invite popover');
     setInvitePopover(true);
   }
 
   async function processNewTM(tm:any){
     tm['assessment_id'] = currentAssessment
     var newTm = await createTeamMember(tm);
-    console.log(newTm);
-    console.log('***')
     if (newTm.data.team_member) {
-      console.log('hereee')
       setInvitePopover(false);
       var index = assessments.findIndex((ast) => ast.id == tm['assessment_id']);
       var astclone = Object.create(assessments);
@@ -68,12 +63,10 @@ const Home: React.FC = () => {
   }
 
   async function deleteAssessmentFromBack(id: number) {
-    console.log(id)
     var deleted = await deleteAssessment(id);
     var asts = assessments;
     var currentAst = assessments.find((assessment) => assessment.assessment.id == id).name
     var ats = assessments.filter((assess) => assess.assessment.id !== id);
-    console.log(ats);
     // setDeletedAssess(currentAst);
     setShowToast(true);
     setToastMessage({message: `Assessment ${currentAst} has been deleted`, status: 'success'})

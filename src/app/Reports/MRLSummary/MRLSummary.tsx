@@ -43,7 +43,7 @@ const MRLSummary: React.FC = () => {
       let answerYes = false;
       let answerNo = false;
       let answerArray: { answer: string, subthread_name: string; }[] = [];
-      console.log(assessmentData);
+      // console.log(assessmentData);
 
       let insertQuestionData = assessmentData.threads.map((thread: any) => (
         thread.subthreads.map((subthread: any) => {
@@ -56,7 +56,7 @@ const MRLSummary: React.FC = () => {
               answerNo = true;
             }
           })
-          console.log(subthread);
+          // console.log(subthread);
           if (answerYes === true && answerNo === false) {
             answerArray.push(
               { answer: 'yes', subthread_name: subthread.name }
@@ -91,13 +91,14 @@ const MRLSummary: React.FC = () => {
     }
   }, [questionData]);
 
+  // <InfoCard assessmentId={assessmentId} />
+
   return (
     <IonPage>
       <Header showAssessment={true} assessmentId={assessmentId} />
       <ReportsTopbar text="MRL Summary" />
       <IonContent>
         <div className="mrl-summary-wrapper">
-          <InfoCard assessmentId={assessmentId} />
           <IonRow className="mrl-summary-toolbar">
             <IonCol size="12" size-lg="2" className="download-image ion-padding-bottom">
               {/* <IonButton color="dsb">Download Image</IonButton>  */}
