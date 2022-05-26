@@ -54,7 +54,7 @@ const QuestionsList: React.FC = () => {
 
   useEffect(() => {
     if (assessmentData) {
-      console.log(assessmentData)
+      // console.log(assessmentData)
       setSelectedMRL(assessmentData.info.current_mrl.toString())
       setFilteredMRL(assessmentData.info.current_mrl.toString())
 
@@ -169,6 +169,7 @@ const QuestionsList: React.FC = () => {
     setFilteredMRL('all-levels');
     setFilteredAnswer('all-answers');
   }
+  // <InfoCard assessmentId={assessmentId} />
 
   return (
     <IonPage>
@@ -176,7 +177,6 @@ const QuestionsList: React.FC = () => {
       <ReportsTopbar text="Questions List" />
       <IonContent>
         <div className="questions-list-wrapper">
-          <InfoCard assessmentId={assessmentId} />
           <IonRow className="questions-list-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1 ion-padding-bottom">
               {/* <IonButton expand="block" color="dsb">Close All</IonButton> */}

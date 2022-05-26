@@ -155,7 +155,7 @@ const QuestionsPage: React.FC = (props) => {
   }
 
   function setUpQuestionsPage(res: any) {
-    console.log(res);
+    // console.log(res);
     setQuestion(res.question)
     setSubthread(res.subthread)
     setThread(res.thread)
@@ -177,7 +177,7 @@ const QuestionsPage: React.FC = (props) => {
     setShowToast(true)
 
     if (yes === true || no === true || na === true) {
-      console.log("Answer condition activated")
+      // console.log("Answer condition activated")
       if (valuesChanged === true) {
         setToastMessage({ message: 'Answers Saving', status: 'primary' })
         await createAnswers(data)
@@ -203,7 +203,7 @@ const QuestionsPage: React.FC = (props) => {
           formData.append('outside_file', selectedFile);
 
           var assm = await addFileToAssessment(formData).then((res) => {
-            console.log(res)
+            // console.log(res)
             saveFileToQuestion(res.file.id);
           })
             .catch((error) => {
@@ -213,7 +213,7 @@ const QuestionsPage: React.FC = (props) => {
       }
     }
     else {
-      console.log("Didn't save answer")
+      // console.log("Didn't save answer")
       setToastMessage({ message: 'Select an answer before saving', status: 'danger' })
       setTimeout(() => {
         setShowToast(false)
@@ -239,7 +239,7 @@ const QuestionsPage: React.FC = (props) => {
   };
 
   const handleAnswerChange = (e: any) => {
-    console.log(e.target.name)
+    // console.log(e.target.name)
     if (e.target.name === "answer") {
       changeInterface(e.target.value)
     }
@@ -255,7 +255,6 @@ const QuestionsPage: React.FC = (props) => {
         [e.target.name]: e.target.value
       });
     }
-    console.log('values')
     setValuesChanged(true)
   };
 
@@ -349,7 +348,6 @@ const QuestionsPage: React.FC = (props) => {
       ...answer,
       when: value
     });
-    console.log('values')
     setValuesChanged(true)
   }
 

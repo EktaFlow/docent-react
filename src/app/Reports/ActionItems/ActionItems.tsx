@@ -50,7 +50,7 @@ const ActionItems: React.FC = () => {
 
   useEffect(() => {
     if (assessmentData) {
-      console.log(assessmentData);
+      // console.log(assessmentData);
       setSelectedMRL(assessmentData.info.current_mrl.toString())
       setFilteredMRL(assessmentData.info.current_mrl.toString())
 
@@ -165,6 +165,7 @@ const ActionItems: React.FC = () => {
   const handleClearClick = () => {
     setFilteredMRL('all-levels');
   }
+  // <InfoCard assessmentId={assessmentId} />
 
   return (
     <IonPage>
@@ -172,7 +173,6 @@ const ActionItems: React.FC = () => {
       <ReportsTopbar text="Action Items" />
       <IonContent>
         <div className="action-items-wrapper">
-          <InfoCard assessmentId={assessmentId} />
           <IonRow className="action-filter-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1 ion-padding-bottom">
               {assessmentData && <ExcelFile element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>

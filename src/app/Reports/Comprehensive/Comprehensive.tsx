@@ -51,7 +51,7 @@ const Comprehensive: React.FC = () => {
     }
     async function loadFiles(assessmentId: any) {
       await grabFiles(assessmentId).then((res) => {
-        console.log(res.files);
+        // console.log(res.files);
         setLoadedFiles(res.files);
       })
         .catch((error) => {
@@ -73,7 +73,6 @@ const Comprehensive: React.FC = () => {
 
   useEffect(() => {
     if (assessmentData) {
-      console.log(assessmentData)
       setSelectedMRL(assessmentData.info.current_mrl.toString())
       setFilteredMRL(assessmentData.info.current_mrl.toString())
 
@@ -249,6 +248,7 @@ const Comprehensive: React.FC = () => {
     setFilteredMRL('all-levels');
     setFilteredAnswer('all-answers');
   }
+  // <InfoCard assessmentId={assessmentId} />
 
   return (
     <IonPage>
@@ -256,7 +256,6 @@ const Comprehensive: React.FC = () => {
       <ReportsTopbar text="Comprehensive Report" />
       <IonContent>
         <div className="comprehensive-wrapper">
-          <InfoCard assessmentId={assessmentId} />
           <IonRow className="comprehensive-filter-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1">
               {assessmentData &&

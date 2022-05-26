@@ -76,6 +76,7 @@ const RiskSummary: React.FC = () => {
   const handleClearClick = () => {
     setFilteredMRL('all-levels');
   }
+  // <InfoCard assessmentId={assessmentId} />
 
   return (
     <IonPage>
@@ -83,7 +84,6 @@ const RiskSummary: React.FC = () => {
       <ReportsTopbar text="MRL Risk Summary" />
       <IonContent>
         <div className="risk-summary-wrapper">
-          <InfoCard assessmentId={assessmentId} />
           <IonRow className="summary-filter-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1 ion-padding-bottom">
               {assessmentData &&

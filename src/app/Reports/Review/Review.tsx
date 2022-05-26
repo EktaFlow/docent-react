@@ -75,7 +75,7 @@ const Review: React.FC = () => {
 
   useEffect(() => {
     if (assessmentData) {
-      console.log(assessmentData);
+      // console.log(assessmentData);
       setSelectedMRL(assessmentData.info.current_mrl.toString())
       setFilteredMRL(assessmentData.info.current_mrl.toString())
 
@@ -188,6 +188,7 @@ const Review: React.FC = () => {
     setFilteredMRL('all-levels');
     setFilteredAnswer('all-answers');
   }
+  // <InfoCard assessmentId={assessmentId} />
 
   return (
     <IonPage>
@@ -195,7 +196,6 @@ const Review: React.FC = () => {
       <ReportsTopbar text="Review" />
       <IonContent>
         <div className="review-wrapper">
-          <InfoCard assessmentId={assessmentId} />
           <IonRow className="review-filter-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1">
               {assessmentData &&
