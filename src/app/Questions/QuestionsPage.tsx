@@ -45,8 +45,6 @@ const QuestionsPage: React.FC = (props) => {
   });
   const history = useHistory();
 
-  const [questionCount, setQuestionCount] = useState(0);
-
   const [explanationText, showExplanationText] = useState(false);
 
   const [yes, setYes] = useState(false);
@@ -110,6 +108,16 @@ const QuestionsPage: React.FC = (props) => {
       console.log(answer);
     }
   }, [answer]);
+
+  useEffect(() => {
+    if (selectedFile) {
+      setShowToast(true)
+      setToastMessage({ message: 'File attached, save answer to save file', status: 'primary' })
+      setTimeout(() => {
+        setShowToast(false)
+      }, 3000)
+    }
+  }, [selectedFile]);
 
   async function loadFiles(assessmentId: any) {
     await grabFiles(assessmentId).then((res) => {
@@ -203,8 +211,8 @@ const QuestionsPage: React.FC = (props) => {
           formData.append('outside_file', selectedFile);
 
           var assm = await addFileToAssessment(formData).then((res) => {
-            // console.log(res)
-            saveFileToQuestion(res.file.id);
+            loadFiles(assessmentId)
+            // saveFileToQuestion(res.file.id);
           })
             .catch((error) => {
               console.log(error)
@@ -226,10 +234,23 @@ const QuestionsPage: React.FC = (props) => {
       question_id: question.question_id,
       file_id: file_id
     }
+
+    setShowToast(true);
+
     var ques = await addFileToQuestion(data).then((res) => {
-      console.log(res)
+      console.log(showToast)
+      loadFiles(assessmentId)
+      setToastMessage({ message: 'File added to question', status: 'success' })
+      setTimeout(() => {
+        setShowToast(false)
+      }, 2000)
     })
       .catch((error) => {
+        console.log('2')
+        setToastMessage({ message: 'Error attaching question', status: 'danger' })
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000)
         console.log(error)
       })
   };
@@ -501,7 +522,7 @@ const QuestionsPage: React.FC = (props) => {
 
                 <IonPopover isOpen={fileModal}
                   onDidDismiss={() => setFileModal(false)} className="file-popover">
-                  <FilePopover files={loadedFiles} question_id={question.question_id} />
+                  <FilePopover saveFileToQuestion={saveFileToQuestion} files={loadedFiles} question_id={question.question_id} />
                 </IonPopover>
 
                 {/*
