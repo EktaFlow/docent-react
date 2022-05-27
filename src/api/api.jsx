@@ -183,11 +183,18 @@ export async function loginUser(user) {
   return result
 }
 
+// export async function registerUser(user) {
+//   const result = await axios.post({
+//     method: 'post',
+//     url: `${apiUrl}/users`,
+//     data: {"user": user},
+//   })
+//   return result
+// }
+
 export async function registerUser(user) {
-  const result = await axios({
-    method: 'post',
-    url: `${apiUrl}/users`,
-    data: {"user": user},
+  const result = await axios.post(`${apiUrl}/users`, {
+    "user": user
   })
   return result
 }

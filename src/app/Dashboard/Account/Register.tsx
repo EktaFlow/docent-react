@@ -2,6 +2,8 @@ import { IonPage, IonContent, IonGrid, IonRow, IonCol, IonButton, IonItem, IonLa
 import './Login.scss';
 import React, {useState, useEffect} from 'react'
 import {registerUser} from '../../../api/api';
+import axios from 'axios';
+import { apiUrl } from '../../../api/constants.js';
 
 const Register: React.FC = () => {
   const [newUser, setNewUser] = useState({email: '', company_name: '', password: '', name: '', password_confirmation: ''});
@@ -16,12 +18,15 @@ const Register: React.FC = () => {
   }
 
   async function registerNewUser() {
-    var user = await registerUser(newUser);
-    user.then((res) => {
-      if (user.data.message == 'Signed up.'){
+    // var user = await registerUser(newUser);
+    const result = await axios.post(`${apiUrl}/users`, {
+      "user": newUser
+    })
+    .then((res) => {
+      if (res.data.message == 'Signed up.'){
         setShowToast(true);
         setToastMessage({message: 'Registration Successful! Please check your email to confirm your account before logging in.', status: 'success'})
-      } else if (user.data.message == 'Signed up failure') {
+      } else if (res.data.message == 'Signed up failure') {
         setShowToast(true);
         setToastMessage({message: 'Error registring your account. Please try again', status: 'danger'})
       }
@@ -77,7 +82,7 @@ const Register: React.FC = () => {
           <IonToast
             isOpen={showToast}
             onDidDismiss={() => setShowToast(false)}
-            position="top"
+            position="bottom"
             message={toastMessage.message}
             color={toastMessage.status}
             buttons={[
