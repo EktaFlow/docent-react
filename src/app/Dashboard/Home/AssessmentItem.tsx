@@ -20,6 +20,12 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
     })
   }
 
+  useEffect(() => {
+    if (assessmentInfo) {
+      console.log(assessmentInfo);
+    }
+  }, [assessmentInfo]);
+
   const removeAssessment = (id: number) => {
     console.log(id)
     deleteAssessmentFromBack(id);
