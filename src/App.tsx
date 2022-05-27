@@ -81,7 +81,9 @@ const App: React.FC = () => {
       <IonReactRouter>
         <IonRouterOutlet>
           <Route exact path="/">
-            <Redirect to="/home" />
+            {
+              isAuthed() ? <Redirect to="/home"/> : <Redirect to="/login" />
+            }
           </Route>
           <Route exact path="/login">
             <Login />
