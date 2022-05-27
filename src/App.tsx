@@ -150,7 +150,7 @@ const App: React.FC = () => {
           />
           <Route
             exact
-            path="/action-tiem"
+            path="/action-item"
             render={(props) => {
               return isAuthed() ? <ActionItems /> : <Login />;
             }}
