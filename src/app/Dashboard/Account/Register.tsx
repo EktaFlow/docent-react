@@ -17,13 +17,22 @@ const Register: React.FC = () => {
 
   async function registerNewUser() {
     var user = await registerUser(newUser);
-    if (user.data.message == 'Signed up.'){
-      setShowToast(true);
-      setToastMessage({message: 'Registration Successful! Please check your email to confirm your account before logging in.', status: 'success'})
-    } else if (user.data.message == 'Signed up failure') {
-      setShowToast(true);
-      setToastMessage({message: 'Error registring your account. Please try again', status: 'danger'})
-    }
+    user.then((res) => {
+      if (user.data.message == 'Signed up.'){
+        setShowToast(true);
+        setToastMessage({message: 'Registration Successful! Please check your email to confirm your account before logging in.', status: 'success'})
+      } else if (user.data.message == 'Signed up failure') {
+        setShowToast(true);
+        setToastMessage({message: 'Error registring your account. Please try again', status: 'danger'})
+      }
+    }).catch((error) => {
+      console.log(error);
+      if (error == 'You have to confirm your email address before continuing.'){
+        setShowToast(true);
+        setToastMessage({message: 'Registration Successful! Please check your email to confirm your account before logging in.', status: 'success'})
+      }
+    })
+
   }
 
   return (
