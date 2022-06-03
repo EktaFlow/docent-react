@@ -22,6 +22,8 @@ const Comprehensive: React.FC = () => {
   const [questionData, setQuestionData] = useState<any>([]);
   const [filteringData, setFilteringData] = useState<any>([]);
 
+  const [excelData, setExcelData] =  useState<any>([]);
+
   const [selectedMRL, setSelectedMRL] = useState<string>('all-levels');
   const [filteredMRL, setFilteredMRL] = useState('all-levels');
 
@@ -29,8 +31,6 @@ const Comprehensive: React.FC = () => {
   const [filteredAnswer, setFilteredAnswer] = useState('all-answers');
 
   const [loadedFiles, setLoadedFiles] = useState<any>([])
-
-  let excelData: Array<any> = [];
 
   async function navigateToAssessment(questionId: number) {
     history.push({
@@ -80,7 +80,7 @@ const Comprehensive: React.FC = () => {
         thread.subthreads.map((subthread: any) => (
           subthread.questions.map((question: any) => (
             question.answer !== "Unanswered" &&
-            excelData.push({
+            setExcelData((data: any) => [...data, {
               thread_name: thread.name,
               subthread_name: subthread.name,
               MRL: assessmentData.info.current_mrl,
@@ -112,7 +112,7 @@ const Comprehensive: React.FC = () => {
               greatest_impact: question.answer.greatest_impact,
               risk_response: question.answer.risk_response,
               mmp_summary: question.answer.mmp_summary,
-            })
+            }])
           ))
         ))
       ));
@@ -258,8 +258,8 @@ const Comprehensive: React.FC = () => {
         <div className="comprehensive-wrapper">
           <IonRow className="comprehensive-filter-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1">
-              {assessmentData &&
-                <ExcelFile element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
+              {excelData &&
+                <ExcelFile filename="Comprehensive" element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
                   <ExcelSheet data={excelData} name="Comprehensive">
                     <ExcelColumn label="Thread Name" value="thread_name" />
                     <ExcelColumn label="Subthread Name" value="subthread_name" />

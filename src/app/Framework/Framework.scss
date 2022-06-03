@@ -15,10 +15,11 @@
 ion-popover.reports-popover {
   --offset-x: 380px;
   --offset-y: -290px;
+  // position: relative;
 }
 
 ion-popover.help-popover {
-  --offset-x: 460px;
+  --offset-x: 700px;
   --offset-y: -290px;
 }
 

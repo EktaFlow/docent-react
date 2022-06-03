@@ -54,7 +54,7 @@ import './theme/variables.css';
 
 import { IntercomProvider, useIntercom } from 'react-use-intercom';
 
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 
 
 setupIonicReact({
@@ -76,154 +76,163 @@ const App: React.FC = () => {
   }
 
   return (
-  <IntercomProvider appId={INTERCOM_APP_ID} autoBoot onShow={onShow}>
-    <IonApp>
-      <IonReactRouter>
-        <IonRouterOutlet>
-          <Route exact path="/">
-            {
-              isAuthed() ? <Redirect to="/home"/> : <Redirect to="/login" />
-            }
-          </Route>
-          <Route exact path="/login">
-            <Login />
-          </Route>
-          <Route exact path="/register">
-            <Register />
-          </Route>
-          <Route exact path="/password-reset">
-            <PasswordReset />
-          </Route>
-          <Route
-            exact
-            path="/home"
-            render={(props) => {
-              return isAuthed() ? <Home /> : <Login />;
-            }}
-          />
-          <Route
-            exact
-            path="/start-new"
-            render={(props) => {
-              return isAuthed() ? <New /> : <Login />;
-            }}
-          />
-          <Route
-            exact
-            path="/questions/:ast_id"
-            render={(props) => {
-              return isAuthed() ? <Questions /> : <Login />;
-            }}
-          />
-          <Route
-            exact
-            path="/questions"
-            render={(props) => {
-              return isAuthed() ? <Questions /> : <Login />;
-            }}
-          />
-          <Route
-            exact
-            path="/review-report"
-            render={(props) => {
-              return isAuthed() ? <Review /> : <Login />;
-            }}
-          />
-          <Route
-            exact
-            path="/review-report/:ast_id"
-            render={(props) => {
-              return isAuthed() ? <Review /> : <Login />;
-            }}
-          />
-          <Route
-            exact
-            path="/comprehensive-report"
-            render={(props) => {
-              return isAuthed() ? <Comprehensive /> : <Login />;
-            }}
-          />
-          <Route
-            exact
-            path="/risk-summary"
-            render={(props) => {
-              return isAuthed() ? <RiskSummary /> : <Login />;
-            }}
-          />
-          <Route
-            exact
-            path="/action-item"
-            render={(props) => {
-              return isAuthed() ? <ActionItems /> : <Login />;
-            }}
-          />
-          <Route
-            exact
-            path="/detailed-risk"
-            render={(props) => {
-              return isAuthed() ? <DetailedRisk /> : <Login />;
-            }}
-          />
-          <Route
-            exact
-            path="/questions-list"
-            render={(props) => {
-              return isAuthed() ? <QuestionsList /> : <Login />;
-            }}
-          />
-          <Route
-            exact
-            path="/mrl-summary"
-            render={(props) => {
-              return isAuthed() ? <MRLSummary /> : <Login />;
-            }}
-          />
-          <Route
-            exact
-            path="/definitions"
-            render={(props) => {
-              return isAuthed() ? <Definitions /> : <Login />;
-            }}
-          />
-          <Route
-            exact
-            path="/acronyms"
-            render={(props) => {
-              return isAuthed() ? <Acronyms /> : <Login />;
-            }}
-          />
-          <Route
-            exact
-            path="/faqs"
-            render={(props) => {
-              return isAuthed() ? <FAQs /> : <Login />;
-            }}
-          />
-          <Route
-            exact
-            path="/criteria"
-            render={(props) => {
-              return isAuthed() ? <Criteria /> : <Login />;
-            }}
-          />
-          <Route
-            exact
-            path="/edit-assessment"
-            render={(props) => {
-              return isAuthed() ? <Edit /> : <Login />;
-            }}
-          />
-          <Route
-            exact
-            path="/settings"
-            render={(props) => {
-              return isAuthed() ? <Settings /> : <Login />;
-            }}
-          />
-        </IonRouterOutlet>
-      </IonReactRouter>
-    </IonApp>
-  </IntercomProvider>
-)};
+    <IntercomProvider appId={INTERCOM_APP_ID} autoBoot onShow={onShow}>
+      <IonApp>
+        <IonReactRouter>
+          <IonRouterOutlet>
+            <Route exact path="/">
+              {
+                isAuthed() ? <Redirect to="/home" /> : <Redirect to="/login" />
+              }
+            </Route>
+            <Route exact path="/login">
+              <Login />
+            </Route>
+            <Route exact path="/register">
+              <Register />
+            </Route>
+            <Route exact path="/password-reset">
+              <PasswordReset />
+            </Route>
+            <Route
+              exact
+              path="/home"
+              render={(props) => {
+                return isAuthed() ? <Home /> : <Login />;
+              }}
+            />
+            <Route
+              exact
+              path="/start-new"
+              render={(props) => {
+                return isAuthed() ? <New /> : <Login />;
+              }}
+            />
+            <Route
+              exact
+              path="/questions/:ast_id"
+              render={(props) => {
+                return isAuthed() ? <Questions /> : <Login />;
+              }}
+            />
+            <Route
+              exact
+              path="/questions"
+              render={(props) => {
+                return isAuthed() ? <Questions /> : <Login />;
+              }}
+            />
+            <Route
+              exact
+              path="/review-report"
+              render={(props) => {
+                return isAuthed() ? <Review /> : <Login />;
+              }}
+            />
+            <Route
+              exact
+              path="/review-report/:ast_id"
+              render={(props) => {
+                return isAuthed() ? <Review /> : <Login />;
+              }}
+            />
+            <Route
+              exact
+              path="/comprehensive-report"
+              render={(props) => {
+                return isAuthed() ? <Comprehensive /> : <Login />;
+              }}
+            />
+            <Route
+              exact
+              path="/risk-summary"
+              render={(props) => {
+                return isAuthed() ? <RiskSummary /> : <Login />;
+              }}
+            />
+            <Route
+              exact
+              path="/action-items"
+              render={(props) => {
+                return isAuthed() ? <ActionItems /> : <Login />;
+              }}
+            />
+            <Route
+              exact
+              path="/detailed-risk"
+              render={(props) => {
+                return isAuthed() ? <DetailedRisk /> : <Login />;
+              }}
+            />
+            <Route
+              exact
+              path="/questions-list"
+              render={(props) => {
+                return isAuthed() ? <QuestionsList /> : <Login />;
+              }}
+            />
+            <Route
+              exact
+              path="/mrl-summary"
+              render={(props) => {
+                return isAuthed() ? <MRLSummary /> : <Login />;
+              }}
+            />
+            <Route
+              exact
+              path="/definitions"
+              render={(props) => {
+                return isAuthed() ? <Definitions /> : <Login />;
+              }}
+            />
+            <Route
+              exact
+              path="/acronyms"
+              render={(props) => {
+                return isAuthed() ? <Acronyms /> : <Login />;
+              }}
+            />
+            <Route
+              exact
+              path="/faqs"
+              render={(props) => {
+                return isAuthed() ? <FAQs /> : <Login />;
+              }}
+            />
+            <Route
+              exact
+              path="/criteria"
+              render={(props) => {
+                return isAuthed() ? <Criteria /> : <Login />;
+              }}
+            />
+            <Route
+              exact
+              path="/edit-assessment"
+              render={(props) => {
+                return isAuthed() ? <Edit /> : <Login />;
+              }}
+            />
+            <Route
+              exact
+              path="/settings"
+              render={(props) => {
+                return isAuthed() ? <Settings /> : <Login />;
+              }}
+            />
+
+            <Route
+              exact
+              path="/test"
+              render={(props) => {
+                return isAuthed() ? <Test /> : <Login />;
+              }}
+            />
+          </IonRouterOutlet>
+        </IonReactRouter>
+      </IonApp>
+    </IntercomProvider>
+  )
+};
 
 export default App;
