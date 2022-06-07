@@ -9,8 +9,6 @@ const FilePopover: React.FC<{ saveFileToQuestion?: any, files?: any, question_id
         if (files) {
             setCurrentFiles([]);
             setAllFiles([]);
-            console.log(files);
-            console.log(question_id);
             let insertFileData = files.map((file: any, index: any) => {
                 let attachedToQuestion = false;
                 let questionArray: { id: number }[] = [];
@@ -64,7 +62,7 @@ const FilePopover: React.FC<{ saveFileToQuestion?: any, files?: any, question_id
 
             {currentFiles.map((file: any, index: any) => (
                 <div className="files">
-                    <p>{file.name} | <span>Uploaded: {file.date}</span> | <span className="open-file" onClick={() => openURL(file.url)}><u>Open File</u></span></p>
+                    <p>{file.name} | <span>Uploaded: {file.date}</span> | <span className="open-file" onClick={() => openURL(file.url)}>Open File</span></p>
                 </div>
             ))}
 
@@ -74,25 +72,13 @@ const FilePopover: React.FC<{ saveFileToQuestion?: any, files?: any, question_id
 
             {allFiles.map((file: any, index: any) => (
                 <div className="files">
-                    <p>{file.name} | <span>Uploaded: {file.date}</span> | <span className="open-file" onClick={() => openURL(file.url)}><u>Open File</u></span>
+                    <p>{file.name} | <span>Uploaded: {file.date}</span> | <span className="open-file" onClick={() => openURL(file.url)}>Open File</span>
                         {!file.inQuestion &&
                             <span className="open-file" onClick={() => fileToQuestion(file.id)}> | <u>Add File to Current Question</u></span>
                         }
                     </p>
                 </div>
             ))}
-
-            {/* {files && files.map((file: any, index: any) => (
-                <Fragment>
-                    {file.url !== null && <div className="files">
-                        <p>{file.name} | <span>Uploaded: {file.created_at.slice(0, 10)}</span> | <span className="open-file" onClick={() => openURL(file.url)}><u>Open File</u></span>
-                            {file.questions[0].id !== question_id &&
-                                <span className="open-file" onClick={() => fileToQuestion(file.id)}> | <u>Add File to Current Question</u></span>
-                            }
-                        </p>
-                    </div>}
-                </Fragment>
-            ))} */}
         </div>
     )
 }

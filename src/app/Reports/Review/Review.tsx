@@ -22,6 +22,8 @@ const Review: React.FC = () => {
   const [questionData, setQuestionData] = useState<any>([]);
   const [filteringData, setFilteringData] = useState<any>([]);
 
+  const [excelData, setExcelData] =  useState<any>([]);
+
   const [selectedMRL, setSelectedMRL] = useState<string>('all-levels');
   const [filteredMRL, setFilteredMRL] = useState('all-levels');
 
@@ -29,8 +31,6 @@ const Review: React.FC = () => {
   const [filteredAnswer, setFilteredAnswer] = useState('all-answers');
 
   const [loadedFiles, setLoadedFiles] = useState<any>([]);
-
-  let excelData: Array<any> = [];
 
   const history = useHistory();
 
@@ -53,7 +53,6 @@ const Review: React.FC = () => {
     }
     async function loadFiles(assessmentId: any) {
       await grabFiles(assessmentId).then((res) => {
-        // console.log(res);
         setLoadedFiles(res.files);
       })
         .catch((error) => {
@@ -75,7 +74,6 @@ const Review: React.FC = () => {
 
   useEffect(() => {
     if (assessmentData) {
-      // console.log(assessmentData);
       setSelectedMRL(assessmentData.info.current_mrl.toString())
       setFilteredMRL(assessmentData.info.current_mrl.toString())
 
@@ -83,13 +81,12 @@ const Review: React.FC = () => {
         thread.subthreads.map((subthread: any) => (
           subthread.questions.map((question: any) => (
             question.answer !== "Unanswered" &&
-            excelData.push({
+            setExcelData((data: any) => [...data, {
               MRL: assessmentData.info.current_mrl,
               question_text: question.question_text,
               current_answer: question.answer.answer,
               objective_evidence: question.answer.objective_evidence,
-              // question_id: question.id
-            })
+            }])
           ))
         ))
       ));
@@ -142,12 +139,6 @@ const Review: React.FC = () => {
     }
   }, [filteredAnswer]);
 
-  useEffect(() => {
-    if (loadedFiles) {
-      console.log(loadedFiles)
-    }
-  }, [loadedFiles]);
-
   const handleMRLevelChange = (value: any) => {
     setSelectedMRL(value)
   }
@@ -198,9 +189,9 @@ const Review: React.FC = () => {
         <div className="review-wrapper">
           <IonRow className="review-filter-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1">
-              {assessmentData &&
-                <ExcelFile element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
-                  <ExcelSheet data={excelData} name="Review">
+              {excelData &&
+                <ExcelFile filename="Review" element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
+                  <ExcelSheet name="Review" data={excelData}>
                     <ExcelColumn label="MRL" value="MRL" />
                     <ExcelColumn label="Question Text" value="question_text" />
                     <ExcelColumn label="Current Answer" value="current_answer" />

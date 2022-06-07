@@ -19,12 +19,12 @@ const RiskSummary: React.FC = () => {
   const [assessmentId, setAssessmentId] = useState<number>();
   const [assessmentData, setAssessmentData] = useState<any>();
 
+  const [excelData, setExcelData] =  useState<any>([]);
+
   const [selectedMRL, setSelectedMRL] = useState<string>('');
   const [filteredMRL, setFilteredMRL] = useState('all-levels');
 
   const history = useHistory();
-
-  let excelData: Array<any> = [];
 
   useEffect(() => {
     async function getAssessmentInfo() {
@@ -53,12 +53,12 @@ const RiskSummary: React.FC = () => {
       let threadData = assessmentData.threads.map((thread: any) => (
         thread.subthreads.map((subthread: any) => (
           subthread.questions.map((question: any) => (
-            excelData.push({
+            setExcelData((data: any) => [...data, {
               MRL: assessmentData.info.current_mrl,
               thread_name: thread.name,
               subthread_name: subthread.name,
               risk_score: question.answer.risk,
-            })
+            }])
           ))
         ))
       ));
@@ -86,8 +86,8 @@ const RiskSummary: React.FC = () => {
         <div className="risk-summary-wrapper">
           <IonRow className="summary-filter-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1 ion-padding-bottom">
-              {assessmentData &&
-                <ExcelFile element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
+              {excelData &&
+                <ExcelFile filename="Risk_Summary" element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
                   <ExcelSheet data={excelData} name="Risk Summary">
                     <ExcelColumn label="MRL" value="MRL" />
                     <ExcelColumn label="Thread Name" value="thread_name" />

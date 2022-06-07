@@ -175,7 +175,7 @@ const ActionItems: React.FC = () => {
         <div className="action-items-wrapper">
           <IonRow className="action-filter-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1 ion-padding-bottom">
-              {assessmentData && <ExcelFile element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
+              {assessmentData && <ExcelFile filename="Action_Items" element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
                 <ExcelSheet data={filteringData} name="Action Items">
                   <ExcelColumn label="MRL" value="MRL" />
                   <ExcelColumn label="Thread Name" value="Threads" />

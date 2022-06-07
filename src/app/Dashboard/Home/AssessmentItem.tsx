@@ -18,6 +18,7 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
         assessment_id: assessmentInfo.id as number
       }
     })
+    window.location.reload()
   }
 
   useEffect(() => {
