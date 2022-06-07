@@ -25,31 +25,8 @@ ion-popover.file-popover {
 }
 
 .item-input,
-.item-select,
-.toolbar {
+.item-select {
   margin: 20px 0;
-}
-
-ion-label.attachment-label {
-  font-weight: bold;
-}
-
-ion-label.file-name-label {
-  display: flex;
-  justify-content: flex-start;
-}
-
-ion-label.view-label {
-  display: flex;
-  justify-content: space-evenly;
-  float: right;
-  width: 45;
-}
-
-ion-label.delete-label {
-  float: right;
-  display: flex;
-  justify-content: flex-end;
 }
 
 .explanation-text {
@@ -62,18 +39,6 @@ ion-label.delete-label {
   p {
     padding: 10px;
   }
-}
-
-div.attachments-content {
-  // display: flex;
-  // width: 100%;
-  // justify-content: space-around;
-  // margin-bottom: 175px;
-}
-
-div.attachments-table {
-  display: flex;
-  justify-content: center;
 }
 
 @media screen and (min-width: 992px) {

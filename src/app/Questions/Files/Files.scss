@@ -1,0 +1,76 @@
+.display-files {
+    margin-top: 20px;
+
+    .attach {
+        width: 50%;
+        margin: 10px 0px 0px 0px;
+    }
+
+    .attachments-content {
+        display: flex;
+        width: 100%;
+        justify-content: space-around;
+    }
+
+    .attachments-table {
+        display: flex;
+        justify-content: center;
+    }
+
+    .attachments-header {
+        font-weight: 600;
+        width: 100%;
+        text-align: center;
+    }
+
+    span {
+        font-weight: 400;
+    }
+
+    .file-link {
+        cursor: pointer;
+        color: blue;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .attachment-label {
+        font-weight: bold;
+    }
+    
+    ion-row {
+        border-bottom: 0.5px solid lightgray;
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+
+    .file-name-label,
+    .file-name-content {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .view-label,
+    .view-content {
+        display: flex;
+        justify-content: space-evenly;
+        float: right;
+        width: 45;
+    }
+
+    .delete-label,
+    .delete-content {
+        float: right;
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .display-files {
+        width: 100%;
+        display: block;
+    }
+}

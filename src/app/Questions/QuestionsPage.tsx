@@ -16,6 +16,7 @@ import RiskAssessment from './RiskAssessment/RiskAssessment';
 import RiskMatrix from './RiskAssessment/RiskMatrix';
 
 import FilePopover from './Files/FilePopover';
+import Files from './Files/Files';
 
 const QuestionsPage: React.FC = (props) => {
 
@@ -152,6 +153,7 @@ const QuestionsPage: React.FC = (props) => {
     await grabNextQuestionAction(assessmentId, movement_action, question.question_id)
       .then((res) => {
         setUpQuestionsPage(res)
+        loadFiles(assessmentId)
         setShowToast(false);
       })
       .catch((err) => {
@@ -525,31 +527,7 @@ const QuestionsPage: React.FC = (props) => {
                   <FilePopover saveFileToQuestion={saveFileToQuestion} files={loadedFiles} question_id={question.question_id} />
                 </IonPopover>
 
-                {/*
-                <IonHeader>
-                  <IonToolbar className="toolbar">
-                    <IonTitle>Attachments</IonTitle>
-                  </IonToolbar>
-                </IonHeader>
-
-                <div className="attachments-content">
-                  <table className="attachments-table">
-                  <IonRow>
-                    <IonCol className="ion-no-padding">
-                      <IonLabel className="attachment-label file-name-label">File</IonLabel>
-                    </IonCol>
-                    <IonCol className="ion-no-padding">
-                      <IonLabel className="attachment-label date-label">Date Added</IonLabel>
-                    </IonCol>
-                    <IonCol id="view" className="ion-no-padding">
-                      <IonLabel className="attachment-label view-label">View</IonLabel>
-                    </IonCol>
-                    <IonCol id="delete" className="ion-no-padding">
-                      <IonLabel className="attachment-label delete-label">Delete</IonLabel>
-                    </IonCol>
-                  </IonRow>
-                  </table>
-                </div> */}
+                <Files files={loadedFiles} question_id={question.question_id} />
               </IonCol>
 
               <IonCol size="12" size-lg="3">

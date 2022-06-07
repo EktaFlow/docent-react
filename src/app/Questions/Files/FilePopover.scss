@@ -38,5 +38,9 @@
     .open-file {
         cursor: pointer;
         color: blue;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 }
