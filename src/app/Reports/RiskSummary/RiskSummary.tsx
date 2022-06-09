@@ -24,6 +24,8 @@ const RiskSummary: React.FC = () => {
   const [selectedMRL, setSelectedMRL] = useState<string>('');
   const [filteredMRL, setFilteredMRL] = useState('all-levels');
 
+  const [reportName, setReportName] = useState<string>('')
+
   const history = useHistory();
 
   useEffect(() => {
@@ -49,6 +51,8 @@ const RiskSummary: React.FC = () => {
     if (assessmentData) {
       setSelectedMRL(assessmentData.info.current_mrl.toString())
       setFilteredMRL(assessmentData.info.current_mrl.toString())
+
+      setReportName(assessmentData.info.name + "-risk_summary")
 
       let threadData = assessmentData.threads.map((thread: any) => (
         thread.subthreads.map((subthread: any) => (
@@ -87,7 +91,7 @@ const RiskSummary: React.FC = () => {
           <IonRow className="summary-filter-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1 ion-padding-bottom">
               {excelData &&
-                <ExcelFile filename="Risk_Summary" element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
+                <ExcelFile filename={reportName} element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
                   <ExcelSheet data={excelData} name="Risk Summary">
                     <ExcelColumn label="MRL" value="MRL" />
                     <ExcelColumn label="Thread Name" value="thread_name" />

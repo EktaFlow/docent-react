@@ -70,18 +70,6 @@ const ThreadPopover: React.FC<({ assessmentId: any })> = ({ assessmentId }) => {
           ))}
         </div>
       ))}
-      {/* {threadHeaders.map((thread, index) => (
-        <div key={index}>
-          <div className="thread-header"
-            onClick={() => clickSubheader(index)}
-          >
-            <p>{thread}</p>
-          </div>
-          {subheader && index === threadIndex && <div className="subheader">
-            <p>{subheaderInfo[index]}</p>
-          </div>}
-        </div>
-      ))} */}
     </div>
   )
 }

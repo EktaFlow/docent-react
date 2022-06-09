@@ -28,6 +28,7 @@ const ActionItems: React.FC = () => {
   const [data, setData] = useState<any>([]);
   const [filteringData, setFilteringData] = useState<any>([]);
 
+  const [reportName, setReportName] = useState<string>('')
 
   useEffect(() => {
     async function getAssessmentInfo() {
@@ -53,6 +54,8 @@ const ActionItems: React.FC = () => {
       // console.log(assessmentData);
       setSelectedMRL(assessmentData.info.current_mrl.toString())
       setFilteredMRL(assessmentData.info.current_mrl.toString())
+
+      setReportName(assessmentData.info.name + "-action_items")
 
       let insertQuestionData = assessmentData.threads.map((thread: any) => (
         thread.subthreads.map((subthread: any) => (
@@ -175,7 +178,7 @@ const ActionItems: React.FC = () => {
         <div className="action-items-wrapper">
           <IonRow className="action-filter-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1 ion-padding-bottom">
-              {assessmentData && <ExcelFile filename="Action_Items" element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
+              {assessmentData && <ExcelFile filename={reportName} element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
                 <ExcelSheet data={filteringData} name="Action Items">
                   <ExcelColumn label="MRL" value="MRL" />
                   <ExcelColumn label="Thread Name" value="Threads" />

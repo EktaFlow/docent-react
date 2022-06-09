@@ -32,6 +32,8 @@ const Review: React.FC = () => {
 
   const [loadedFiles, setLoadedFiles] = useState<any>([]);
 
+  const [reportName, setReportName] = useState<string>('')
+
   const history = useHistory();
 
   async function navigateToAssessment(questionId: number) {
@@ -76,6 +78,8 @@ const Review: React.FC = () => {
     if (assessmentData) {
       setSelectedMRL(assessmentData.info.current_mrl.toString())
       setFilteredMRL(assessmentData.info.current_mrl.toString())
+
+      setReportName(assessmentData.info.name + "-review")
 
       let threadData = assessmentData.threads.map((thread: any) => (
         thread.subthreads.map((subthread: any) => (
@@ -179,7 +183,6 @@ const Review: React.FC = () => {
     setFilteredMRL('all-levels');
     setFilteredAnswer('all-answers');
   }
-  // <InfoCard assessmentId={assessmentId} />
 
   return (
     <IonPage>
@@ -190,7 +193,7 @@ const Review: React.FC = () => {
           <IonRow className="review-filter-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1">
               {excelData &&
-                <ExcelFile filename="Review" element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
+                <ExcelFile filename={reportName} element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
                   <ExcelSheet name="Review" data={excelData}>
                     <ExcelColumn label="MRL" value="MRL" />
                     <ExcelColumn label="Question Text" value="question_text" />

@@ -16,7 +16,6 @@ const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const Comprehensive: React.FC = () => {
-  const history = useHistory();
   const [assessmentId, setAssessmentId] = useState<number>();
   const [assessmentData, setAssessmentData] = useState<any>();
   const [questionData, setQuestionData] = useState<any>([]);
@@ -31,6 +30,10 @@ const Comprehensive: React.FC = () => {
   const [filteredAnswer, setFilteredAnswer] = useState('all-answers');
 
   const [loadedFiles, setLoadedFiles] = useState<any>([])
+
+  const [reportName, setReportName] = useState<string>('')
+
+  const history = useHistory();
 
   async function navigateToAssessment(questionId: number) {
     history.push({
@@ -75,6 +78,8 @@ const Comprehensive: React.FC = () => {
     if (assessmentData) {
       setSelectedMRL(assessmentData.info.current_mrl.toString())
       setFilteredMRL(assessmentData.info.current_mrl.toString())
+
+      setReportName(assessmentData.info.name + "-comprehensive")
 
       let threadData = assessmentData.threads.map((thread: any) => (
         thread.subthreads.map((subthread: any) => (
@@ -259,7 +264,7 @@ const Comprehensive: React.FC = () => {
           <IonRow className="comprehensive-filter-toolbar">
             <IonCol size="12" size-lg="2" className="filter-button1">
               {excelData &&
-                <ExcelFile filename="Comprehensive" element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
+                <ExcelFile filename={reportName} element={<IonButton expand="block" color="dsb">Export As XLS</IonButton>}>
                   <ExcelSheet data={excelData} name="Comprehensive">
                     <ExcelColumn label="Thread Name" value="thread_name" />
                     <ExcelColumn label="Subthread Name" value="subthread_name" />

@@ -18,7 +18,6 @@ const MRLSummary: React.FC = () => {
   const [assessmentData, setAssessmentData] = useState<any>();
   const [questionData, setQuestionData] = useState<any>([]);
 
-
   useEffect(() => {
     async function getAssessmentInfo() {
       var his: any = history
@@ -43,7 +42,6 @@ const MRLSummary: React.FC = () => {
       let answerYes = false;
       let answerNo = false;
       let answerArray: { answer: string, subthread_name: string; }[] = [];
-      // console.log(assessmentData);
 
       let insertQuestionData = assessmentData.threads.map((thread: any) => (
         thread.subthreads.map((subthread: any) => {
@@ -84,12 +82,6 @@ const MRLSummary: React.FC = () => {
       ));
     }
   }, [assessmentData]);
-
-  useEffect(() => {
-    if (questionData) {
-      console.log(questionData);
-    }
-  }, [questionData]);
 
   // <InfoCard assessmentId={assessmentId} />
 

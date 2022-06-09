@@ -35,12 +35,26 @@
         display: inline-block;
     }
 
-    .open-file {
+    .open-file,
+    .open-questions {
         cursor: pointer;
         color: blue;
 
         &:hover {
             text-decoration: underline;
+        }
+    }
+
+    .questions {
+        padding: 5px 0 5px 5px;
+        border-top: 0.5px solid lightgray;
+        border-bottom: 0.5px solid lightgray;
+        p {
+            color: darkslateblue;
+        }
+        &:hover {
+            background-color: #bbb9cc;
+            cursor: pointer;
         }
     }
 }
