@@ -29,11 +29,11 @@ const Files: React.FC<{ files?: any, question_id?: any }> = ({ files, question_i
     }
   }, [files]);
 
-  useEffect(() => {
-    if (currentFiles) {
-      console.log(currentFiles)
-    }
-  }, [currentFiles]);
+  // useEffect(() => {
+  //   if (currentFiles) {
+  //     console.log(currentFiles)
+  //   }
+  // }, [currentFiles]);
 
   const openURL = (url: any) => {
     window.open(url)
