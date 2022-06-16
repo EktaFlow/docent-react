@@ -172,7 +172,7 @@ const ActionItems: React.FC = () => {
 
   return (
     <IonPage>
-      <Header showAssessment={true} assessmentId={assessmentId} />
+      <Header showAssessment={true} prevInAssessment={true} assessmentId={assessmentId} />
       <ReportsTopbar text="Action Items" />
       <IonContent>
         <div className="action-items-wrapper">

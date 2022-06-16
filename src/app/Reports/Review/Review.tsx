@@ -186,7 +186,7 @@ const Review: React.FC = () => {
 
   return (
     <IonPage>
-      <Header showAssessment={true} assessmentId={assessmentId} />
+      <Header showAssessment={true} prevInAssessment={true} assessmentId={assessmentId} />
       <ReportsTopbar text="Review" />
       <IonContent>
         <div className="review-wrapper">

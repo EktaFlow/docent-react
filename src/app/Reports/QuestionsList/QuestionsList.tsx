@@ -173,7 +173,7 @@ const QuestionsList: React.FC = () => {
 
   return (
     <IonPage>
-      <Header showAssessment={true} assessmentId={assessmentId} />
+      <Header showAssessment={true} prevInAssessment={true} assessmentId={assessmentId} />
       <ReportsTopbar text="Questions List" />
       <IonContent>
         <div className="questions-list-wrapper">

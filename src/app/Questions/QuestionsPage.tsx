@@ -391,7 +391,7 @@ const QuestionsPage: React.FC = (props) => {
 
   return (
     <IonPage className="question-page-wrapper">
-      <Header showAssessment={true} inAssessment={true} assessmentId={assessmentId} />
+      <Header showAssessment={true} inAssessment={true} prevInAssessment={true} assessmentId={assessmentId} />
       <Topbar getNextQuestion={getNextQuestion} saveAnswers={saveAnswers} assessmentId={assessmentId} question={question} subthread={subthread} thread={thread} assessInfo={assessInfo} />
       <IonContent>
         <div className="content-wrapper">

@@ -7,7 +7,6 @@ import { id } from 'date-fns/locale';
 import { useHistory } from 'react-router-dom';
 
 const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack: any, openInviteTM: any, teamMembers: any })> = ({ assessmentInfo, deleteAssessmentFromBack, openInviteTM, teamMembers }) => {
-
   const history = useHistory();
 
   async function navigateToPage(value: string) {
@@ -23,7 +22,7 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
 
   useEffect(() => {
     if (assessmentInfo) {
-      console.log(assessmentInfo);
+      // console.log(assessmentInfo);
     }
   }, [assessmentInfo]);
 

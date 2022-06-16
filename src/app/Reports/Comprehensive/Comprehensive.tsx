@@ -257,7 +257,7 @@ const Comprehensive: React.FC = () => {
 
   return (
     <IonPage>
-      <Header showAssessment={true} assessmentId={assessmentId} />
+      <Header showAssessment={true} prevInAssessment={true} assessmentId={assessmentId} />
       <ReportsTopbar text="Comprehensive Report" />
       <IonContent>
         <div className="comprehensive-wrapper">

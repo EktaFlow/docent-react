@@ -84,7 +84,7 @@ const RiskSummary: React.FC = () => {
 
   return (
     <IonPage>
-      <Header showAssessment={true} assessmentId={assessmentId} />
+      <Header showAssessment={true} prevInAssessment={true} assessmentId={assessmentId} />
       <ReportsTopbar text="MRL Risk Summary" />
       <IonContent>
         <div className="risk-summary-wrapper">

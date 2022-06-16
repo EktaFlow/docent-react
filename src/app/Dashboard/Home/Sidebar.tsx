@@ -3,19 +3,37 @@ import {settingsOutline} from 'ionicons/icons';
 import './Components.scss';
 import React, {useState, useEffect} from 'react';
 
-const Sidebar: React.FC = () => {
+import { useHistory } from 'react-router-dom';
+
+const Sidebar: React.FC<{ prevInAssessment?: boolean, passedAId?: number }> = ({prevInAssessment, passedAId}) => {
   const [user, setUser] = useState({name: '', company_name: ''})
+  const history = useHistory(); 
+
   useEffect(() => {
     var usr = JSON.parse(localStorage.getItem("user") || "")
     if (usr){
       setUser({name: usr.name, company_name: usr.company_name})
     }
   }, [])
+
+  async function navigateToQuestions(value: string) {
+    console.log(value)
+    history.push({
+      pathname: `/${value}`,
+      state: {
+        assessment_id: passedAId as number
+      }
+    })
+    window.location.reload()
+  }
+
   return(
     <div className="home-rs">
 
     <div className="rs-bottom">
       <div className="action-group">
+        {(prevInAssessment && passedAId) && <IonButton expand="full" color="dark" onClick={() => navigateToQuestions('questions')}>Continue Previous Assessment</IonButton>}
+
         <IonButton expand="full" color="dark" routerLink="/start-new">Start New Assessment</IonButton>
         <div className="port-group">
 

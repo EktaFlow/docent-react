@@ -9,8 +9,9 @@ import Sidebar from './Sidebar';
 import FilterPopover from './FilterPopover';
 import InviteTMPopover from './InviteTMPopover';
 
-import { grabAssessments, deleteAssessment, createTeamMember } from '../../../api/api'
+import { useHistory } from 'react-router-dom';
 
+import { grabAssessments, deleteAssessment, createTeamMember } from '../../../api/api'
 
 const Home: React.FC = () => {
   const [assessments, setAssessments] = useState<Array<any>>([]);
@@ -24,6 +25,11 @@ const Home: React.FC = () => {
   const [invitePopover, setInvitePopover] = useState(false);
   const [currentAssessment, setCurrentAssesment] = useState(null);
 
+  const [prevInAssessment, setPrevInAssessment] = useState(false)
+  const [passedAId, setPassedAId] = useState()
+
+  const history = useHistory();
+
   useEffect(() => {
     async function getAssessments() {
       var asts = await grabAssessments();
@@ -31,6 +37,12 @@ const Home: React.FC = () => {
       setAssessments(asts.assessments)
     }
     getAssessments()
+    var his: any = history
+    if (his["location"]["state"]) {
+      console.log(his["location"]["state"]);
+      setPrevInAssessment(his["location"]["state"]["prevInAssessment"]);
+      setPassedAId(his["location"]["state"]["assessmentId"])
+    }
   }, [])
 
   function openPopover() {
@@ -110,7 +122,7 @@ const Home: React.FC = () => {
           />
 
         </div>
-        <Sidebar />
+        <Sidebar prevInAssessment={prevInAssessment} passedAId={passedAId} />
       </div>
     </IonPage>
   );

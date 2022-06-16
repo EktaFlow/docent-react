@@ -5,7 +5,7 @@ import { logoutUser } from '../../api/api';
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-const Header: React.FC<{ showAssessment?: boolean, inAssessment?: boolean, assessmentId?: number }> = ({ showAssessment, inAssessment, assessmentId }) => {
+const Header: React.FC<{ showAssessment?: boolean, inAssessment?: boolean, prevInAssessment?: boolean, assessmentId?: number }> = ({ showAssessment, inAssessment, prevInAssessment, assessmentId }) => {
   // const [popoverState, setShowPopover] = useState({ showPopover: false, event: undefined });
   const [reportsPopover, showReportsPopover] = useState(false);
   const [helpPopover, showHelpPopover] = useState(false);
@@ -49,6 +49,10 @@ const Header: React.FC<{ showAssessment?: boolean, inAssessment?: boolean, asses
   async function navigate(value: string) {
     history.push({
       pathname: `/${value}`,
+      state: {
+        prevInAssessment: prevInAssessment as boolean,
+        assessmentId: assessmentId as number,
+      }
     })
     window.location.reload()
   }
