@@ -180,23 +180,15 @@ export async function loginUser(user) {
     url: `${apiUrl}/users/sign_in`,
     data: {"user": user},
   })
-  return result
+  return result.data
 }
 
-// export async function registerUser(user) {
-//   const result = await axios.post({
-//     method: 'post',
-//     url: `${apiUrl}/users`,
-//     data: {"user": user},
-//   })
-//   return result
-// }
 
 export async function registerUser(user) {
   const result = await axios.post(`${apiUrl}/users`, {
     "user": user
   })
-  return result
+  return result.data
 }
 
 export async function logoutUser(user){

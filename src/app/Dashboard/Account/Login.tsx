@@ -19,23 +19,27 @@ const Login: React.FC = () => {
 
 
   async function loginNewUser() {
-    var user = await loginUser(newUser);
-    if (user.data.user) {
-      localStorage.setItem("token", user.data.token)
-      localStorage.setItem("user", JSON.stringify(user.data.user))
-      setShowToast(true);
+    var user = await loginUser(newUser)
+    .then((response:any) => {
+      console.log('here in response')
+      console.log(response);
+      localStorage.setItem("token", response.token)
+      localStorage.setItem("user", JSON.stringify(response.user))
       setToastMessage({message: "Logged in!", status: "success"});
+      setShowToast(true);
       setNewUser({email: '', password: ''})
       history.push({
         pathname: `/home`
-        // state: {
-        //   assessment_id: assessmentInfo.id as number
-        // }
       })
-    } else if (user.data.message) {
-      setShowToast(true);
+    }).catch((error:any) => {
+      console.log('here in error')
+      console.log(error)
       setToastMessage({message: "Error logging in, please try again", status: "danger"});
-    }
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 2000);
+    })
   }
 
   return (
@@ -67,6 +71,23 @@ const Login: React.FC = () => {
             </IonCardContent>
           </IonCard>
         </div>
+        <IonToast
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          position="bottom"
+          message={toastMessage.message}
+          color={toastMessage.status}
+          duration={3000}
+          buttons={[
+            {
+              text: 'Done',
+              role: 'cancel',
+              handler: () => {
+                console.log('Cancel clicked');
+              }
+            }
+          ]}
+        />
 
       </IonContent>
     </IonPage>
@@ -74,44 +95,3 @@ const Login: React.FC = () => {
   )
 }
 export default Login;
-
-//
-// <IonGrid>
-//   <IonRow>
-//     <IonCol size="12">
-//       <div className="top-container">
-//         <h1>Login</h1>
-//       </div>
-//
-//       <div className="login-container">
-//         <IonRow>
-//           <IonCol size="12">
-//             <IonItem color="dark">
-//               <IonLabel position="floating">Email</IonLabel>
-//               <IonInput type="email" placeholder=""></IonInput>
-//             </IonItem>
-//           </IonCol>
-//           <IonCol size="12">
-//             <IonItem color="dark">
-//               <IonLabel position="floating">Password</IonLabel>
-//               <IonInput placeholder=""></IonInput>
-//             </IonItem>
-//           </IonCol>
-//         </IonRow>
-//
-//         <IonButton color="dsb">Login</IonButton>
-//
-//         <div className="notes-container">
-//           <p> If you have issues registering or logging into the Docent tool, please contact
-//             <a href="mailto:support@mfgdocent.com?Subject=Support%20Request" target="_top"> support@mfgdocent.com.</a>
-//           </p>
-//         </div>
-//       </div>
-//
-//       <div className="bottom-container">
-//         <h6 id="register-link"> <a href="/register">Register for Docent</a> </h6>
-//         <h6 id="forgot-password"><a href="/password-reset"> Forgot Password? </a> </h6>
-//       </div>
-//     </IonCol>
-//   </IonRow>
-// </IonGrid>

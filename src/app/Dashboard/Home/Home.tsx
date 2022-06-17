@@ -87,6 +87,13 @@ const Home: React.FC = () => {
               </IonPopover>
             </div>
           </div>
+          {
+            assessments.length == 0 &&
+            <div className="no-assessments-box">
+              <h2>You don't have any asessments, get started by creating a new assessment</h2>
+              <IonButton color="dsb" routerLink="/start-new">Start New</IonButton>
+            </div>
+          }
           <IonAccordionGroup className="assessments-accordion">
             {
               assessments && assessments.map((assessment, index) => (

@@ -19,15 +19,23 @@ const Register: React.FC = () => {
 
   async function registerNewUser() {
     // var user = await registerUser(newUser);
-    const result = await axios.post(`${apiUrl}/users`, {
-      "user": newUser
-    })
+    const result = await registerUser(newUser)
     .then((res) => {
-      if (res.data.message == 'Signed up.'){
+      console.log(res);
+      if (res.message == 'Signed up.'){
         setToastMessage({message: 'Registration Successful! Please check your email to confirm your account before logging in.', status: 'success'})
         setShowToast(true);
-      } else if (res.data.message == 'Signed up failure') {
-        setToastMessage({message: 'Error registring your account. Please try again', status: 'danger'})
+      } else if (res.message == 'Signed up failure.') {
+        if (res.errors){
+          var e = ''
+          res.errors.forEach((ee:any) => {
+            e = e + ' ' + ee + ';'
+          })
+          setToastMessage({message: e, status: 'danger'})
+        } else {
+          setToastMessage({message: 'Error registring your account. Please try again', status: 'danger'})
+        }
+
         setShowToast(true);
       }
     }).catch((error) => {
