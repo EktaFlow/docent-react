@@ -43,6 +43,8 @@ const Register: React.FC = () => {
       if (error == 'You have to confirm your email address before continuing.'){
         setToastMessage({message: 'Registration Successful! Please check your email to confirm your account before logging in.', status: 'success'})
         setShowToast(true);
+      } else {
+        setToastMessage({message: 'Error registring your account. Please try again', status: 'danger'})
       }
     })
 
