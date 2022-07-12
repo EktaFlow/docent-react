@@ -7,7 +7,7 @@ import Header from '../../Framework/Header';
 import InfoCard from '../InfoCard';
 import ReportsTopbar from '../ReportsTopbar';
 
-import { grabSingleAssessment } from '../../../api/api'
+import { grabSingleAssessment, grabSpecificQuestion, grabFiles } from '../../../api/api'
 
 const QuestionsList: React.FC = () => {
   const [assessmentId, setAssessmentId] = useState<number>();
@@ -20,6 +20,20 @@ const QuestionsList: React.FC = () => {
 
   const [selectedAnswer, setSelectedAnswer] = useState<string>('all-answers');
   const [filteredAnswer, setFilteredAnswer] = useState('all-answers');
+  const [loadedFiles, setLoadedFiles] = useState([])
+
+  const [question, setQuestion] = useState<any>({
+    question_text: '', answered: false, assessment_length: 0, current_answer_text: '', current_mrl: 0, position: 0, question_id: 0,
+  })
+  const [subthread, setSubthread] = useState({
+    help_text: '', id: null, name: ''
+  })
+  const [thread, setThread] = useState({
+    id: null, mr_level: null, name: ''
+  })
+  const [assessInfo, setAssessInfo] = useState({
+    targetDate: null, additionalInfo: ''
+  })
 
   const history = useHistory();
 
@@ -31,6 +45,8 @@ const QuestionsList: React.FC = () => {
         question_id: questionId as number
       }
     })
+    window.location.reload()
+    // console.log("Question pushed: ", {questionId} )
   }
 
   useEffect(() => {
@@ -171,6 +187,16 @@ const QuestionsList: React.FC = () => {
   }
   // <InfoCard assessmentId={assessmentId} />
 
+  // async function loadFiles(assessmentId: any) {
+  //   await grabFiles(assessmentId).then((res) => {
+  //     // console.log(res);
+  //     setLoadedFiles(res.files);
+  //   })
+  //     .catch((error) => {
+  //       console.log(error)
+  //     })
+  // }
+
   return (
     <IonPage>
       <Header showAssessment={true} assessmentId={assessmentId} />
@@ -233,7 +259,8 @@ const QuestionsList: React.FC = () => {
                   <div className="mrl">
                     <h6><b>MR Level: {question.MRL}</b></h6>
                     {question.questionInfo.map((question_info: any, index: any) => (
-                      <div className="question">
+                      
+                      <div className="question" onClick = {() => navigateToAssessment(question_info.question_id)}>
                         <h5 className="navigate-links">
                           <span>
                             {question_info.current_answer === 'yes' &&

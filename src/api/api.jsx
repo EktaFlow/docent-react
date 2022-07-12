@@ -46,6 +46,16 @@ export async function grabNextQuestion(assessment_id) {
   return result.data
 }
 
+export async function grabSpecificQuestion(question_id) {
+  const token = localStorage.getItem("token");
+  const result = await axios.get(
+    `${apiUrl}/next_specific_question?id=${question_id}`,
+    {headers: {Authorization: `Bearer ${token}`}}
+  )
+  // console.log(result.data)
+  return result.data
+}
+
 export async function grabNextQuestionAction(assessment_id, action, q_id) {
   const token = localStorage.getItem("token");
   const result = await axios.get(

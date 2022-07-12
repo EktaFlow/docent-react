@@ -1,27 +1,40 @@
+// .page-content {
+//   margin: 0; 
+//   --max-width: 285px; 
+// }
+
 .content-wrapper {
   min-height: 100%;
   width: 100%;
   background-color: white;
   color: black;
   padding-left: 15px;
+  // padding-bottom: 50px; 
+  margin-bottom: 150px; 
+
+  h2 {
+    align-self: center; 
+  }
 }
+
+
+.quest-history-btn {
+  display: flex;
+  justify-content: right;
+  // align-self: center; 
+  padding-right: 10px;
+  ion-button {
+    --background: #494949; 
+  }
+  
+}
+
+
 
 ion-popover.file-popover {
   --width: 70%;
   --height: 70%;
   --border-radius: 0;
-}
-
-.title-wrapper {
-  width: 30%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  div {
-    .button {
-
-    }
-  }
 }
 
 .item-input,

@@ -1,4 +1,4 @@
-import { IonButton } from '@ionic/react';
+import { IonButton,IonAccordion, IonItem, IonLabel } from '@ionic/react';
 import './QuestionHistory.scss';
 
 import React, { useState, useEffect } from 'react';
@@ -15,11 +15,11 @@ const QuestionHistory: React.FC<({ question: any })> = ({ question }) => {
   return (
     <div className="question-history">
       <div className="header">
-        <h2>This Question's History:</h2>
+        <h2>Question History:</h2>
       </div>
       <div className="answers-list">
         {(!question.current_answer_text) ?
-          <h2>You have not answered this question yet.</h2> : <div>
+          <h5>You have not answered this question yet.</h5> : <div>
             <div className="top">
               <h3>
                 {question.current_answer_text === 'yes' && <span>Yes </span>}
@@ -34,10 +34,10 @@ const QuestionHistory: React.FC<({ question: any })> = ({ question }) => {
                 {/* yes answer */}
                 {question.current_answer_text === 'yes' &&
                   <div>
-                    <p><b>Answer:</b> Yes</p>
-                    <p><b>Objective Evidence:</b> {question.current_answer.objective_evidence}</p>
-                    <p><b>Assumptions:</b> {question.current_answer.assumptions_yes}</p>
-                    <p><b>Notes:</b> {question.current_answer.notes_yes}</p>
+                    <p><b>Answer: </b> Yes</p>
+                    <p><b>Objective Evidence: </b> {question.current_answer.objective_evidence}</p>
+                    <p><b>Assumptions: </b> {question.current_answer.assumptions_yes}</p>
+                    <p><b>Notes: </b> {question.current_answer.notes_yes}</p>
                   </div>
                 }
                 {/* no answer */}

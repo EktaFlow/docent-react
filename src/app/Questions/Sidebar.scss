@@ -1,0 +1,45 @@
+//Link to docs that show specific stylingfor sidebar: https://www.npmjs.com/package/react-pro-sidebar
+$sidebar-bg-color: #383838 !default;
+$sidebar-color: #FFF !default; 
+$sidebar-collapsed-width: 80px !default;
+$icon-size: 35px !default; 
+$sidebar-max-width: 285px !default;
+// $sidebar-min-width: 285px !default; 
+$icon-color: #FFF !default; 
+$icon-bg-color: #8980C2 !default; 
+$sidebar-position: fixed !default; 
+$sidebar-float: left !default; 
+$sidebar-overflow-y: scroll !default; 
+@import '~react-pro-sidebar/dist/scss/styles.scss';
+
+* {
+   overflow-wrap: break-word;
+   word-wrap: auto;
+   white-space: normal;
+}
+
+pro-sidebar {
+   // color: white; 
+   // background-color: #494949;
+   // position: fixed; 
+   overflow: visible;
+   height: 100%;
+   float: left; 
+}
+
+.close-menu-arrow {
+   // float: right;
+   display: flex; 
+   justify-content: center;  
+   padding: 15px 0; 
+}
+
+pro-sidebar .sidebar-menu {
+   height: 100%; 
+}
+
+@media only screen and (max-width: 720px) {
+   html {
+   overflow: hidden;
+   }
+}   
