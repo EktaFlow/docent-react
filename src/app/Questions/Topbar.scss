@@ -1,7 +1,21 @@
 .topbar-wrapper {
-  background-color: #222428;
+  background-color: #FFF;
   width: 100%;
-  padding-left: 20px;
+  padding-left: 10px;
+  color: #483D8B; 
+  padding-top: 80px; 
+  border-bottom: 2px solid #d1d1d1;
+  display: flex;
+  // flex-direction: column; 
+  // align-content: center;
+  // justify-items: space-between;
+
+  p {
+    // color: black;
+    font-size: 17px; 
+    display: flex;
+    justify-content: flex-end;
+  }
 
   .popover-link {
     &:hover {
@@ -16,10 +30,33 @@ ion-col.topbar-header {
   padding-left: 5px;
 }
 
-.topbar-header {
-  h1 {
-    margin-bottom: 0px;
-    margin-top: 10px;
+.first-col {
+  align-self: center;
+  ion-label {
+    // display: flex; 
+    // justify-content: flex-start;
+    font-size: 17px;
+  }
+}
+
+.second-col {
+  // padding-top: 15px; 
+  align-content: center; 
+  padding-right: 15px; 
+  // display: flex;
+  // flex-direction: column; 
+  // align-content: center;
+  
+  .button-wrapper{
+    align-self: center; 
+    display: flex; 
+    justify-content: flex-end;
+  }
+
+  ion-label {
+    display: flex; 
+    justify-content: flex-end;
+    font-size: 17px;
   }
 }
 

@@ -102,7 +102,7 @@ const Home: React.FC = () => {
                     <IonLabel>Assessment Name: {assessment.assessment.name}</IonLabel>
                   </IonItem>
                   <IonItem slot="content" color="dark">
-                    <AssessmentItem assessmentInfo={assessment.assessment} teamMembers={assessment.team_members} deleteAssessmentFromBack={deleteAssessmentFromBack} openInviteTM={openInviteTM}/>
+                    <AssessmentItem assessmentInfo={assessment.assessment} teamMembers={assessment.team_members} deleteAssessmentFromBack={deleteAssessmentFromBack} openInviteTM={openInviteTM} processNewTM={processNewTM}/>
                   </IonItem>
                 </IonAccordion>
               ))
