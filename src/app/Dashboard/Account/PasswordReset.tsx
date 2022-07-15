@@ -18,11 +18,11 @@ const PasswordReset: React.FC = (props:any) => {
 
   useEffect(() => {
     if (window.location.search != ''){
-      fetch = window.location.search.split('=')
+      var fetchT = window.location.search.split('=')
       if(fetch.length >= 2){
         setNewPwd({
           ...newPwd,
-          reset_password_token: fetch[1]
+          reset_password_token: fetchT[1]
         })
       }
     }
