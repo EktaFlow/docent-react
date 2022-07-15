@@ -7,6 +7,7 @@ import axios from 'axios';
 const PasswordReset: React.FC = (props:any) => {
   const [newPwd, setNewPwd] = useState({password: '', password_confirmation: '', reset_password_token: ''});
   const [showToast, setShowToast] = useState(false);
+  const [disableClick, setDisableClick] = useState(false);
   const [toastMessage, setToastMessage] = useState({message: '', status: ''})
 
   const handleChange = (e:any) => {
@@ -19,7 +20,8 @@ const PasswordReset: React.FC = (props:any) => {
   useEffect(() => {
     if (window.location.search != ''){
       var fetchT = window.location.search.split('=')
-      if(fetch.length >= 2){
+      // console.log(window.location.search)
+      if(fetchT.length >= 2){
         setNewPwd({
           ...newPwd,
           reset_password_token: fetchT[1]
@@ -32,17 +34,20 @@ const PasswordReset: React.FC = (props:any) => {
 
   async function resetPwd() {
     // var user = await registerUser(newPwd);
+    setDisableClick(true)
     const result = await resetPassword(newPwd)
     .then((res) => {
       console.log(res);
       if (res.status == 200){
         setToastMessage({message: 'Your Password has been reset. Please log in to continue', status: 'success'})
         setShowToast(true);
+        setDisableClick(false)
       }
     }).catch((error) => {
       console.log(error);
         setToastMessage({message: 'Error resetting your password. Please try again', status: 'danger'})
         setShowToast(true);
+        setDisableClick(false)
     })
 
   }
@@ -71,7 +76,7 @@ const PasswordReset: React.FC = (props:any) => {
                 <IonLabel position="floating">Confirm New Password</IonLabel>
                 <IonInput name="password_confirmation" onIonChange={handleChange} value={newPwd.password_confirmation} type="password"></IonInput>
               </IonItem>
-              <IonButton onClick={resetPwd} color="dsb">Reset Password</IonButton>
+              <IonButton onClick={resetPwd} color="dsb" disabled={disableClick}>Reset Password</IonButton>
             </IonCardContent>
           </IonCard>
           <IonToast
