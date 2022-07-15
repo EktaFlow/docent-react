@@ -67,7 +67,7 @@ const Login: React.FC = () => {
                 <IonInput name="password" value={newUser.password} onIonChange={handleChange} type="password"></IonInput>
               </IonItem>
               <IonButton onClick={loginNewUser} color="dsb">Login</IonButton>
-              <h3>Forgot Your Password? <a href="/password-reset">Reset Here</a></h3>
+              <h3>Forgot Your Password? <a href="/password-reset-request">Reset Here</a></h3>
             </IonCardContent>
           </IonCard>
         </div>

@@ -210,3 +210,24 @@ export async function logoutUser(user){
   })
   return result
 }
+
+export async function sendPasswordReset(email){
+  const token = localStorage.getItem("token");
+  const result = await axios({
+    method: 'get',
+    url: `${apiUrl}/send_reset?email=${email}`,
+    headers: {Authorization: `Bearer ${token}`}
+  })
+  return result
+}
+
+export async function resetPassword(data){
+  const token = localStorage.getItem("token");
+  const result = await axios({
+    method: 'put',
+    url: `${apiUrl}/reset_pwd`,
+    data: data,
+    headers: {Authorization: `Bearer ${token}`}
+  })
+  return result
+}

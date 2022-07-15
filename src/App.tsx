@@ -10,6 +10,7 @@ import Questions from './app/Questions/QuestionsPage';
 import Login from './app/Dashboard/Account/Login';
 import Register from './app/Dashboard/Account/Register';
 import PasswordReset from './app/Dashboard/Account/PasswordReset';
+import PasswordResetRequest from './app/Dashboard/Account/PasswordResetRequest'
 
 // reports pages
 import Review from './app/Reports/Review/Review';
@@ -93,6 +94,9 @@ const App: React.FC = () => {
             </Route>
             <Route exact path="/password-reset">
               <PasswordReset />
+            </Route>
+            <Route exact path="/password-reset-request">
+              <PasswordResetRequest />
             </Route>
             <Route
               exact

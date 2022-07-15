@@ -198,6 +198,7 @@ const QuestionsPage: React.FC = (props) => {
       }
     }
     setShowToast(true);
+    //if answer is no and its the last item in the subthread, AND level switching is on THEN give user notification that they failed the subthread and are being dropped
     setToastMessage({ message: 'Navigating to Question', status: 'primary' })
     await grabNextQuestionAction(assessmentId, movement_action, question.question_id)
       .then((res) => {
