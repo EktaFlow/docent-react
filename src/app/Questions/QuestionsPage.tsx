@@ -10,7 +10,7 @@ import QuestionHistory from './Popovers/QuestionHistory';
 
 import { format, parseISO } from 'date-fns';
 
-import { createAnswers, grabNextQuestion, grabSpecificQuestion, addFileToAssessment, addFileToQuestion, grabFiles, grabNextQuestionAction } from '../../api/api';
+import { createAnswers, grabNextQuestion, grabSpecificQuestion, addFileToAssessment, addFileToQuestion, grabFiles, grabNextQuestionAction, grabAnswers } from '../../api/api';
 
 import Topbar from './Topbar';
 import Sidebar from './Sidebar'; 
@@ -24,7 +24,7 @@ const QuestionsPage: React.FC = (props) => {
 
   // const [questionList, setQuestionList] = useState(questions);
   const [answer, setAnswer] = useState({
-    answer: '',
+    answer: null,
     likelihood: '',
     consequence: '',
     risk_response: '',
@@ -49,6 +49,7 @@ const QuestionsPage: React.FC = (props) => {
 
   const [showHistory, setShowHistory] = useState(false); 
   const history = useHistory();
+  const [questionHistory, setQuestionHistory] = useState([]); 
 
   const [explanationText, showExplanationText] = useState(false);
 
@@ -58,7 +59,7 @@ const QuestionsPage: React.FC = (props) => {
 
   const [selectedDate, setSelectedDate] = useState('');
   const [question, setQuestion] = useState<any>({
-    question_text: '', answered: false, assessment_length: 0, current_answer_text: '', current_mrl: 0, position: 0, question_id: 0,
+    question_text: '', answered: false, assessment_length: 0, current_answer_text: '', most_recent_answer_text: '', current_mrl: 0, position: 0, question_id: 0,
   })
   const [subthread, setSubthread] = useState({
     help_text: '', id: null, name: ''
@@ -72,11 +73,13 @@ const QuestionsPage: React.FC = (props) => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState({ message: '', status: '' });
   const [valuesChanged, setValuesChanged] = useState(false)
+  const [isNewQ, setIsNewQ] = useState(false)
 
   const [selectedFile, setSelectedFile] = useState<any>(null);
   const [loadedFiles, setLoadedFiles] = useState([])
   const [fileModal, setFileModal] = useState(false);
   const fileInput = useRef(null);
+  const [showFiles, setShowFiles] = useState(false); 
 
   const [assessmentId, setAssessmentId] = useState<number>();
 
@@ -93,26 +96,29 @@ const QuestionsPage: React.FC = (props) => {
     console.log(his["location"]["state"])
 
     if (his["location"]["state"]) {
-      // console.log(his["location"]["state"]["question_id"]);
+      console.log(his["location"]["state"]["question_id"]);
       var ast_id = his["location"]["state"]["assessment_id"]
       // var q_id; 
       if(his["location"]["state"]["question_id"]){
         console.log("grabbing specific question")
         var q_id = his["location"]["state"]["question_id"]
         var q = grabSQ(q_id)
+        // setIsNewQ(true)
       }
       else {
         setAssessmentId(ast_id)
         var question = grabQ(ast_id)
+        // setIsNewQ(true)
       }
       loadFiles(ast_id)
-          
-      }
+    }
+    
+    
   }, []);
 
   useEffect(() => {
     var his: any = history
-    // console.log(his["location"]["state"])
+    console.log(his["location"]["state"])
     if (his["location"]["state"]) {
       // console.log(his["location"]["state"]["question_id"]);
       var ast_id = his["location"]["state"]["assessment_id"]
@@ -121,12 +127,14 @@ const QuestionsPage: React.FC = (props) => {
       if(his["location"]["state"]["question_id"]){
         if(question.id != his["location"]["state"]["question_id"]) {
           var q_id = his["location"]["state"]["question_id"]
-          var q = grabSQ(q_id)
+          var q = grabSQ(q_id)       
+          // setIsNewQ(true)
         }
       }
       else {
         setAssessmentId(ast_id)
         var q = grabQ(ast_id)
+        // setIsNewQ(true)
       }
       loadFiles(ast_id)
     }
@@ -141,11 +149,14 @@ const QuestionsPage: React.FC = (props) => {
     }
   }, [valuesChanged]);
 
-  useEffect(() => {
-    if (answer) {
-      console.log(answer);
-    }
-  }, [answer]);
+  // useEffect(() => {
+  //   if (answer) {
+  //     console.log(answer.answer);
+  //     console.log(question.question_id)
+  //   }
+  //   // resetQuestionAnswers()
+  //   // setAnswer
+  // }, [answer]);
 
   useEffect(() => {
     if (selectedFile) {
@@ -156,6 +167,11 @@ const QuestionsPage: React.FC = (props) => {
       }, 3000)
     }
   }, [selectedFile]);
+
+  // useEffect(() => {
+  //   console.log("grab first question")
+  //   grabSQ(1)
+  // })
 
   async function loadFiles(assessmentId: any) {
     await grabFiles(assessmentId).then((res) => {
@@ -171,6 +187,7 @@ const QuestionsPage: React.FC = (props) => {
     var next_question = await grabNextQuestion(assessment_id)
       .then((res) => {
         setUpQuestionsPage(res)
+        // resetQuestionAnswers()
         return res
       })
       .catch((error) => {
@@ -179,9 +196,11 @@ const QuestionsPage: React.FC = (props) => {
   }
 
   async function grabSQ(question_id: Number) {
+    // console.log(question_id)
     var next_question = await grabSpecificQuestion(question_id)
       .then((res) => {
         setUpQuestionsPage(res)
+        // resetQuestionAnswers()
         // console.log(res)
         return res
       })
@@ -202,6 +221,7 @@ const QuestionsPage: React.FC = (props) => {
     await grabNextQuestionAction(assessmentId, movement_action, question.question_id)
       .then((res) => {
         setUpQuestionsPage(res)
+        // resetQuestionAnswers()
         loadFiles(assessmentId)
         setShowToast(false);
       })
@@ -214,19 +234,39 @@ const QuestionsPage: React.FC = (props) => {
   }
 
   function setUpQuestionsPage(res: any) {
-    // console.log(res);
+    console.log(res);
     setShowHistory(false)
     setQuestion(res.question)
     setSubthread(res.subthread)
     setThread(res.thread)
     setAssessInfo(res.assessment_info)
+    
     if (res.question.current_answer !== []) {
       setAnswer(res.question.current_answer);
-      var ci = changeInterface(res.question.current_answer.answer);
-      if (ci == 'done') {
-        setValuesChanged(false)
-      }
+      // var ci = changeInterface(res.question.current_answer_text);
+      // if (ci == 'done') {
+      //   setValuesChanged(false)
+      // }
+      
     }
+    setValuesChanged(false);
+  }
+
+  const resetQuestionAnswers = () => {
+    console.log("resetting questions")
+    setAnswer({
+      ...answer,
+      likelihood: '',
+      consequence: '',
+      risk_response: '',
+      greatest_impact: '',
+      mmp_summary: '',
+      risk: '',
+    })
+
+    setYes(false)
+    setNo(false)
+    setNA(false)
   }
 
   async function saveAnswers() {
@@ -235,7 +275,7 @@ const QuestionsPage: React.FC = (props) => {
       answer: answer
     }
     setShowToast(true)
-
+    console.log("answer changed? " + valuesChanged)
     if (yes === true || no === true || na === true) {
       // console.log("Answer condition activated")
       if (valuesChanged === true) {
@@ -246,6 +286,7 @@ const QuestionsPage: React.FC = (props) => {
             setTimeout(() => {
               setShowToast(false)
             }, 2000)
+            console.log(res)
             return res
           })
           .catch((error) => {
@@ -271,6 +312,8 @@ const QuestionsPage: React.FC = (props) => {
             })
         }
       }
+      //if values have not been changed
+      // setValuesChanged(false)
     }
     else {
       // console.log("Didn't save answer")
@@ -329,6 +372,7 @@ const QuestionsPage: React.FC = (props) => {
       });
     }
     setValuesChanged(true)
+    setIsNewQ(false)
   };
 
   const changeInterface = (answer: any) => {
@@ -359,6 +403,13 @@ const QuestionsPage: React.FC = (props) => {
         answer: 'na'
       });
     }
+    // else {
+    //   setYes(false);
+    //   setNo(false);
+    //   setNA(false);
+    //   resetQuestionAnswers(); 
+    // }
+    setValuesChanged(true); 
     return 'done'
   }
 
@@ -425,12 +476,12 @@ const QuestionsPage: React.FC = (props) => {
   }
 
   const getRiskScore = (data: any) => {
-    setAnswer({
-      ...answer,
-      risk: data
-    });
-    console.log('values')
-    setValuesChanged(true)
+      setAnswer({
+        ...answer,
+        risk: data
+      });
+      // console.log(data)
+      setValuesChanged(true)
   }
 
   const formatDate = (value: any) => {
@@ -441,7 +492,7 @@ const QuestionsPage: React.FC = (props) => {
 
   const showHistoryToggle = () => {
     showHistory ? setShowHistory(false) : setShowHistory(true)
-    console.log(showHistory)
+    // console.log(showHistory)
   }
 
   return (
@@ -474,7 +525,7 @@ const QuestionsPage: React.FC = (props) => {
                       :
                       <>
                         <IonCol size="12" size-lg="5">
-                          <IonItem color="dark">
+                          <IonItem color="docentlight" >
                             <IonLabel position="floating">Select Answer</IonLabel>
                             <IonSelect
                               name="answer"
@@ -494,7 +545,7 @@ const QuestionsPage: React.FC = (props) => {
                           </div>}
 
                           {yes && <div>
-                            <IonItem color="dark">
+                            <IonItem color="docentlight" >
                               <IonLabel position="floating">Objective Evidence</IonLabel>
                               <IonTextarea
                                 name="objective_evidence"
@@ -509,7 +560,7 @@ const QuestionsPage: React.FC = (props) => {
                             <h3><b>Action Plan</b></h3>
                             <IonRow>
                               <IonCol size="12" size-lg="6" className="ion-no-padding">
-                                <IonItem color="dark">
+                                <IonItem color="docentlight" >
                                   <IonLabel position="floating">Owner</IonLabel>
                                   <IonInput
                                     name="who"
@@ -519,7 +570,7 @@ const QuestionsPage: React.FC = (props) => {
                                 </IonItem>
                               </IonCol>
                               <IonCol size="12" size-lg="6" className="ion-no-padding due-date-col">
-                                <IonItem button={true} color="dark" id="open-date-input">
+                                <IonItem button={true} color="docentlight"  id="open-date-input">
                                   <IonLabel>Due Date</IonLabel>
                                   <IonText slot="end">{selectedDate}</IonText>
                                   <IonPopover trigger="open-date-input" showBackdrop={false}>
@@ -533,7 +584,7 @@ const QuestionsPage: React.FC = (props) => {
                               </IonCol>
                             </IonRow>
 
-                            <IonItem color="dark">
+                            <IonItem color="docentlight" >
                               <IonLabel position="floating">Action Item</IonLabel>
                               <IonTextarea
                                 name="what"
@@ -542,7 +593,7 @@ const QuestionsPage: React.FC = (props) => {
                                 onIonChange={handleAnswerChange}>
                               </IonTextarea>
                             </IonItem>
-                            <IonItem color="dark">
+                            <IonItem color="docentlight" >
                               <IonLabel position="floating">Reason</IonLabel>
                               <IonTextarea
                                 name="reason"
@@ -554,7 +605,7 @@ const QuestionsPage: React.FC = (props) => {
                           </div>}
 
                           {na && <div>
-                            <IonItem color="dark">
+                            <IonItem color="docentlight" >
                               <IonLabel position="floating">Documentation</IonLabel>
                               <IonTextarea
                                 name="documentation_no"
@@ -565,7 +616,7 @@ const QuestionsPage: React.FC = (props) => {
                             </IonItem>
                           </div>}
 
-                          <IonItem color="dark">
+                          <IonItem color="docentlight" >
                             <IonLabel position="floating">Assumptions</IonLabel>
                             <IonTextarea
                               name="assumptions"
@@ -574,7 +625,7 @@ const QuestionsPage: React.FC = (props) => {
                             </IonTextarea>
                           </IonItem>
 
-                          <IonItem color="dark">
+                          <IonItem color="docentlight">
                             <IonLabel position="floating">Notes</IonLabel>
                             <IonTextarea
                               name="notes"
@@ -582,6 +633,10 @@ const QuestionsPage: React.FC = (props) => {
                               onIonChange={handleAnswerChange}>
                             </IonTextarea>
                           </IonItem>
+                          
+                          <IonButton color="dsb" onClick={() => setShowFiles(!showFiles)}>{showFiles ? "Show Question" : "Manage Files"}</IonButton>
+                          
+                          <br />
 
                           <IonButton color="dsb" onClick={() => {
                             // @ts-ignore
@@ -595,28 +650,43 @@ const QuestionsPage: React.FC = (props) => {
 
                           <br />
 
-                          <IonButton color="dsb" onClick={() => setFileModal(true)}>Manage Files</IonButton>
+                          {/* <IonButton color="dsb" onClick={() => setFileModal(!fileModal)}>Manage Files</IonButton>
 
                           <IonPopover isOpen={fileModal}
                             onDidDismiss={() => setFileModal(false)} className="file-popover">
                             <FilePopover saveFileToQuestion={saveFileToQuestion} files={loadedFiles} question_id={question.question_id} />
-                          </IonPopover>
+                          </IonPopover> */}
+
+                        
 
                           <Files files={loadedFiles} question_id={question.question_id} />
                         </IonCol>
 
-                        <IonCol size="12" size-lg="3">
-                          <RiskAssessment
-                            answer={answer}
-                            handleAnswerChange={handleAnswerChange}
-                            getRiskScore={getRiskScore}
-                          />
-                        </IonCol>
-                        <IonCol size="12" size-lg="4">
-                          <RiskMatrix
-                            likelihood={Number(answer.likelihood)} consequence={Number(answer.consequence)} riskScore={Number(answer.risk)}
-                          />
-                        </IonCol>
+                        {showFiles ? 
+                          <IonCol size="12" size-lg="7">
+                            <FilePopover saveFileToQuestion={saveFileToQuestion} files={loadedFiles} question_id={question.question_id} />
+                          </IonCol>
+                          
+                        :
+                        <>
+                          <IonCol size="12" size-lg="3">
+                              <RiskAssessment
+                                answer={answer}
+                                handleAnswerChange={handleAnswerChange}
+                                getRiskScore={getRiskScore}
+                              />
+                              
+                            </IonCol>
+                            <IonCol size="12" size-lg="4">
+                              <RiskMatrix
+                                likelihood={Number(answer.likelihood)} consequence={Number(answer.consequence)} riskScore={Number(answer.risk)}
+                              />
+                              {/* <IonButton size="large"></IonButton> */}
+                          </IonCol>
+                        </>
+                        
+                        }
+                        
                       </>
                     }
                     {/* </IonRow> */}

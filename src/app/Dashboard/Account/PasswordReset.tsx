@@ -16,7 +16,7 @@ const PasswordReset: React.FC = () => {
                 <div className="password-container">
                   <IonRow>
                     <IonCol size="12">
-                      <IonItem color="dark">
+                      <IonItem color="docentdark"   >
                         <IonLabel position="floating">Email</IonLabel>
                         <IonInput type="email" placeholder=""></IonInput>
                       </IonItem>

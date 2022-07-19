@@ -46,7 +46,7 @@ const Login: React.FC = () => {
     <IonPage>
       <IonContent>
         <div className="login-wrapper">
-          <IonCard className="info-card" color="dark">
+          <IonCard className="info-card" color="docentdark"   >
             <IonCardContent className="inner-card-content">
               <h1>docent</h1>
               <h3>Prove your readiness</h3>
@@ -55,14 +55,14 @@ const Login: React.FC = () => {
               <IonButton color="dsb" routerLink="register">Register for Docent</IonButton>
             </IonCardContent>
           </IonCard>
-          <IonCard className="login-card" color="dark">
+          <IonCard className="login-card" color="docentdark"   >
             <IonCardContent className="inner-card-content">
               <h2>Login to Docent</h2>
-              <IonItem color="tertiary">
+              <IonItem color="docenttertiary">
                 <IonLabel position="floating">Email</IonLabel>
                 <IonInput name="email" value={newUser.email} onIonChange={handleChange}></IonInput>
               </IonItem>
-              <IonItem color="tertiary">
+              <IonItem color="docenttertiary">
                 <IonLabel position="floating">Password</IonLabel>
                 <IonInput name="password" value={newUser.password} onIonChange={handleChange} type="password"></IonInput>
               </IonItem>
