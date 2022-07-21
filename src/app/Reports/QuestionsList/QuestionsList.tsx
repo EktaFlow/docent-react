@@ -73,6 +73,7 @@ const QuestionsList: React.FC = () => {
       // console.log(assessmentData)
       setSelectedMRL(assessmentData.info.current_mrl.toString())
       setFilteredMRL(assessmentData.info.current_mrl.toString())
+      console.log(assessmentData)
 
       let insertQuestionData = assessmentData.threads.map((thread: any) => (
         thread.subthreads.map((subthread: any) => {
@@ -208,8 +209,8 @@ const QuestionsList: React.FC = () => {
               {/* <IonButton expand="block" color="dsb">Close All</IonButton> */}
             </IonCol>
             <IonCol size="12" size-lg="3" className="filter-item">
-              <IonItem color="dark">
-                <IonLabel position="floating">Filter MR Level</IonLabel>
+              <IonItem color="docentlight">
+                <IonLabel  position="floating">Filter MR Level</IonLabel>
                 <IonSelect interface="popover" value={selectedMRL} onIonChange={e => handleMRLevelChange(e.detail.value)}>
                   <IonSelectOption value="all-levels">All Levels</IonSelectOption>
                   <IonSelectOption value="1">1</IonSelectOption>
@@ -227,7 +228,7 @@ const QuestionsList: React.FC = () => {
             </IonCol>
 
             <IonCol size="12" size-lg="3" className="filter-item">
-              <IonItem color="dark">
+              <IonItem color="docentlight">
                 <IonLabel position="floating">Filter Answer Type</IonLabel>
                 <IonSelect interface="popover" value={selectedAnswer} onIonChange={e => handleAnswerChange(e.detail.value)}>
                   <IonSelectOption value="all-answers">All Answers</IonSelectOption>
@@ -248,11 +249,11 @@ const QuestionsList: React.FC = () => {
 
           <div className="thread">
             {questionData && questionData.map((question: any, index: any) => (
-              <IonCard className="thread-card" color="dark">
+              <IonCard className="thread-card" color="docentlight">
                 <IonCardHeader>
                   <IonCardTitle><img src="assets/if_icon-arrow-down.png" className="down-arrow"></img>{question.thread_name}</IonCardTitle>
                 </IonCardHeader>
-                <IonCard className="subthread-card" color="dark">
+                <IonCard className="subthread-card" color="docentlight"   >
                   <IonCardHeader>
                     <IonCardTitle><img src="assets/if_icon-arrow-down.png" className="down-arrow"></img>{question.subthread_name}</IonCardTitle>
                   </IonCardHeader>
@@ -267,7 +268,7 @@ const QuestionsList: React.FC = () => {
                               <IonButton size="small" className="status-button green-button ion-no-padding">Yes</IonButton>
                             }
                             {question_info.current_answer === 'no' &&
-                              <IonButton size="small" color="danger" className="status-button ion-no-padding">No</IonButton>
+                              <IonButton size="small" color="docentdanger" className="status-button ion-no-padding">No</IonButton>
                             }
                             {(question_info.current_answer === 'na' || !question_info.current_answer) &&
                               <IonButton size="small" className="status-button ion-no-padding">Unanswered</IonButton>

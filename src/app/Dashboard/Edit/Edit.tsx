@@ -24,7 +24,7 @@ const Edit: React.FC = () => {
           <IonGrid>
             <IonRow>
               <IonCol size="12" size-lg="4">
-                <IonItem color="dark">
+                <IonItem color="docentdark"   >
                   <IonLabel position="floating">Assessment Name</IonLabel>
                   <IonInput placeholder="Name"></IonInput>
                 </IonItem>
@@ -34,33 +34,33 @@ const Edit: React.FC = () => {
             <h6>Add Team Member</h6>
             <IonRow>
               <IonCol size="12" size-lg="4">
-                <IonItem color="dark">
+                <IonItem color="docentdark"   >
                   <IonLabel position="floating">Member Name</IonLabel>
                   <IonInput placeholder=""></IonInput>
                 </IonItem>
               </IonCol>
               <IonCol size="12" size-lg="4">
-                <IonItem color="dark">
+                <IonItem color="docentdark"   >
                   <IonLabel position="floating">Member Email</IonLabel>
                   <IonInput placeholder=""></IonInput>
                 </IonItem>
               </IonCol>
               <IonCol size="12" size-lg="4">
-                <IonItem color="dark">
+                <IonItem color="docentdark"   >
                   <IonLabel position="floating">Member Role</IonLabel>
                   <IonInput placeholder=""></IonInput>
                 </IonItem>
               </IonCol>
 
               <IonCol size="12" size-lg="5">
-                <IonItem color="dark">
+                <IonItem color="docentdark"   >
                   <IonLabel position="floating">Additional Info</IonLabel>
                   <IonInput placeholder="Enter Additional Information Here"></IonInput>
                 </IonItem>
               </IonCol>
 
               <IonCol size="12" size-lg="2">
-                <IonItem color="dark">
+                <IonItem color="docentdark"   >
                   <IonLabel position="floating">Target MRL*</IonLabel>
                   <IonSelect interface="popover">
                     <IonSelectOption value="1">1</IonSelectOption>
@@ -78,7 +78,7 @@ const Edit: React.FC = () => {
               </IonCol>
 
               <IonCol size="12" size-lg="2">
-                <IonItem color="dark">
+                <IonItem color="docentdark"   >
                   <IonLabel position="floating">Level Switching</IonLabel>
                   <IonSelect interface="popover">
                     <IonSelectOption value="yes">Yes</IonSelectOption>
@@ -88,7 +88,7 @@ const Edit: React.FC = () => {
               </IonCol>
 
               <IonCol size="12" size-lg="3">
-                <IonItem button={true} id="open-date-input" color="dark">
+                <IonItem button={true} id="open-date-input" color="docentdark"   >
                   <IonLabel>Date</IonLabel>
                   <IonText slot="end">{selectedDate}</IonText>
                   <IonPopover trigger="open-date-input" showBackdrop={false}>
@@ -101,7 +101,7 @@ const Edit: React.FC = () => {
               </IonCol>
 
               <IonCol size="12" size-lg="6">
-                <IonItem className="date-picker" color="dark">
+                <IonItem className="date-picker" color="docentdark"   >
                   <IonLabel position="floating">Location</IonLabel>
                   <IonInput placeholder="Enter Location"></IonInput>
                 </IonItem>

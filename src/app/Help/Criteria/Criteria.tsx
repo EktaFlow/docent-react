@@ -179,7 +179,7 @@ const Criteria: React.FC = () => {
                 <IonButton expand="block" color="dsb">Close All</IonButton>
               </IonCol>
               <IonCol size="12" size-lg="3" className="filter-item">
-                <IonItem color="dark">
+                <IonItem color="docentlight" >
                   <IonLabel position="floating">Filter MR Level</IonLabel>
                   <IonSelect interface="popover" onIonChange={e => handleMRLevelChange(e.detail.value)}>
                     <IonSelectOption value="all-levels">All Levels</IonSelectOption>
@@ -198,7 +198,7 @@ const Criteria: React.FC = () => {
               </IonCol>
 
               <IonCol size="12" size-lg="3" className="filter-item">
-                <IonItem color="dark">
+                <IonItem color="docentlight" >
                   <IonLabel position="floating">Filter Answer Type</IonLabel>
                   <IonSelect interface="popover" onIonChange={e => handleAnswerChange(e.detail.value)}>
                     <IonSelectOption value="all-answers">All Answers</IonSelectOption>
@@ -219,11 +219,11 @@ const Criteria: React.FC = () => {
 
             <div className="thread">
               {questionData && questionData.map((question: any, index: any) => (
-                <IonCard className="thread-card" color="dark">
+                <IonCard className="thread-card" color="docentlight" >
                   <IonCardHeader>
                     <IonCardTitle><img src="assets/if_icon-arrow-down.png" className="down-arrow"></img>{question.thread_name}</IonCardTitle>
                   </IonCardHeader>
-                  <IonCard className="subthread-card" color="dark">
+                  <IonCard className="subthread-card" color="docentlight" >
                     <IonCardHeader>
                       <IonCardTitle><img src="assets/if_icon-arrow-down.png" className="down-arrow"></img>{question.subthread_name}</IonCardTitle>
                     </IonCardHeader>

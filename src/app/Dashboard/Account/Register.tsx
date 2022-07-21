@@ -44,6 +44,7 @@ const Register: React.FC = () => {
         setToastMessage({message: 'Registration Successful! Please check your email to confirm your account before logging in.', status: 'success'})
         setShowToast(true);
       } else {
+        console.log(error);
         setToastMessage({message: 'Error registring your account. Please try again', status: 'danger'})
       }
     })
@@ -54,7 +55,7 @@ const Register: React.FC = () => {
     <IonPage>
       <IonContent>
         <div className="login-wrapper">
-          <IonCard className="info-card" color="docentdark"   >
+          <IonCard className="info-card" color="docentlight"   >
             <IonCardContent className="inner-card-content">
               <h1>docent</h1>
               <h3>Prove your readiness</h3>
@@ -63,7 +64,7 @@ const Register: React.FC = () => {
               <IonButton color="dsb" routerLink="login">Login to Docent</IonButton>
             </IonCardContent>
           </IonCard>
-          <IonCard className="login-card" color="docentdark"   >
+          <IonCard className="login-card" color="docentlight"   >
             <IonCardContent className="inner-card-content">
               <h2>Register for Docent</h2>
               <IonItem color="docenttertiary">

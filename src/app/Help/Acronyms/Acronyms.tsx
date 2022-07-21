@@ -36,12 +36,12 @@ const Acronyms: React.FC = () => {
                   {index % 2 === 1 &&
                     <Fragment>
                       <IonCol size="6">
-                        <IonItem className="acronym even" color="dark">{acronym}</IonItem>
+                        <IonItem className="acronym even" color="docentdark"   >{acronym}</IonItem>
                       </IonCol>
 
                       <IonCol size="6">
                         {/* @ts-ignore */}
-                        <IonItem className="spelled-name even" color="dark">{acronyms[acronym]}</IonItem>
+                        <IonItem className="spelled-name even" color="docentdark"   >{acronyms[acronym]}</IonItem>
                       </IonCol>
                     </Fragment>
                   }
@@ -49,11 +49,11 @@ const Acronyms: React.FC = () => {
               ))}
 
               {/* <IonCol size="6">
-                <IonItem className="acronym even" color="dark">AAC</IonItem>
+                <IonItem className="acronym even" color="docentdark"   >AAC</IonItem>
               </IonCol>
 
               <IonCol size="6">
-                <IonItem className="spelled-name even" color="dark">Air Armament Center</IonItem>
+                <IonItem className="spelled-name even" color="docentdark"   >Air Armament Center</IonItem>
               </IonCol>
 
               <IonCol size="6">
@@ -65,11 +65,11 @@ const Acronyms: React.FC = () => {
               </IonCol>
 
               <IonCol size="6">
-                <IonItem className="acronym even" color="dark">ACTD</IonItem>
+                <IonItem className="acronym even" color="docentdark"   >ACTD</IonItem>
               </IonCol>
 
               <IonCol size="6">
-                <IonItem className="spelled-name even" color="dark">Advanced Concept Technology Demonstration</IonItem>
+                <IonItem className="spelled-name even" color="docentdark"   >Advanced Concept Technology Demonstration</IonItem>
               </IonCol> */}
             </IonRow>
           </IonGrid>

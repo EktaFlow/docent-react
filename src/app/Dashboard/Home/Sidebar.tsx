@@ -16,7 +16,7 @@ const Sidebar: React.FC = () => {
 
     <div className="rs-bottom">
       <div className="action-group">
-        <IonButton expand="full" color="dark" routerLink="/start-new">Start New Assessment</IonButton>
+        <IonButton expand="full" color="docentlight"    routerLink="/start-new">Start New Assessment</IonButton>
         <div className="port-group">
 
         </div>
@@ -24,7 +24,7 @@ const Sidebar: React.FC = () => {
       <div className="footer">
         <div className="name-section">
           <h2>{user.name.toUpperCase()}</h2>
-          <h5>{user.company_name.toUpperCase()}</h5>
+          <h5>{user.company_name ? user.company_name.toUpperCase() : ""}</h5>
         </div>
 
       </div>
@@ -39,7 +39,7 @@ export default Sidebar;
 //     <IonInput placeholder="Search Through Assessments"></IonInput>
 //   </IonItem>
 //   <IonAccordionGroup className="assessments-accordion">
-//     <IonAccordion value="assessment1" color="secondary">
+//     <IonAccordion value="assessment1" color="docentsecondary">
 //       <IonItem slot="header">
 //         <IonLabel>Docent Metrics</IonLabel>
 //       </IonItem>
@@ -49,6 +49,6 @@ export default Sidebar;
 //     </IonAccordion>
 //   </IonAccordionGroup>
 // </div>
-// <IonButton expand="full" color="dark">Import</IonButton>
-// <IonButton expand="full" color="dark">Export</IonButton>
-// <IonIcon icon={settingsOutline} size="large" color="dark"/>
+// <IonButton expand="full" color="docentdark"   >Import</IonButton>
+// <IonButton expand="full" color="docentdark"   >Export</IonButton>
+// <IonIcon icon={settingsOutline} size="large" color="docentdark"   />
