@@ -2,11 +2,13 @@ import React, { useEffect, useState, Fragment } from 'react';
 import { IonHeader, IonToolbar, IonTitle, IonRow, IonCol, IonLabel } from '@ionic/react';
 import './Files.scss';
 
-const Files: React.FC<{ files?: any, question_id?: any }> = ({ files, question_id }) => {
+const Files: React.FC<{ files?: any, question_id?: any, answer_id?: any }> = ({ files, question_id, answer_id }) => {
   const [currentFiles, setCurrentFiles] = useState<any>([]);
 
   useEffect(() => {
     if (files) {
+      console.log(files)
+      console.log(answer_id)
       setCurrentFiles([]);
       let insertFileData = files.map((file: any, index: any) => {
         let attachedToQuestion = false;
@@ -42,7 +44,7 @@ const Files: React.FC<{ files?: any, question_id?: any }> = ({ files, question_i
   return (
     <div className="display-files">
       <IonHeader>
-        <IonToolbar className="toolbar">
+        <IonToolbar className="toolbar" color="docentdark">
           <IonTitle>Attachments</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -69,7 +71,7 @@ const Files: React.FC<{ files?: any, question_id?: any }> = ({ files, question_i
 
             {currentFiles && currentFiles.map((file: any, index: any) => (
               <IonRow>
-                <IonCol color="dark" className="ion-no-padding">
+                <IonCol color="docentdark"    className="ion-no-padding">
                   <span className="file-name-content">{file.name}</span>
                 </IonCol>
                 <IonCol className="ion-no-padding">

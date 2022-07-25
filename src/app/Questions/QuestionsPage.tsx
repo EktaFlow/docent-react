@@ -10,7 +10,7 @@ import QuestionHistory from './Popovers/QuestionHistory';
 
 import { format, parseISO } from 'date-fns';
 
-import { createAnswers, grabNextQuestion, grabSpecificQuestion, addFileToAssessment, addFileToQuestion, grabFiles, grabNextQuestionAction } from '../../api/api';
+import { createAnswers, grabNextQuestion, grabSpecificQuestion, addFileToAssessment, addFileToQuestion, grabFiles, grabNextQuestionAction, grabAnswers, deleteFileFromQuestion, deleteFileFromAssessment } from '../../api/api';
 
 import Topbar from './Topbar';
 import Sidebar from './Sidebar'; 
@@ -24,11 +24,11 @@ const QuestionsPage: React.FC = (props) => {
 
   // const [questionList, setQuestionList] = useState(questions);
   const [answer, setAnswer] = useState({
-    answer: '',
-    likelihood: '',
-    consequence: '',
-    risk_response: '',
-    greatest_impact: '',
+    answer: null, 
+    likelihood: null,
+    consequence: null,
+    risk_response: null,
+    greatest_impact: null,
     mmp_summary: '',
     objective_evidence: '',
     assumptions_yes: '',
@@ -47,8 +47,11 @@ const QuestionsPage: React.FC = (props) => {
     notes_na: '',
   });
 
+  const [allChanges, setAllChanges] = useState(['']);
+
   const [showHistory, setShowHistory] = useState(false); 
   const history = useHistory();
+  const [questionHistory, setQuestionHistory] = useState([]); 
 
   const [explanationText, showExplanationText] = useState(false);
 
@@ -58,7 +61,7 @@ const QuestionsPage: React.FC = (props) => {
 
   const [selectedDate, setSelectedDate] = useState('');
   const [question, setQuestion] = useState<any>({
-    question_text: '', answered: false, assessment_length: 0, current_answer_text: '', current_mrl: 0, position: 0, question_id: 0,
+    question_text: '', answered: false, assessment_length: 0, current_answer_text: '', current_answer_id: 0, current_mrl: 0, position: 0, question_id: 0,
   })
   const [subthread, setSubthread] = useState({
     help_text: '', id: null, name: ''
@@ -72,13 +75,20 @@ const QuestionsPage: React.FC = (props) => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState({ message: '', status: '' });
   const [valuesChanged, setValuesChanged] = useState(false)
+  const [isNewQ, setIsNewQ] = useState(false)
 
   const [selectedFile, setSelectedFile] = useState<any>(null);
   const [loadedFiles, setLoadedFiles] = useState([])
   const [fileModal, setFileModal] = useState(false);
   const fileInput = useRef(null);
+  const [showFiles, setShowFiles] = useState(false); 
 
   const [assessmentId, setAssessmentId] = useState<number>();
+
+  const [fieldNames, setFieldNames] = useState({
+    assumptions_name: '',
+    notes_name: ''
+  });
 
   // useEffect(() => {
   //   // if(history["location"]["state"]["question_id"]) {
@@ -93,26 +103,29 @@ const QuestionsPage: React.FC = (props) => {
     console.log(his["location"]["state"])
 
     if (his["location"]["state"]) {
-      // console.log(his["location"]["state"]["question_id"]);
+      console.log(his["location"]["state"]["question_id"]);
       var ast_id = his["location"]["state"]["assessment_id"]
       // var q_id; 
       if(his["location"]["state"]["question_id"]){
         console.log("grabbing specific question")
         var q_id = his["location"]["state"]["question_id"]
         var q = grabSQ(q_id)
+        // setIsNewQ(true)
       }
       else {
         setAssessmentId(ast_id)
         var question = grabQ(ast_id)
+        // setIsNewQ(true)
       }
       loadFiles(ast_id)
-          
-      }
+    }
+    
+    
   }, []);
 
   useEffect(() => {
     var his: any = history
-    // console.log(his["location"]["state"])
+    console.log(his["location"]["state"])
     if (his["location"]["state"]) {
       // console.log(his["location"]["state"]["question_id"]);
       var ast_id = his["location"]["state"]["assessment_id"]
@@ -121,31 +134,86 @@ const QuestionsPage: React.FC = (props) => {
       if(his["location"]["state"]["question_id"]){
         if(question.id != his["location"]["state"]["question_id"]) {
           var q_id = his["location"]["state"]["question_id"]
-          var q = grabSQ(q_id)
+          var q = grabSQ(q_id)       
+          // setIsNewQ(true)
         }
       }
       else {
         setAssessmentId(ast_id)
         var q = grabQ(ast_id)
+        // setIsNewQ(true)
       }
       loadFiles(ast_id)
     }
     
   }, [history])
 
-
-
   useEffect(() => {
-    if (valuesChanged === true) {
-      console.log("Value changed: " + valuesChanged);
-    }
-  }, [valuesChanged]);
+    // console.log(question.question_text)
+    setAnswer({
+      answer: null, 
+      likelihood: null,
+      consequence: null,
+      risk_response: null,
+      greatest_impact: null,
+      mmp_summary: '',
+      objective_evidence: '',
+      assumptions_yes: '',
+      notes_yes: '',
+      what: '',
+      when: '',
+      who: '',
+      risk: '',
+      reason: '',
+      assumptions_no: '',
+      documentation_no: '',
+      assumptions_na: '',
+      assumptions_skipped: '',
+      notes_skipped: '',
+      notes_no: '',
+      notes_na: '',
+    })
 
-  useEffect(() => {
-    if (answer) {
-      console.log(answer);
-    }
-  }, [answer]);
+  }, [question.question_id])
+
+  // useEffect(() => {
+  //   console.log(allChanges)
+  // }, [allChanges])
+
+  // const clearAnswers = () => {
+  //   for(let field in allChanges) {
+  //     if(field == 'answer' || field == 'likelihood' || field == 'consequence' ||field == 'risk_response' || field == 'greatest_impact') {
+  //       setAnswer({
+  //         ...answer, 
+  //         [field]: null
+  //       })
+  //     }
+  //     else {
+  //       setAnswer({
+  //         ...answer, 
+  //         [field]: ''
+  //       })
+  //     }
+  //   }
+  //   setAllChanges(allChanges => []);
+  // }
+
+
+  // useEffect(() => {
+  //   // if (valuesChanged === true) {
+  //   //   console.log("Value changed: " + valuesChanged);
+  //   // }
+  //   console.log("Value changed: " + valuesChanged);
+  // }, [valuesChanged]);
+
+  // useEffect(() => {
+  //   if (answer) {
+  //     console.log(answer.answer);
+  //     console.log(question.question_id)
+  //   }
+  //   // resetQuestionAnswers()
+  //   // setAnswer
+  // }, [answer]);
 
   useEffect(() => {
     if (selectedFile) {
@@ -156,6 +224,11 @@ const QuestionsPage: React.FC = (props) => {
       }, 3000)
     }
   }, [selectedFile]);
+
+  // useEffect(() => {
+  //   console.log("grab first question")
+  //   grabSQ(1)
+  // })
 
   async function loadFiles(assessmentId: any) {
     await grabFiles(assessmentId).then((res) => {
@@ -170,7 +243,9 @@ const QuestionsPage: React.FC = (props) => {
   async function grabQ(assessment_id: Number) {
     var next_question = await grabNextQuestion(assessment_id)
       .then((res) => {
+        // setIsNewQ(true)
         setUpQuestionsPage(res)
+        resetQuestionAnswers()
         return res
       })
       .catch((error) => {
@@ -179,9 +254,12 @@ const QuestionsPage: React.FC = (props) => {
   }
 
   async function grabSQ(question_id: Number) {
+    // console.log(question_id)
     var next_question = await grabSpecificQuestion(question_id)
       .then((res) => {
+        // setIsNewQ(true)
         setUpQuestionsPage(res)
+        resetQuestionAnswers()
         // console.log(res)
         return res
       })
@@ -192,42 +270,117 @@ const QuestionsPage: React.FC = (props) => {
 
   async function getNextQuestion(movement_action: any) {
     //will run and grab the right question
+    console.log("valuesChanged in getNextQ: " + valuesChanged);
     if (yes == true || no == true || na == true) {
-      if (valuesChanged === true) {
+      if (valuesChanged == true && answer.answer != null) {
+        console.log("saving answers")
         saveAnswers();
       }
     }
-    setShowToast(true);
-    //if answer is no and its the last item in the subthread, AND level switching is on THEN give user notification that they failed the subthread and are being dropped
-    setToastMessage({ message: 'Navigating to Question', status: 'primary' })
     await grabNextQuestionAction(assessmentId, movement_action, question.question_id)
       .then((res) => {
+        console.log(res)
+        resetQuestionAnswers()
         setUpQuestionsPage(res)
         loadFiles(assessmentId)
-        setShowToast(false);
-      })
-      .catch((err) => {
-        setToastMessage({ message: 'Error navigating to next question, please refresh', status: 'danger' })
+        setToastMessage({ message: 'Navigating to Question', status: 'primary' })
+        setShowToast(true)
         setTimeout(() => {
           setShowToast(false)
         }, 2000)
       })
+      .catch((err) => {
+        setToastMessage({ message: 'Error navigating to next question, please refresh', status: 'danger' })
+        setShowToast(true);
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000)
+      })
+
+      // setShowToast(false);
   }
 
   function setUpQuestionsPage(res: any) {
-    // console.log(res);
+    console.log("setting up new questions page: ");
+    console.log(res); 
     setShowHistory(false)
+    setShowFiles(false)
     setQuestion(res.question)
     setSubthread(res.subthread)
     setThread(res.thread)
     setAssessInfo(res.assessment_info)
-    if (res.question.current_answer !== []) {
-      setAnswer(res.question.current_answer);
-      var ci = changeInterface(res.question.current_answer.answer);
-      if (ci == 'done') {
-        setValuesChanged(false)
-      }
-    }
+    
+    //if previous answers, set to new question
+    // if (res.question.all_answers.length != 0) {
+    //   setAnswer(res.question.new_answer);
+    //   var ci = changeInterface(res.question.new_answer.answer);
+    //   // setAnswer(res.question.new_answer);
+    //   // var ci = changeInterface('');
+    //   if (ci == 'done') {
+    //     setValuesChanged(false)
+    //   }
+    //   // setValuesChanged(false); 
+    // }
+    // else {  //if no previous answers
+    //   setAnswer(res.question.current_answer);
+    //   var ci = changeInterface(res.question.current_answer_text);
+    //   if (ci == 'done') {
+    //     setValuesChanged(false)
+    //   }
+    // }
+
+    
+    // setValuesChanged(false);
+  }
+
+  const resetQuestionAnswers = () => {
+    setAnswer({
+      ...answer,
+      likelihood: null, 
+      consequence: null, 
+      risk_response: null, 
+      greatest_impact: null, 
+      mmp_summary: '', 
+      risk: '', 
+    })
+    // setSelectedFile(null); 
+    // console.log(answer.risk); 
+    // if( answer.risk) {
+    //   setAnswer({
+    //     ...answer,
+    //     likelihood: '', 
+    //   })
+      // setAnswer({
+      //   ...answer,
+      //   consequence: null 
+      // })
+    //   setAnswer({
+    //     ...answer, 
+    //     risk: ''
+    //   })
+    //   setAnswer({
+    //     ...answer, 
+    //     answer: null
+    //   })
+      
+    // }
+    // setAnswer({
+    //   ...answer, 
+    //   answer: null
+    // })
+    
+    // setYes(false)
+    // setNo(false)
+    // setNA(false)
+  }
+
+  const revertBack = (ans:any) => {
+    console.log(ans)
+    // setAnswer(ans)
+    changeInterface(ans.answer)
+    setAnswer(ans)
+    setShowHistory(false)
+    setValuesChanged(false)
   }
 
   async function saveAnswers() {
@@ -235,22 +388,28 @@ const QuestionsPage: React.FC = (props) => {
       question_id: question.question_id,
       answer: answer
     }
-    setShowToast(true)
-
+    // console.log(data)
+    // console.log("saving answers and values changed: " + valuesChanged)
+    // setShowToast(true)
+    // console.log("answer changed? " + valuesChanged)
     if (yes === true || no === true || na === true) {
       // console.log("Answer condition activated")
-      if (valuesChanged === true) {
-        setToastMessage({ message: 'Answers Saving', status: 'primary' })
+      if (valuesChanged === true ) {
+        // console.log("saving answer")
+        // setToastMessage({ message: 'Answers Saving', status: 'primary' })
+        // setShowToast(true)
         await createAnswers(data)
           .then((res) => {
-            setToastMessage({ message: 'Answers have Saved', status: 'success' })
+            setShowToast(true)
+            setToastMessage({ message: 'Answers have Saved Successfully', status: 'success' })
             setTimeout(() => {
               setShowToast(false)
             }, 2000)
+            console.log(res)
             return res
           })
           .catch((error) => {
-            // setShowToast(true)
+            setShowToast(true)
             setToastMessage({ message: 'Error saving answers', status: 'danger' })
             setTimeout(() => {
               setShowToast(false)
@@ -272,8 +431,18 @@ const QuestionsPage: React.FC = (props) => {
             })
         }
       }
+      else {
+        setShowToast(true)
+        setToastMessage({ message: 'Answers have Saved', status: 'primary' })
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000)
+      }
+      //if values have not been changed
+      setValuesChanged(false)
     }
     else {
+      setShowToast(true)
       // console.log("Didn't save answer")
       setToastMessage({ message: 'Select an answer before saving', status: 'danger' })
       setTimeout(() => {
@@ -299,7 +468,7 @@ const QuestionsPage: React.FC = (props) => {
       }, 2000)
     })
       .catch((error) => {
-        console.log('2')
+        // console.log('2')
         setToastMessage({ message: 'Error attaching question', status: 'danger' })
         setTimeout(() => {
           setShowToast(false)
@@ -308,62 +477,167 @@ const QuestionsPage: React.FC = (props) => {
       })
   };
 
+  async function deleteQuestionFile(file_id: any) {
+    var data = {
+      question_id: question.question_id, 
+      file_id: file_id
+    }
+    // setShowToast(true);
+
+    var file = await deleteFileFromQuestion(data).then((res) => {
+      console.log(showToast)
+      loadFiles(assessmentId)
+      setShowToast(true);
+      setToastMessage({ message: 'Removed file from question', status: 'success' })
+      setTimeout(() => {
+        setShowToast(false)
+      }, 2000)
+    })
+    .catch((error) => {
+      console.log('2')
+      setShowToast(true);
+      setToastMessage({ message: 'Error removing file from question', status: 'danger' })
+      setTimeout(() => {
+        setShowToast(false)
+      }, 2000)
+      console.log(error)
+    })
+  }
+
+  async function deleteAssessmentFile(file_id: any) {
+    var data = {
+      assessment_id: assessmentId, 
+      file_id: file_id
+    }
+    // setShowToast(true);
+
+    var file = await deleteFileFromAssessment(data).then((res) => {
+      loadFiles(assessmentId)
+      setShowToast(true);
+      setToastMessage({ message: 'Removed file from assessment', status: 'success' })
+      setTimeout(() => {
+        setShowToast(false)
+      }, 2000)
+    })
+    .catch((error) => {
+      setShowToast(true);
+      setToastMessage({ message: 'Error removing file from assessment', status: 'danger' })
+      setTimeout(() => {
+        setShowToast(false)
+      }, 2000)
+      console.log(error)
+    })
+  }
+
   const handleFileChange = (e: any) => {
     setSelectedFile(e.target.files[0]);
   };
 
   const handleAnswerChange = (e: any) => {
-    // console.log(e.target.name)
+    // console.log(e)
     if (e.target.name === "answer") {
       changeInterface(e.target.value)
     }
     else if(e.target.name === "assumptions") {
-      getAssumptions(e.target.value)
+      if(answer.answer) {
+        // setAssumptions(e.target.detail)
+        // console.log(fieldNames)
+        // return 
+      }
     }
     else if(e.target.name === "notes") {
-      getNotes(e.target.value)
+      if(answer.answer) {
+        // setNotes(e.target.detail)
+      }
     }
+    // else if(answer['answer'] === null && e.target.value !== ''){
+    //   let name = e.target.name; 
+    //   if(name === "likelihood" || name === "consequence" || name === "greatest_impact" || name === "risk_response" || name === "mmp_summary") {
+    //     setShowToast(true)
+    //     setToastMessage({ message: `Select an answer before entering ${e.target.name}`, status: 'danger' })
+    //     setTimeout(() => {
+    //       setShowToast(false)
+    //     }, 2000)
+
+    //     setAnswer({
+    //       ...answer,
+    //       [e.target.name]: ''
+    //     })
+    //   }
+    // }
     else {
+      console.log("name: " + e.target.name + "\nvalue: " + (typeof e.target.value))
       setAnswer({
         ...answer,
         [e.target.name]: e.target.value
       });
     }
-    setValuesChanged(true)
   };
 
+  
+
   const changeInterface = (answer: any) => {
+    // console.log("yes: " + yes + "\nno: " + no + "\nna: " + na)
     if (answer === "yes") {
       setYes(true);
       setNo(false);
       setNA(false);
+      setFieldNames({ 
+        assumptions_name: "assumptions_yes",
+        notes_name: "notes_yes"
+      })
       setAnswer({
         ...answer,
         answer: 'yes'
       });
+      
+      setValuesChanged(true); 
     }
     else if (answer === "no") {
       setYes(false);
       setNo(true);
       setNA(false);
+      setFieldNames({ 
+        assumptions_name: "assumptions_no",
+        notes_name: "notes_no"
+      })
       setAnswer({
         ...answer,
         answer: 'no'
       });
+      setValuesChanged(true); 
     }
     else if (answer === "na") {
       setYes(false);
       setNo(false);
       setNA(true);
+      setFieldNames({ 
+        assumptions_name: "assumptions_na",
+        notes_name: "notes_na"
+      })
       setAnswer({
         ...answer,
         answer: 'na'
       });
+      setValuesChanged(true); 
     }
+    else {
+      setYes(false);
+      setNo(false);
+      setNA(false);
+      setValuesChanged(false); 
+      setFieldNames({ 
+        assumptions_name: '',
+        notes_name: ''
+      })
+      // resetQuestionAnswers(); 
+    }
+    // setValuesChanged(true); 
+    // console.log("valuesChanged in changeInterface: " + valuesChanged)
     return 'done'
   }
 
-  const getAssumptions = (value: any) => {
+  const setAssumptions = (value: any) => {
     if (yes) {
       setAnswer({
         ...answer,
@@ -388,9 +662,33 @@ const QuestionsPage: React.FC = (props) => {
         assumptions_na: value
       });
     }
+    else {
+      setAnswer({
+        ...answer,
+        assumptions_yes: '',
+        assumptions_no: '',
+        assumptions_na: '',
+        assumptions_skipped: ''
+      });
+    }
   }
 
-  const getNotes = (value: any) => {
+  const getAssumptions = () => {
+    if(yes) {
+      return answer.assumptions_yes
+    }
+    else if(no) {
+      return answer.assumptions_no
+    }
+    else if(na) {
+      return answer.assumptions_na
+    }
+    else {
+      return ''
+    }
+  }
+
+  const setNotes = (value: any) => {
     if (yes) {
       setAnswer({
         ...answer,
@@ -417,6 +715,21 @@ const QuestionsPage: React.FC = (props) => {
     }
   }
 
+  const getNotes = () => {
+    if(yes) {
+      return answer.notes_yes
+    }
+    else if(no) {
+      return answer.notes_no
+    }
+    else if(na) {
+      return answer.notes_na
+    }
+    else {
+      return ''
+    }
+  }
+
   const getWhen = (value: any) => {
     setAnswer({
       ...answer,
@@ -426,12 +739,12 @@ const QuestionsPage: React.FC = (props) => {
   }
 
   const getRiskScore = (data: any) => {
-    setAnswer({
-      ...answer,
-      risk: data
-    });
-    console.log('values')
-    setValuesChanged(true)
+      setAnswer({
+        ...answer,
+        risk: data
+      });
+      // console.log(data)
+      setValuesChanged(true)
   }
 
   const formatDate = (value: any) => {
@@ -442,7 +755,7 @@ const QuestionsPage: React.FC = (props) => {
 
   const showHistoryToggle = () => {
     showHistory ? setShowHistory(false) : setShowHistory(true)
-    console.log(showHistory)
+    // console.log(showHistory)
   }
 
   return (
@@ -470,12 +783,12 @@ const QuestionsPage: React.FC = (props) => {
                     {/* <IonRow> */}
                     {showHistory ?
                       <IonCol size="12">
-                        <QuestionHistory question={question} />
+                        <QuestionHistory question={question} revertBack={revertBack} />
                       </IonCol>
                       :
                       <>
                         <IonCol size="12" size-lg="5">
-                          <IonItem color="dark">
+                          <IonItem color="docentlight" >
                             <IonLabel position="floating">Select Answer</IonLabel>
                             <IonSelect
                               name="answer"
@@ -495,7 +808,7 @@ const QuestionsPage: React.FC = (props) => {
                           </div>}
 
                           {yes && <div>
-                            <IonItem color="dark">
+                            <IonItem color="docentlight" >
                               <IonLabel position="floating">Objective Evidence</IonLabel>
                               <IonTextarea
                                 name="objective_evidence"
@@ -510,7 +823,7 @@ const QuestionsPage: React.FC = (props) => {
                             <h3><b>Action Plan</b></h3>
                             <IonRow>
                               <IonCol size="12" size-lg="6" className="ion-no-padding">
-                                <IonItem color="dark">
+                                <IonItem color="docentlight" >
                                   <IonLabel position="floating">Owner</IonLabel>
                                   <IonInput
                                     name="who"
@@ -520,7 +833,7 @@ const QuestionsPage: React.FC = (props) => {
                                 </IonItem>
                               </IonCol>
                               <IonCol size="12" size-lg="6" className="ion-no-padding due-date-col">
-                                <IonItem button={true} color="dark" id="open-date-input">
+                                <IonItem button={true} color="docentlight"  id="open-date-input">
                                   <IonLabel>Due Date</IonLabel>
                                   <IonText slot="end">{selectedDate}</IonText>
                                   <IonPopover trigger="open-date-input" showBackdrop={false}>
@@ -534,7 +847,7 @@ const QuestionsPage: React.FC = (props) => {
                               </IonCol>
                             </IonRow>
 
-                            <IonItem color="dark">
+                            <IonItem color="docentlight" >
                               <IonLabel position="floating">Action Item</IonLabel>
                               <IonTextarea
                                 name="what"
@@ -543,7 +856,7 @@ const QuestionsPage: React.FC = (props) => {
                                 onIonChange={handleAnswerChange}>
                               </IonTextarea>
                             </IonItem>
-                            <IonItem color="dark">
+                            <IonItem color="docentlight" >
                               <IonLabel position="floating">Reason</IonLabel>
                               <IonTextarea
                                 name="reason"
@@ -555,7 +868,7 @@ const QuestionsPage: React.FC = (props) => {
                           </div>}
 
                           {na && <div>
-                            <IonItem color="dark">
+                            <IonItem color="docentlight" >
                               <IonLabel position="floating">Documentation</IonLabel>
                               <IonTextarea
                                 name="documentation_no"
@@ -566,23 +879,34 @@ const QuestionsPage: React.FC = (props) => {
                             </IonItem>
                           </div>}
 
-                          <IonItem color="dark">
+                          <IonItem color="docentlight" >
                             <IonLabel position="floating">Assumptions</IonLabel>
                             <IonTextarea
-                              name="assumptions"
-                              placeholder="Enter any assumptions here..."
-                              onIonChange={handleAnswerChange}>
+                              name={fieldNames.assumptions_name}
+                              placeholder={(!yes && !no && !na) ? "Select answer value before entering":"Enter any assumptions here..."}
+                              readonly={!yes && !no && !na}
+                              onIonChange={e => setAssumptions(e.detail.value)}
+                              value={getAssumptions()}
+                              // value={!answer.answer && ''}
+                              >
                             </IonTextarea>
                           </IonItem>
 
-                          <IonItem color="dark">
+                          <IonItem color="docentlight">
                             <IonLabel position="floating">Notes</IonLabel>
                             <IonTextarea
-                              name="notes"
-                              placeholder="Enter any notes here..."
-                              onIonChange={handleAnswerChange}>
+                              name={fieldNames.notes_name}
+                              placeholder={(!yes && !no && !na) ? "Select answer value before entering":"Enter any notes here..."}
+                              readonly={!yes && !no && !na}
+                              onIonChange={e => setNotes(e.detail.value)}
+                              value={getNotes()}
+                              >
                             </IonTextarea>
                           </IonItem>
+                          
+                          <IonButton color="dsb" onClick={() => setShowFiles(!showFiles)}>{showFiles ? "Show Question" : "Manage Files"}</IonButton>
+                          
+                          <br />
 
                           <IonButton color="dsb" onClick={() => {
                             // @ts-ignore
@@ -596,28 +920,43 @@ const QuestionsPage: React.FC = (props) => {
 
                           <br />
 
-                          <IonButton color="dsb" onClick={() => setFileModal(true)}>Manage Files</IonButton>
+                          {/* <IonButton color="dsb" onClick={() => setFileModal(!fileModal)}>Manage Files</IonButton>
 
                           <IonPopover isOpen={fileModal}
                             onDidDismiss={() => setFileModal(false)} className="file-popover">
                             <FilePopover saveFileToQuestion={saveFileToQuestion} files={loadedFiles} question_id={question.question_id} />
-                          </IonPopover>
+                          </IonPopover> */}
 
-                          <Files files={loadedFiles} question_id={question.question_id} />
+                        
+
+                          <Files files={loadedFiles} question_id={question.question_id} answer_id={question.current_answer_id} />
                         </IonCol>
 
-                        <IonCol size="12" size-lg="3">
-                          <RiskAssessment
-                            answer={answer}
-                            handleAnswerChange={handleAnswerChange}
-                            getRiskScore={getRiskScore}
-                          />
-                        </IonCol>
-                        <IonCol size="12" size-lg="4">
-                          <RiskMatrix
-                            likelihood={Number(answer.likelihood)} consequence={Number(answer.consequence)} riskScore={Number(answer.risk)}
-                          />
-                        </IonCol>
+                        {showFiles ? 
+                          <IonCol size="12" size-lg="7">
+                            <FilePopover saveFileToQuestion={saveFileToQuestion} files={loadedFiles} question_id={question.question_id} deleteQuestionFile={deleteQuestionFile} deleteAssessmentFile={deleteAssessmentFile}/>
+                          </IonCol>
+                          
+                        :
+                        <>
+                          <IonCol size="12" size-lg="3">
+                              <RiskAssessment
+                                answer={answer}
+                                handleAnswerChange={handleAnswerChange}
+                                getRiskScore={getRiskScore}
+                              />
+                              
+                            </IonCol>
+                            <IonCol size="12" size-lg="4">
+                              <RiskMatrix
+                                likelihood={Number(answer.likelihood)} consequence={Number(answer.consequence)} riskScore={Number(answer.risk)}
+                              />
+                              {/* <IonButton size="large"></IonButton> */}
+                          </IonCol>
+                        </>
+                        
+                        }
+                        
                       </>
                     }
                     {/* </IonRow> */}

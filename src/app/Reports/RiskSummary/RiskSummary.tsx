@@ -102,7 +102,7 @@ const RiskSummary: React.FC = () => {
             </IonCol>
             <IonCol size="12" size-lg="3" className="ion-no-padding"></IonCol>
             <IonCol size="12" size-lg="3" className="filter-item ion-no-padding">
-              <IonItem color="dark">
+              <IonItem color="docentlight" >
                 <IonLabel position="floating">Filter MR Level</IonLabel>
                 <IonSelect interface="popover" value={selectedMRL} onIonChange={e => handleMRLevelChange(e.detail.value)}>
                   <IonSelectOption value="all-levels">All Levels</IonSelectOption>

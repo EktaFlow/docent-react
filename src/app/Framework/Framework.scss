@@ -12,6 +12,10 @@
   // width: 30%;
 }
 
+ion-popover {
+  --background: #000; 
+}
+
 ion-popover.reports-popover {
   --offset-x: 380px;
   --offset-y: -290px;

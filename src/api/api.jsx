@@ -10,6 +10,17 @@ export async function grabAssessments() {
   return result.data
 }
 
+export async function updateAssessment(assessment_id, data) {
+  const token = localStorage.getItem("token");
+  const result = await axios.put({
+    method: 'put', 
+    url: `${apiUrl}/update_assessments`, 
+    data: data, 
+    headers: {Authorization: `Bearer ${token}`}
+  })
+  return result.data
+}
+
 export async function grabSingleAssessment(assessment_id) {
   const token = localStorage.getItem("token");
   const result = await axios.get(
@@ -157,6 +168,28 @@ export async function addFileToQuestion(data) {
     method: 'post',
     url: `${apiUrl}/add_to_question`,
     data: data,
+    headers: {Authorization: `Bearer ${token}`}
+  })
+  return result.data
+}
+
+export async function deleteFileFromQuestion(data) {
+  const token = localStorage.getItem("token");
+  const result = await axios ({
+    method: 'put', 
+    url: `${apiUrl}/delete_file_question`, 
+    data: data, 
+    headers: {Authorization: `Bearer ${token}`}
+  })
+  return result.data
+}
+
+export async function deleteFileFromAssessment(data) {
+  const token = localStorage.getItem("token");
+  const result = await axios ({
+    method: 'delete', 
+    url: `${apiUrl}/delete_file_assessment`, 
+    data: data, 
     headers: {Authorization: `Bearer ${token}`}
   })
   return result.data

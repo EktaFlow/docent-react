@@ -296,7 +296,7 @@ const Comprehensive: React.FC = () => {
                 </ExcelFile>}
             </IonCol>
             <IonCol size="12" size-lg="3" className="filter-item">
-              <IonItem color="dark">
+              <IonItem color="docentlight" >
                 <IonLabel position="floating">Filter MR Level</IonLabel>
                 <IonSelect interface="popover" value={selectedMRL} onIonChange={e => handleMRLevelChange(e.detail.value)}>
                   <IonSelectOption value="all-levels">All Levels</IonSelectOption>
@@ -313,7 +313,7 @@ const Comprehensive: React.FC = () => {
                 </IonSelect>
               </IonItem></IonCol>
             <IonCol size="12" size-lg="3" className="filter-item">
-              <IonItem color="dark">
+              <IonItem color="docentlight" >
                 <IonLabel position="floating">Filter Answer Type</IonLabel>
                 <IonSelect interface="popover" value={selectedAnswer} onIonChange={e => handleAnswerChange(e.detail.value)}>
                   <IonSelectOption value="all-answers">All Answers</IonSelectOption>

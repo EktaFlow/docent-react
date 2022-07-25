@@ -55,7 +55,7 @@ const Register: React.FC = () => {
     <IonPage>
       <IonContent>
         <div className="login-wrapper">
-          <IonCard className="info-card" color="dark">
+          <IonCard className="info-card" color="docentlight"   >
             <IonCardContent className="inner-card-content">
               <h1>docent</h1>
               <h3>Prove your readiness</h3>
@@ -64,26 +64,26 @@ const Register: React.FC = () => {
               <IonButton color="dsb" routerLink="login">Login to Docent</IonButton>
             </IonCardContent>
           </IonCard>
-          <IonCard className="login-card" color="dark">
+          <IonCard className="login-card" color="docentlight"   >
             <IonCardContent className="inner-card-content">
               <h2>Register for Docent</h2>
-              <IonItem color="tertiary">
+              <IonItem color="docenttertiary">
                 <IonLabel position="floating">Name</IonLabel>
                 <IonInput name="name" value={newUser.name} onIonChange={handleChange}></IonInput>
               </IonItem>
-              <IonItem color="tertiary">
+              <IonItem color="docenttertiary">
                 <IonLabel position="floating">Company Name</IonLabel>
                 <IonInput name="company_name" value={newUser.company_name} onIonChange={handleChange}></IonInput>
               </IonItem>
-              <IonItem color="tertiary">
+              <IonItem color="docenttertiary">
                 <IonLabel position="floating">Email</IonLabel>
                 <IonInput name="email" value={newUser.email} onIonChange={handleChange}></IonInput>
               </IonItem>
-              <IonItem color="tertiary">
+              <IonItem color="docenttertiary">
                 <IonLabel position="floating">Password</IonLabel>
                 <IonInput name="password" value={newUser.password} onIonChange={handleChange} type="password"></IonInput>
               </IonItem>
-              <IonItem color="tertiary">
+              <IonItem color="docenttertiary">
                 <IonLabel position="floating">Confirm Password</IonLabel>
                 <IonInput name="password_confirmation" onIonChange={handleChange} value={newUser.password_confirmation} type="password"></IonInput>
               </IonItem>

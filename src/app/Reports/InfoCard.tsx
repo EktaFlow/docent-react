@@ -25,7 +25,7 @@ const InfoCard: React.FC<{ assessmentId?: number }> = ({ assessmentId }) => {
   // }, [assessment])
 
   return (
-    <IonCard className="info-card" color="dark">
+    <IonCard className="info-card" color="docentdark"   >
       <IonCardHeader>
         <IonCardTitle>Assessment Information</IonCardTitle>
       </IonCardHeader>

@@ -34,31 +34,31 @@ const Sidebar: React.FC<({ getSQ: any, assessmentId: any, thread: any, subthread
     getAssessment();
   }, [assessmentId]);
 
-  useEffect(() => {
-    if (assessmentData) {
-      console.log(assessmentData)
-      let insertThreadData = assessmentData.threads.map((thread: any) => {
-        let subthreadNames: { name: string }[] = [];
-        thread.subthreads.map((subthread: any) => {
-          if (subthread.questions.length !== 0) {
-            subthreadNames.push({ name: subthread.name })
-          }
-        })
-        if (subthreadNames.length !== 0) {
-          setThreadData((threadData: any) => [...threadData, {
-            thread_name: thread.name,
-            subthreads: subthreadNames
-          }])
-        }
-      });
-    }
-  }, [assessmentData]);
+  // useEffect(() => {
+  //   if (assessmentData) {
+  //     console.log(assessmentData)
+  //     let insertThreadData = assessmentData.threads.map((thread: any) => {
+  //       let subthreadNames: { name: string }[] = [];
+  //       thread.subthreads.map((subthread: any) => {
+  //         if (subthread.questions.length !== 0) {
+  //           subthreadNames.push({ name: subthread.name })
+  //         }
+  //       })
+  //       if (subthreadNames.length !== 0) {
+  //         setThreadData((threadData: any) => [...threadData, {
+  //           thread_name: thread.name,
+  //           subthreads: subthreadNames
+  //         }])
+  //       }
+  //     });
+  //   }
+  // }, [assessmentData]);
 
-  useEffect(() => {
-    if (threadData) {
-      console.log(threadData);
-    }
-  }, [threadData]);
+  // useEffect(() => {
+  //   if (threadData) {
+  //     console.log(threadData);
+  //   }
+  // }, [threadData]);
 
 
 
@@ -128,7 +128,7 @@ const Sidebar: React.FC<({ getSQ: any, assessmentId: any, thread: any, subthread
                   
                     <SubMenu title={sub.name} defaultOpen={false}>
                       {sub.questions.map((q: any) => (
-                        <MenuItem onClick={() => getSQ(q.id)}>{q.question_text}</MenuItem>
+                        <MenuItem onClick={() => {getSQ(q.id); setMenuCollapse(true);}}>{q.question_text}</MenuItem>
                       ))}
                     </SubMenu>
 

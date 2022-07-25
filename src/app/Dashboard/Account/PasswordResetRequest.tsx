@@ -48,7 +48,7 @@ const PasswordResetRequest: React.FC = (props:any) => {
                 <div className="password-container">
                   <IonRow>
                     <IonCol size="12">
-                      <IonItem color="dark">
+                      <IonItem color="docentlight">
                         <IonLabel position="floating">Email</IonLabel>
                         <IonInput value={email} onIonChange={updateEmail} type="email" placeholder=""></IonInput>
                       </IonItem>

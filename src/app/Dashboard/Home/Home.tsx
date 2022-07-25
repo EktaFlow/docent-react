@@ -33,43 +33,57 @@ const Home: React.FC = () => {
     getAssessments()
   }, [])
 
+  useEffect(() => {
+    // console.log("current open assesment: " + currentAssessment)
+    console.log(assessments)
+  })
+
   function openPopover() {
     setIsPopoverOpen(!isPopoverOpen)
   }
 
   function openInviteTM(assessmentId:any) {
     setCurrentAssesment(assessmentId);
-    setInvitePopover(true);
+    // setInvitePopover(true);
   }
 
   async function processNewTM(tm:any){
     tm['assessment_id'] = currentAssessment
+    console.log(tm)
     var newTm = await createTeamMember(tm);
-    if (newTm.data.team_member) {
-      setInvitePopover(false);
+    console.log(newTm)
+    if (newTm.team_member) {
+      // setInvitePopover(false);
       var index = assessments.findIndex((ast) => ast.id == tm['assessment_id']);
       var astclone = Object.create(assessments);
-      astclone[index] = newTm.data.assessment;
+      astclone[index] = newTm.assessment;
       setAssessments(astclone);
-      setShowToast(true);
-      if (newTm.data.newUser) {
-        setToastMessage({message: `${newTm.data.team_member} has been invited to the assessment: ${newTm.data.assessment.name}`, status: 'success'})
+      
+      if (newTm.newUser) {
+        setShowToast(true);
+        setToastMessage({message: `${newTm.team_member} has been invited to the assessment: ${newTm.assessment.name}`, status: 'success'})
       } else {
-        setToastMessage({message: `${newTm.data.team_member} has been invited to Docent as a new user and been invited to the assessment: ${newTm.data.assessment.name}`, status: 'success'})
+        setShowToast(true);
+        setToastMessage({message: `${newTm.team_member} has been invited to Docent as a new user and been invited to the assessment: ${newTm.assessment.name}`, status: 'success'})
       }
-
+      // window.location.reload(); 
     }
 
   }
 
   async function deleteAssessmentFromBack(id: number) {
+    setShowToast(true);
+    console.log(id)
     var deleted = await deleteAssessment(id);
     var asts = assessments;
     var currentAst = assessments.find((assessment) => assessment.assessment.id == id).name
     var ats = assessments.filter((assess) => assess.assessment.id !== id);
     // setDeletedAssess(currentAst);
-    setShowToast(true);
+    //if deleted, show toast?
     setToastMessage({message: `Assessment ${currentAst} has been deleted`, status: 'success'})
+    setTimeout(() => {
+      setShowToast(false)
+    }, 2000)
     setAssessments(ats);
   }
 
@@ -97,12 +111,12 @@ const Home: React.FC = () => {
           <IonAccordionGroup className="assessments-accordion">
             {
               assessments && assessments.map((assessment, index) => (
-                <IonAccordion value={assessment.assessment.id} color="secondary">
-                  <IonItem slot="header" id="invite-trigger">
+                <IonAccordion value={assessment.assessment.id}>
+                  <IonItem slot="header" id="invite-trigger" color="docentdark">
                     <IonLabel>Assessment Name: {assessment.assessment.name}</IonLabel>
                   </IonItem>
-                  <IonItem slot="content" color="dark">
-                    <AssessmentItem assessmentInfo={assessment.assessment} teamMembers={assessment.team_members} deleteAssessmentFromBack={deleteAssessmentFromBack} openInviteTM={openInviteTM} processNewTM={processNewTM}/>
+                  <IonItem slot="content" color="docentlight">
+                    <AssessmentItem assessmentInfo={assessment.assessment}  deleteAssessmentFromBack={deleteAssessmentFromBack} openInviteTM={openInviteTM} teamMembers={assessment.team_members} processNewTM={processNewTM}/>
                   </IonItem>
                 </IonAccordion>
               ))
@@ -113,6 +127,7 @@ const Home: React.FC = () => {
             isOpen={showToast}
             onDidDismiss={() => setShowToast(false)}
             message={toastMessage.message}
+            color="docentdark"
             duration={2000}
           />
 
@@ -124,7 +139,7 @@ const Home: React.FC = () => {
 };
 
 export default Home;
-// <IonButton expand="full" color="light" id="trigger-button" onClick={openPopover}>Filter</IonButton>
+// <IonButton expand="full" color="docentlight" id="trigger-button" onClick={openPopover}>Filter</IonButton>
 // <IonPopover trigger="trigger-button" isOpen={isPopoverOpen}>
 //   <FilterPopover filters={filters} setFilters={setFilters}/>
 // </IonPopover>

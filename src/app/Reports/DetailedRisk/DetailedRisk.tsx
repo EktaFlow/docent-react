@@ -184,7 +184,7 @@ const DetailedRisk: React.FC = () => {
             </IonCol>
             <IonCol size="12" size-lg="3" className="ion-no-padding"></IonCol>
             <IonCol size="12" size-lg="3" className="filter-item ion-no-padding">
-              <IonItem color="dark">
+              <IonItem color="docentlight" >
                 <IonLabel position="floating">Filter MR Level</IonLabel>
                 <IonSelect interface="popover" value={selectedMRL} onIonChange={e => handleMRLevelChange(e.detail.value)}>
                   <IonSelectOption value="all-levels">All Levels</IonSelectOption>
@@ -211,12 +211,12 @@ const DetailedRisk: React.FC = () => {
 
           <div className="detailed-card-wrapper">
             {questionData && questionData.map((question: any, index: any) => (
-              <IonCard className="detailed-risk-card" color="dark">
+              <IonCard className="detailed-risk-card" color="docentlight" >
                 <IonCardHeader>
                   <IonCardTitle>Thread: {question.thread_name}</IonCardTitle>
                 </IonCardHeader>
 
-                <IonCard className="subthread-card" color="dark">
+                <IonCard className="subthread-card" color="docentlight" >
                   <IonCardHeader>
                     <IonCardTitle>Subthread: {question.subthread_name}</IonCardTitle>
                   </IonCardHeader>
