@@ -5,6 +5,8 @@
   color: black;
   width: 100%; 
   margin-right: 20px; 
+  margin-bottom: 60px; 
+  // overflow: scroll !important; 
 
   .header {
     width: 100%;
@@ -23,6 +25,7 @@
     width: 100%;
     // margin: 0;
     padding: 0 10px; 
+    // overflow-y: scroll; 
 
     .top {
       width: 100%;
@@ -30,12 +33,23 @@
 
       h3 {
         padding-left: 10px;
-        span {
+        .question-text {
           font-weight: 400;
+          text-decoration: none;
         }
         u {
+          font-weight: 400;
+          font-size: 20px; 
+          // padding: 2px 3px; 
+          // border-style: solid; 
+          // border-radius: 7px;
+          // background-color: #483D8B;
+          // color: white; 
+
           &:hover {
             cursor: pointer;
+            color: #483D8B; 
+            text-decoration: underline;
           }
         }
       }

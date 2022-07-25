@@ -29,13 +29,18 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
     }
   }, [assessmentInfo]);
 
+  // useEffect(() => {
+    
+  // })
+
   const removeAssessment = (id: number) => {
     console.log(id)
     deleteAssessmentFromBack(id);
   }
 
-  const clickTM = () => {
-    setShowTM(!showTM); 
+  function clickTM(id:any){
+    showTM ? setShowTM(false) : setShowTM(true); 
+    openInviteTM(id); 
   }
 
   return (
@@ -55,11 +60,16 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
             <span> No Team Members</span> 
             :
             teamMembers.map((tm:any, index:number) => (
-              <span>{tm.email} (dev) {index !== teamMembers.length - 1 ? ', ' : ''}</span>
+              <p>{tm.email} (dev) {index !== teamMembers.length - 1 ? ', ' : ''}</p>
             ))
-            
           }
-             <IonButton size="small" color="success" onClick={clickTM} ><FaUserPlus/></IonButton>
+             <IonButton 
+              size="small" 
+              color="docentsuccess" 
+              onClick={() => {clickTM(assessmentInfo.id)}
+              }>
+               <FaUserPlus/>
+             </IonButton>
           </p>
           {showTM &&
             <p>
@@ -70,7 +80,7 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
         
         
         
-        {/* <IonButton size="small" color="light" onClick={() => clickTM()} >Invite Team Members</IonButton> */}
+        {/* <IonButton size="small" color="docentdark"  onClick={() => clickTM()} >Invite Team Members</IonButton> */}
         {/* {showTM &&
           <div>
             <InviteTMPopover  />
@@ -79,13 +89,13 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
 
       </div>
       <div className="assessment-actions">
-        <IonButton size="small" expand="full" color="light" onClick={() => navigateToPage('questions')}>Continue Assessment</IonButton>
-        <IonButton size="small" expand="full" color="light" onClick={() => navigateToPage('mrl-summary')}>MRL Summary</IonButton>
-        <IonButton size="small" expand="full" color="light" onClick={() => navigateToPage('action-items')}>Action Items</IonButton>
-        {/* <IonButton size="small" expand="full" color="light" onClick={() => openInviteTM(assessmentInfo.id)} >Invite Team Members</IonButton> */}
-        <IonButton size="small" expand="full" color="light">Edit Assessment Info</IonButton>
-        <IonButton size="small" expand="full" color="light" onClick={() => removeAssessment(assessmentInfo.id)}>Delete Assessment</IonButton>
-        <IonButton size="small" expand="full" color="light">Export Assessment</IonButton>
+        <IonButton size="small" expand="full" color="docentdark"  onClick={() => navigateToPage('questions')}>Continue Assessment</IonButton>
+        <IonButton size="small" expand="full" color="docentdark"  onClick={() => navigateToPage('mrl-summary')}>MRL Summary</IonButton>
+        <IonButton size="small" expand="full" color="docentdark"  onClick={() => navigateToPage('action-items')}>Action Items</IonButton>
+        {/* <IonButton size="small" expand="full" color="docentdark"  onClick={() => openInviteTM(assessmentInfo.id)} >Invite Team Members</IonButton> */}
+        <IonButton size="small" expand="full" color="docentdark" onClick={() => navigateToPage('edit-assessment')}>Edit Assessment Info</IonButton>
+        <IonButton size="small" expand="full" color="docentdark"  onClick={() => removeAssessment(assessmentInfo.id)}>Delete Assessment</IonButton>
+        <IonButton size="small" expand="full" color="docentdark" >Export Assessment</IonButton>
       </div>
     </div>
   )

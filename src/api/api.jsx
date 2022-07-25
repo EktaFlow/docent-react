@@ -10,6 +10,17 @@ export async function grabAssessments() {
   return result.data
 }
 
+export async function updateAssessment(assessment_id, data) {
+  const token = localStorage.getItem("token");
+  const result = await axios.put({
+    method: 'put', 
+    url: `${apiUrl}/update_assessments`, 
+    data: data, 
+    headers: {Authorization: `Bearer ${token}`}
+  })
+  return result.data
+}
+
 export async function grabSingleAssessment(assessment_id) {
   const token = localStorage.getItem("token");
   const result = await axios.get(
@@ -162,6 +173,28 @@ export async function addFileToQuestion(data) {
   return result.data
 }
 
+export async function deleteFileFromQuestion(data) {
+  const token = localStorage.getItem("token");
+  const result = await axios ({
+    method: 'put', 
+    url: `${apiUrl}/delete_file_question`, 
+    data: data, 
+    headers: {Authorization: `Bearer ${token}`}
+  })
+  return result.data
+}
+
+export async function deleteFileFromAssessment(data) {
+  const token = localStorage.getItem("token");
+  const result = await axios ({
+    method: 'delete', 
+    url: `${apiUrl}/delete_file_assessment`, 
+    data: data, 
+    headers: {Authorization: `Bearer ${token}`}
+  })
+  return result.data
+}
+
 export async function deleteAssessment(id) {
   const token = localStorage.getItem("token");
   const result = await axios({
@@ -206,6 +239,27 @@ export async function logoutUser(user){
   const result = await axios({
     method: 'delete',
     url: `${apiUrl}/users/sign_out`,
+    headers: {Authorization: `Bearer ${token}`}
+  })
+  return result
+}
+
+export async function sendPasswordReset(email){
+  const token = localStorage.getItem("token");
+  const result = await axios({
+    method: 'get',
+    url: `${apiUrl}/send_reset?email=${email}`,
+    headers: {Authorization: `Bearer ${token}`}
+  })
+  return result
+}
+
+export async function resetPassword(data){
+  const token = localStorage.getItem("token");
+  const result = await axios({
+    method: 'put',
+    url: `${apiUrl}/reset_pwd`,
+    data: data,
     headers: {Authorization: `Bearer ${token}`}
   })
   return result

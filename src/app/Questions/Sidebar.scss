@@ -22,7 +22,8 @@ pro-sidebar {
    // color: white; 
    // background-color: #494949;
    // position: fixed; 
-   overflow: visible;
+   overflow: scroll;
+   margin: 20px; 
    height: 100%;
    float: left; 
 }
@@ -36,6 +37,7 @@ pro-sidebar {
 
 pro-sidebar .sidebar-menu {
    height: 100%; 
+   overflow-y: scroll;
 }
 
 @media only screen and (max-width: 720px) {

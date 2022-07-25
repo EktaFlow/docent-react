@@ -14,10 +14,19 @@ const InviteTMPopover: React.FC<({ processNewTM: any })> = ({ processNewTM }) =>
     });
   }
 
+  const setAndClearTM = () => {
+    processNewTM(tm);
+    setTm({
+      email: '',
+      role: ''
+    });
+    window.location.reload(); //team member shows up on reload
+  }
+
   return(
     <div className="invite-wrapper">
       <h4>Invite New Team Member to Assessment</h4>
-      <IonItem color="dark">
+      <IonItem color="docentlight"   >
         <IonLabel position="floating">Email</IonLabel> 
          <IonInput
           name="email"
@@ -25,7 +34,7 @@ const InviteTMPopover: React.FC<({ processNewTM: any })> = ({ processNewTM }) =>
           onIonChange={handleChange}
         ></IonInput>
       </IonItem>
-      <IonItem color="dark">
+      <IonItem color="docentlight"   >
         <IonLabel position="floating">Role</IonLabel>
         <IonInput
           name="role"
@@ -33,12 +42,12 @@ const InviteTMPopover: React.FC<({ processNewTM: any })> = ({ processNewTM }) =>
           onIonChange={handleChange}
         ></IonInput>
       </IonItem>
-      <IonButton color="dsb" onClick={() => processNewTM(tm)}>Add Team Member</IonButton>
+      <IonButton color="dsb" onClick={() => setAndClearTM()}>Add Team Member</IonButton>
       
     </div>
-    // <IonContent color="light" className="invite-popover" >
+    // <IonContent color="docentdark"  className="invite-popover" >
     //   <h1>Invite New Team Member to Assessment</h1>
-    //   <IonItem color="dark">
+    //   <IonItem color="docentdark"   >
     //     <IonLabel position="floating">Email</IonLabel> 
     //     <IonInput
     //       name="email"
@@ -46,7 +55,7 @@ const InviteTMPopover: React.FC<({ processNewTM: any })> = ({ processNewTM }) =>
     //       onIonChange={handleChange}
     //     ></IonInput>
     //   </IonItem>
-      // <IonItem color="dark">
+      // <IonItem color="docentdark"   >
       //   <IonLabel position="floating">Role</IonLabel>
       //   <IonInput
       //     name="role"

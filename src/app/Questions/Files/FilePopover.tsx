@@ -2,7 +2,7 @@ import React, { useEffect, Fragment, useState } from 'react';
 import { IonButton } from '@ionic/react';
 import './FilePopover.scss';
 
-const FilePopover: React.FC<{ saveFileToQuestion?: any, files?: any, question_id?: any }> = ({ saveFileToQuestion, files, question_id }) => {
+const FilePopover: React.FC<{ saveFileToQuestion?: any, files?: any, question_id?: any, deleteQuestionFile: any, deleteAssessmentFile: any }> = ({ saveFileToQuestion, files, question_id, deleteQuestionFile, deleteAssessmentFile }) => {
     const [currentFiles, setCurrentFiles] = useState<any>([]);
     const [allFiles, setAllFiles] = useState<any>([]);
 
@@ -10,6 +10,7 @@ const FilePopover: React.FC<{ saveFileToQuestion?: any, files?: any, question_id
     const [showQuestions, setShowQuestions] = useState(false);
 
     useEffect(() => {
+        console.log(files)
         if (files) {
             setCurrentFiles([]);
             setAllFiles([]);
@@ -56,6 +57,14 @@ const FilePopover: React.FC<{ saveFileToQuestion?: any, files?: any, question_id
         saveFileToQuestion(file_id)
     }
 
+    const deleteQF = (file_id: any) => {
+        deleteQuestionFile(file_id)
+    }
+
+    const deleteAF = (file_id: any) => {
+        deleteAssessmentFile(file_id)
+    }
+
     const clickViewFiles = (index: any) => {
         if (index !== fileIndex) {
             setShowQuestions(true);
@@ -70,6 +79,7 @@ const FilePopover: React.FC<{ saveFileToQuestion?: any, files?: any, question_id
         <div className="file-popover-content">
             <div className="header">
                 <h2>File Explorer</h2>
+                {/* <IonButton>X</IonButton> */}
             </div>
 
             {/* <div className="secondary-header">
@@ -82,7 +92,7 @@ const FilePopover: React.FC<{ saveFileToQuestion?: any, files?: any, question_id
 
             {currentFiles.map((file: any, index: any) => (
                 <div className="files">
-                    <p>{file.name} | <span>Date: {file.date}</span> | <span className="open-file" onClick={() => openURL(file.url)}>View File</span></p>
+                    <p>{file.name} | <span>Date: {file.date}</span> | <span className="open-file" onClick={() => openURL(file.url)}>View File</span> | <span className="delete-file-question" onClick={() => deleteQF(file.id)}>Remove File from Current Question</span></p>
                 </div>
             ))}
 
@@ -92,7 +102,7 @@ const FilePopover: React.FC<{ saveFileToQuestion?: any, files?: any, question_id
 
             {allFiles.map((file: any, index: any) => (
                 <div className="files" key={index}>
-                    <p>{file.name} | <span>Date: {file.date}</span> | <span className="open-file" onClick={() => openURL(file.url)}>View File</span> | <span className="open-questions" onClick={() => clickViewFiles(index)}>List of Questions Attached</span>
+                    <p>{file.name} | <span>Date: {file.date}</span> | <span className="open-file" onClick={() => openURL(file.url)}>View File </span> | <span className="delete-file-assessment" onClick={() =>deleteAF(file.id)}>Delete File from Assessment</span> | <span className="open-questions" onClick={() => clickViewFiles(index)}>List of Questions Attached</span>
                         {!file.inQuestion &&
                             <span> | <span className="open-file" onClick={() => fileToQuestion(file.id)}> Add File to Current Question</span></span>
                         }

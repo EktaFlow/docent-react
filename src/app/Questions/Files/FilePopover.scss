@@ -1,12 +1,13 @@
 .file-popover-content {
     padding: 10px;
-    min-height: 100%;
-    background-color: white;
+    max-height: 90%;
+    background-color: #e6e6e6;
+    overflow-y: scroll !important; 
     color: black;
 
     .header {
         width: 100%;
-        background-color: darkslateblue;
+        background-color: #222428;
         margin: 0;
 
         h2 {
@@ -36,7 +37,9 @@
     }
 
     .open-file,
-    .open-questions {
+    .open-questions, 
+    .delete-file-question, 
+    .delete-file-assessment {
         cursor: pointer;
         color: blue;
 

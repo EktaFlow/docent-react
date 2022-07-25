@@ -11,6 +11,14 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-primary-shade: #3171e0;
   --ion-color-primary-tint: #4c8dff;
 
+  /** docentprimary **/
+  --ion-color-docentprimary: #3880ff;
+  --ion-color-docentprimary-rgb: 56, 128, 255;
+  --ion-color-docentprimary-contrast: #ffffff;
+  --ion-color-docentprimary-contrast-rgb: 255, 255, 255;
+  --ion-color-docentprimary-shade: #3171e0;
+  --ion-color-docentprimary-tint: #4c8dff;
+
   /** secondary **/
   --ion-color-secondary: #3dc2ff;
   --ion-color-secondary-rgb: 61, 194, 255;
@@ -18,6 +26,14 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-secondary-contrast-rgb: 255, 255, 255;
   --ion-color-secondary-shade: #36abe0;
   --ion-color-secondary-tint: #50c8ff;
+
+  /** docentsecondary **/
+  --ion-color-docentsecondary: #3dc2ff;
+  --ion-color-docentsecondary-rgb: 61, 194, 255;
+  --ion-color-docentsecondary-contrast: #ffffff;
+  --ion-color-docentsecondary-contrast-rgb: 255, 255, 255;
+  --ion-color-docentsecondary-shade: #36abe0;
+  --ion-color-docentsecondary-tint: #50c8ff;
 
   /** tertiary **/
   --ion-color-tertiary: #d1d1d1;
@@ -27,6 +43,14 @@ http://ionicframework.com/docs/theming/ */
 	--ion-color-tertiary-shade: #b8b8b8;
 	--ion-color-tertiary-tint: #d6d6d6;
 
+    /** docenttertiary **/
+    --ion-color-docenttertiary: #d1d1d1;
+    --ion-color-docenttertiary-rgb: 209,209,209;
+    --ion-color-docenttertiary-contrast: #000000;
+    --ion-color-docenttertiary-contrast-rgb: 0,0,0;
+    --ion-color-docenttertiary-shade: #b8b8b8;
+    --ion-color-docenttertiary-tint: #d6d6d6;
+
   /** success **/
   --ion-color-success: #2dd36f;
   --ion-color-success-rgb: 45, 211, 111;
@@ -34,6 +58,14 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-success-contrast-rgb: 255, 255, 255;
   --ion-color-success-shade: #28ba62;
   --ion-color-success-tint: #42d77d;
+
+  /** docentsuccess **/
+  --ion-color-docentsuccess: #2dd36f;
+  --ion-color-docentsuccess-rgb: 45, 211, 111;
+  --ion-color-docentsuccess-contrast: #000000;
+  --ion-color-docentsuccess-contrast-rgb: 255, 255, 255;
+  --ion-color-docentsuccess-shade: #28ba62;
+  --ion-color-docentsuccess-tint: #42d77d;
 
   /** warning **/
   --ion-color-warning: #ffc409;
@@ -51,6 +83,14 @@ http://ionicframework.com/docs/theming/ */
 	--ion-color-danger-shade: #bd0821;
 	--ion-color-danger-tint: #db223b;
 
+    /** docentdanger **/
+    --ion-color-docentdanger: #d70925;
+    --ion-color-docentdanger-rgb: 215,9,37;
+    --ion-color-docentdanger-contrast: #ffffff;
+    --ion-color-docentdanger-contrast-rgb: 255,255,255;
+    --ion-color-docentdanger-shade: #bd0821;
+    --ion-color-docentdanger-tint: #db223b;
+
   /** dark **/
   --ion-color-dark: #222428;
   --ion-color-dark-rgb: 34, 36, 40;
@@ -58,6 +98,13 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-dark-contrast-rgb: 255, 255, 255;
   --ion-color-dark-shade: #1e2023;
   --ion-color-dark-tint: #383a3e;
+  /** docent dark **/
+  --ion-color-docentdark: #222428;
+  --ion-color-docentdark-rgb: 34, 36, 40;
+  --ion-color-docentdark-contrast: #ffffff;
+  --ion-color-docentdark-contrast-rgb: 255, 255, 255;
+  --ion-color-docentdark-shade: #1e2023;
+  --ion-color-docentdark-tint: #383a3e;
 
   /** medium **/
   --ion-color-medium: #92949c;
@@ -67,6 +114,14 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-medium-shade: #808289;
   --ion-color-medium-tint: #9d9fa6;
 
+  /** docent medium **/
+  --ion-color-docentmedium: #92949c;
+  --ion-color-docentmedium-rgb: 146, 148, 156;
+  --ion-color-docentmedium-contrast: #ffffff;
+  --ion-color-docentmedium-contrast-rgb: 255, 255, 255;
+  --ion-color-docentmedium-shade: #808289;
+  --ion-color-docentmedium-tint: #9d9fa6;
+
   /** light **/
   --ion-color-light: #f4f5f8;
   --ion-color-light-rgb: 244, 245, 248;
@@ -74,6 +129,14 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  /** docent light **/
+  --ion-color-docentlight: #f4f5f8;
+  --ion-color-docentlight-rgb: 244, 245, 248;
+  --ion-color-docentlight-contrast: #000000;
+  --ion-color-docentlight-contrast-rgb: 0, 0, 0;
+  --ion-color-docentlight-shade: #d7d8da;
+  --ion-color-docentlight-tint: #f5f6f9;
 
   /* docent dark slate blue */
   --ion-color-dsb: #483D8B;
@@ -85,13 +148,13 @@ http://ionicframework.com/docs/theming/ */
 
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) { */
   /*
    * Dark Colors
    * -------------------------------------------
    */
 
-  body {
+  /* body {
     --ion-color-primary: #428cff;
     --ion-color-primary-rgb: 66,140,255;
     --ion-color-primary-contrast: #ffffff;
@@ -154,22 +217,22 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-light-contrast-rgb: 255,255,255;
     --ion-color-light-shade: #1e2023;
     --ion-color-light-tint: #383a3e;
-
+*/
     /* docent dark slate blue */
-    --ion-color-dsb: #483D8B;
+    /* --ion-color-dsb: #483D8B;
   	--ion-color-dsb-rgb: 72,61,139;
   	--ion-color-dsb-contrast: #ffffff;
   	--ion-color-dsb-contrast-rgb: 255,255,255;
   	--ion-color-dsb-shade: #3f367a;
   	--ion-color-dsb-tint: #5a5097;
-  }
+  }  */
 
   /*
    * iOS Dark Theme
    * -------------------------------------------
    */
 
-  .ios body {
+  /* .ios body {
     --ion-background-color: #000000;
     --ion-background-color-rgb: 0,0,0;
 
@@ -205,7 +268,7 @@ http://ionicframework.com/docs/theming/ */
     --ion-background-color: var(--ion-color-step-100);
     --ion-toolbar-background: var(--ion-color-step-150);
     --ion-toolbar-border-color: var(--ion-color-step-250);
-  }
+  } */
 
 
   /*
@@ -213,7 +276,7 @@ http://ionicframework.com/docs/theming/ */
    * -------------------------------------------
    */
 
-  .md body {
+  /* .md body {
     --ion-background-color: #121212;
     --ion-background-color-rgb: 18,18,18;
 
@@ -249,8 +312,8 @@ http://ionicframework.com/docs/theming/ */
     --ion-tab-bar-background: #1f1f1f;
 
     --ion-card-background: #1e1e1e;
-  }
-}
+  } */
+/* } */
 
 .ion-color-dsb {
   --ion-color-base: var(--ion-color-dsb);
@@ -259,4 +322,76 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-contrast-rgb: var(--ion-color-dsb-contrast-rgb);
   --ion-color-shade: var(--ion-color-dsb-shade);
   --ion-color-tint: var(--ion-color-dsb-tint);
+}
+
+.ion-color-docentlight {
+  --ion-color-base: var(--ion-color-docentlight);
+  --ion-color-base-rgb: var(--ion-color-docentlight-rgb);
+  --ion-color-contrast: var(--ion-color-docentlight-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-docentlight-contrast-rgb);
+  --ion-color-shade: var(--ion-color-docentlight-shade);
+  --ion-color-tint: var(--ion-color-docentlight-tint);
+}
+
+.ion-color-docentmedium {
+  --ion-color-base: var(--ion-color-docentmedium);
+  --ion-color-base-rgb: var(--ion-color-docentmedium-rgb);
+  --ion-color-contrast: var(--ion-color-docentmedium-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-docentmedium-contrast-rgb);
+  --ion-color-shade: var(--ion-color-docentmedium-shade);
+  --ion-color-tint: var(--ion-color-docentmedium-tint);
+}
+
+.ion-color-docentdark {
+  --ion-color-base: var(--ion-color-docentdark);
+  --ion-color-base-rgb: var(--ion-color-docentdark-rgb);
+  --ion-color-contrast: var(--ion-color-docentdark-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-docentdark-contrast-rgb);
+  --ion-color-shade: var(--ion-color-docentdark-shade);
+  --ion-color-tint: var(--ion-color-docentdark-tint);
+}
+
+.ion-color-docentprimary {
+  --ion-color-base: var(--ion-color-docentprimary);
+  --ion-color-base-rgb: var(--ion-color-docentprimary-rgb);
+  --ion-color-contrast: var(--ion-color-docentprimary-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-docentprimary-contrast-rgb);
+  --ion-color-shade: var(--ion-color-docentprimary-shade);
+  --ion-color-tint: var(--ion-color-docentprimary-tint);
+}
+
+.ion-color-docentsecondary {
+  --ion-color-base: var(--ion-color-docentsecondary);
+  --ion-color-base-rgb: var(--ion-color-docentsecondary-rgb);
+  --ion-color-contrast: var(--ion-color-docentsecondary-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-docentsecondary-contrast-rgb);
+  --ion-color-shade: var(--ion-color-docentsecondary-shade);
+  --ion-color-tint: var(--ion-color-docentsecondary-tint);
+}
+
+.ion-color-docenttertiary {
+  --ion-color-base: var(--ion-color-docenttertiary);
+  --ion-color-base-rgb: var(--ion-color-docenttertiary-rgb);
+  --ion-color-contrast: var(--ion-color-docenttertiary-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-docenttertiary-contrast-rgb);
+  --ion-color-shade: var(--ion-color-docenttertiary-shade);
+  --ion-color-tint: var(--ion-color-docenttertiary-tint);
+}
+
+.ion-color-docentsuccess {
+  --ion-color-base: var(--ion-color-docentsuccess);
+  --ion-color-base-rgb: var(--ion-color-docentsuccess-rgb);
+  --ion-color-contrast: var(--ion-color-docentsuccess-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-docentsuccess-contrast-rgb);
+  --ion-color-shade: var(--ion-color-docentsuccess-shade);
+  --ion-color-tint: var(--ion-color-docentsuccess-tint);
+}
+
+.ion-color-docentdanger {
+  --ion-color-base: var(--ion-color-docentdanger);
+  --ion-color-base-rgb: var(--ion-color-docentdanger-rgb);
+  --ion-color-contrast: var(--ion-color-docentdanger-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-docentdanger-contrast-rgb);
+  --ion-color-shade: var(--ion-color-docentdanger-shade);
+  --ion-color-tint: var(--ion-color-docentdanger-tint);
 }

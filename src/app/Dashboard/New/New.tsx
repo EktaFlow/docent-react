@@ -12,6 +12,7 @@ import {useHistory} from "react-router-dom";
 const New: React.FC = () => {
   type ThreadsType = {t: boolean, a: boolean, b: boolean, c: boolean, d: boolean, e: boolean, f: boolean, g: boolean, h: boolean, i: boolean}
   const [selectedDate, setSelectedDate] = useState('');
+  const [openDate, setOpenDate] = useState(false); 
   const [newAssessment, setNewAssessment] = useState({
     name: '',
     scope: '',
@@ -28,6 +29,7 @@ const New: React.FC = () => {
     role: ''
   })
   const [tms, setTms] = useState<any>([]);
+  const [missingTMValues, setMissingTMValues] = useState(false); 
   let history = useHistory();
   const [validationErrors, setValidationErrors] = useState({
     name: false,
@@ -54,6 +56,16 @@ const New: React.FC = () => {
     console.log(threads);
   }, [threads])
 
+  useEffect(() => {
+    console.log(tms); 
+    // if(tms != []) {
+    //   let tm = tms[0];
+    //   console.log(tm['email']);
+    //   console.log(typeof tms.last)
+    // }
+    
+  }, [tms])
+
   const handleAssessmentChange = (e: any) => {
     if (e.target.name == 'name' && validationErrors.name == true) {
       var v = validationErrors
@@ -78,6 +90,16 @@ const New: React.FC = () => {
     });
   }
 
+  const checkMissingTMValues = () => {
+    if(tempTM.email == '' || tempTM.role == '') {
+      setMissingTMValues(true)
+    }
+    else {
+      setMissingTMValues(false)
+      saveTeamMember()
+    }
+  }
+
   function updateTM(e: any){
     setTempTM({
       ...tempTM,
@@ -88,12 +110,9 @@ const New: React.FC = () => {
   function saveTeamMember() {
     var ts:any = [...tms, tempTM]
     setTms(ts)
+    // console.log(ts)
     setTempTM({email: '', role: ''})
   }
-
-  // useEffect(() => {
-  //   console.log(tms)
-  // }, [tms])
 
   function removeIcon(spot:any){
     var t = [...tms]
@@ -161,7 +180,7 @@ const New: React.FC = () => {
         <div className="panel-wrappers">
           <div className="assessment-info">
             <h3>Assessment Information</h3>
-            <IonItem color={validationErrors.name == false ? 'dark' : 'danger'}>
+            <IonItem color={validationErrors.name == false ? 'docentlight' : 'danger'}>
               <IonLabel position="floating">Assessment Name* (50 characters max)</IonLabel>
               <IonInput
                 name="name"
@@ -171,7 +190,7 @@ const New: React.FC = () => {
                 required
               ></IonInput>
             </IonItem>
-            <IonItem color={validationErrors.target_mrl == false ? 'dark' : 'danger'}>
+            <IonItem color={validationErrors.target_mrl == false ? 'docentlight' : 'danger'}>
               <IonLabel position="floating">Target MRL*</IonLabel>
               <IonSelect
                 name="target_mrl"
@@ -191,7 +210,7 @@ const New: React.FC = () => {
                 <IonSelectOption value="10">10</IonSelectOption>
               </IonSelect>
             </IonItem>
-            <IonItem color="dark">
+            <IonItem color="docentlight"   >
               <IonLabel position="floating">Level Switching</IonLabel>
               <IonSelect
                 name="level_switching"
@@ -203,17 +222,18 @@ const New: React.FC = () => {
                 <IonSelectOption value="no">No</IonSelectOption>
               </IonSelect>
             </IonItem>
-            <IonItem button={true} id="open-date-input" color="dark">
+            <IonItem button={true} id="open-date-input" color="docentlight"   >
               <IonLabel>Date</IonLabel>
               <IonText slot="end">{selectedDate}</IonText>
-              <IonPopover trigger="open-date-input" showBackdrop={false}>
+              <IonPopover trigger="open-date-input" showBackdrop={false} isOpen={openDate}>
                 <IonDatetime
                   presentation="date"
-                  onIonChange={ev => setSelectedDate(formatDate(ev.detail.value!))}
+                  showDefaultButtons={true}
+                  onIonChange={ev => {setSelectedDate(formatDate(ev.detail.value!)); setOpenDate(false);}}
                 />
               </IonPopover>
             </IonItem>
-            <IonItem color="dark">
+            <IonItem color="docentlight"   >
               <IonLabel position="floating">Location</IonLabel>
               <IonInput
                 name="location"
@@ -221,7 +241,7 @@ const New: React.FC = () => {
                 onIonChange={handleAssessmentChange}
               ></IonInput>
             </IonItem>
-            <IonItem color="dark">
+            <IonItem color="docentlight"   >
               <IonLabel position="floating">Additional Information/Scope (250 characters max)</IonLabel>
               <IonTextarea
                 name="scope"
@@ -230,7 +250,7 @@ const New: React.FC = () => {
                 maxlength={250}
               ></IonTextarea>
             </IonItem>
-            <IonItem color="dark">
+            <IonItem color="docentlight"   >
               <IonLabel position="floating">Deskbook Version*</IonLabel>
               <IonSelect
                 name="deskbook_version"
@@ -250,7 +270,7 @@ const New: React.FC = () => {
           <div className="assessment-choices">
             <h3>Add Team Members</h3>
             <div className="tm-fields-wrapper">
-              <IonItem color="dark">
+              <IonItem color={(missingTMValues == true && tempTM.email == '') ? 'danger' : 'docentlight'}>
                 <IonLabel position="floating">Member Email</IonLabel>
                 <IonInput
                   name="email"
@@ -258,7 +278,7 @@ const New: React.FC = () => {
                   onIonChange={updateTM}
                 ></IonInput>
               </IonItem>
-              <IonItem color="dark">
+              <IonItem color={(missingTMValues == true && tempTM.role == '') ? 'danger' : 'docentlight'}>
                 <IonLabel position="floating">Member Role</IonLabel>
                 <IonInput
                   name="role"
@@ -268,12 +288,12 @@ const New: React.FC = () => {
                 </IonInput>
               </IonItem>
             </div>
-            <IonButton color="dsb" expand='full' onClick={() => saveTeamMember()}>Add Team Member</IonButton>
+            <IonButton color="dsb" expand='full' onClick={() => {checkMissingTMValues()}}>Add Team Member</IonButton>
 
             <div className="added-members">
               { tms.length > 0 && tms.map((tm:any, index:any) => (
-                <IonChip color="light">
-                  <IonLabel color="light">Email: <b>{tm.email}</b> Role: <b>{tm.role}</b></IonLabel>
+                <IonChip color="docentlight" >
+                  <IonLabel color="docentlight" >Email: <b>{tm.email}</b> Role: <b>{tm.role}</b></IonLabel>
                   <span onClick={() => removeIcon(index)}><IonIcon  icon={closeCircle} /></span>
                 </IonChip>
               ))

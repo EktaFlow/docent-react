@@ -25,8 +25,23 @@ const RiskMatrix: React.FC<{ likelihood: number | undefined, consequence: number
       ];
       copyMatrix[likelihood][consequence] = riskScore;
       setMatrix(copyMatrix);
+      // console.log(copyMatrix)
+    }
+    else {
+      resetMatrix(); 
     }
   }, [riskScore]);
+
+  const resetMatrix = () => {
+    setMatrix([
+      [null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [null, null, null, null, null, null],
+    ]);
+  }
 
   return (
     <div className="matrix-wrapper">
