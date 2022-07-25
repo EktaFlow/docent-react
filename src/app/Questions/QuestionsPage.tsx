@@ -277,21 +277,21 @@ const QuestionsPage: React.FC = (props) => {
         saveAnswers();
       }
     }
-    // setShowToast(true);
-    //if answer is no and its the last item in the subthread, AND level switching is on THEN give user notification that they failed the subthread and are being dropped
-    // setToastMessage({ message: 'Navigating to Question', status: 'primary' })
     await grabNextQuestionAction(assessmentId, movement_action, question.question_id)
       .then((res) => {
         console.log(res)
         resetQuestionAnswers()
         setUpQuestionsPage(res)
         loadFiles(assessmentId)
-        setShowToast(true)
         setToastMessage({ message: 'Navigating to Question', status: 'primary' })
-        setShowToast(false);
+        setShowToast(true)
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000)
       })
       .catch((err) => {
         setToastMessage({ message: 'Error navigating to next question, please refresh', status: 'danger' })
+        setShowToast(true);
         setTimeout(() => {
           setShowToast(false)
         }, 2000)
