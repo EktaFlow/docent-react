@@ -212,10 +212,10 @@ const RiskSummary: React.FC = () => {
                       <td className="row-border"></td>
                     )} */}
                     
-                    {/* <td className="row-border"></td>
                     <td className="row-border"></td>
                     <td className="row-border"></td>
-                    <td className="row-border"></td> */}
+                    <td className="row-border"></td>
+                    <td className="row-border"></td>
                   </tr>
                 ))}
               </Fragment>
