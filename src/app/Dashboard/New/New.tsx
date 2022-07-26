@@ -292,8 +292,8 @@ const New: React.FC = () => {
 
             <div className="added-members">
               { tms.length > 0 && tms.map((tm:any, index:any) => (
-                <IonChip color="docentlight" >
-                  <IonLabel color="docentlight" >Email: <b>{tm.email}</b> Role: <b>{tm.role}</b></IonLabel>
+                <IonChip color="docentdark" >
+                  <IonLabel color="docentdark" >Email: <b>{tm.email}</b> Role: <b>{tm.role}</b></IonLabel>
                   <span onClick={() => removeIcon(index)}><IonIcon  icon={closeCircle} /></span>
                 </IonChip>
               ))

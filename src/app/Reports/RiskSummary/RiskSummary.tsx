@@ -35,12 +35,14 @@ const RiskSummary: React.FC = () => {
       await setAssessmentId(assessment_id)
     }
     getAssessmentInfo()
+    
   }, []);
 
   useEffect(() => {
     async function getAssessment() {
       if (assessmentId) {
         var assessmentInfo = await grabSingleAssessment(assessmentId);
+        // console.log(assessmentInfo)
         await setAssessmentData(assessmentInfo)
       }
     }
@@ -168,12 +170,15 @@ const RiskSummary: React.FC = () => {
                         {(Number(question.answer.risk) <= 25 && Number(question.answer.risk) >= 20) &&
                           <td className="row-border risk-score red">{question.answer.risk}</td>
                         }
+                        {/* {[...Array(5 - subthread.questions.length)].map((e, i) => 
+                            <td className="row-border"></td>
+                        )} */}
                       </Fragment>
                     ))}
+                    {/* <td className="row-border"></td>
                     <td className="row-border"></td>
                     <td className="row-border"></td>
-                    <td className="row-border"></td>
-                    <td className="row-border"></td>
+                    <td className="row-border"></td> */}
                   </tr>
                 ))}
                 {filteredMRL !== "all-levels" && thread.subthreads.filter((data: any) => Number(filteredMRL) === assessmentData.info.current_mrl).map((subthread: any, index: any) => (
@@ -198,12 +203,19 @@ const RiskSummary: React.FC = () => {
                         {(Number(question.answer.risk) <= 25 && Number(question.answer.risk) >= 20) &&
                           <td className="row-border risk-score red">{question.answer.risk}</td>
                         }
+                        {/* {[...Array(5 - subthread.questions.length)].map((e, i) => 
+                          <td className="row-border"></td>
+                        )} */}
                       </Fragment>
                     ))}
+                    {/* {[...Array(5 - subthread.questions.length)].map((e, i) => 
+                      <td className="row-border"></td>
+                    )} */}
+                    
+                    {/* <td className="row-border"></td>
                     <td className="row-border"></td>
                     <td className="row-border"></td>
-                    <td className="row-border"></td>
-                    <td className="row-border"></td>
+                    <td className="row-border"></td> */}
                   </tr>
                 ))}
               </Fragment>

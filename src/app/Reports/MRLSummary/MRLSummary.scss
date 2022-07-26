@@ -1,3 +1,17 @@
+.mrl-summary-toolbar {
+  min-height: 100%;
+  width: 100%;
+  background-color: white;
+  color: black;
+  padding-bottom: 20px;
+  
+  .download-image {
+    margin-left: 35px;
+    margin-right: 80px;
+    margin-top: 20px; 
+  }
+}
+
 .mrl-summary-wrapper {
   min-height: 100%;
   width: 100%;
@@ -64,12 +78,13 @@
     justify-content: center;
   }
 
-  .mrl-summary-toolbar {
-    .download-image {
-      margin-left: 35px;
-      margin-right: 80px;
-    }
-  }
+  // .mrl-summary-toolbar {
+  //   .download-image {
+  //     margin-left: 35px;
+  //     margin-right: 80px;
+  //     margin-top: 20px; 
+  //   }
+  // }
 
   .desktop {
     padding-left: 15px;

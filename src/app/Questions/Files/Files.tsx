@@ -7,9 +7,9 @@ const Files: React.FC<{ files?: any, question_id?: any, answer_id?: any }> = ({ 
 
   useEffect(() => {
     if (files) {
-      console.log(files)
-      console.log(answer_id)
-      setCurrentFiles([]);
+      // console.log(files)
+      // console.log(answer_id)
+      // setCurrentFiles([]);
       let insertFileData = files.map((file: any, index: any) => {
         let attachedToQuestion = false;
         let questionArray: { id: number }[] = [];
@@ -71,7 +71,7 @@ const Files: React.FC<{ files?: any, question_id?: any, answer_id?: any }> = ({ 
 
             {currentFiles && currentFiles.map((file: any, index: any) => (
               <IonRow>
-                <IonCol color="docentdark"    className="ion-no-padding">
+                <IonCol color="docentdark" className="ion-no-padding">
                   <span className="file-name-content">{file.name}</span>
                 </IonCol>
                 <IonCol className="ion-no-padding">

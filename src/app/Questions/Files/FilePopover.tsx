@@ -10,7 +10,7 @@ const FilePopover: React.FC<{ saveFileToQuestion?: any, files?: any, question_id
     const [showQuestions, setShowQuestions] = useState(false);
 
     useEffect(() => {
-        console.log(files)
+        // console.log(files)
         if (files) {
             setCurrentFiles([]);
             setAllFiles([]);
@@ -43,11 +43,11 @@ const FilePopover: React.FC<{ saveFileToQuestion?: any, files?: any, question_id
         }
     }, [files]);
 
-    useEffect(() => {
-        if (allFiles) {
-            console.log(allFiles)
-        }
-    }, [allFiles]);
+    // useEffect(() => {
+    //     if (allFiles) {
+    //         console.log(allFiles)
+    //     }
+    // }, [allFiles]);
 
     const openURL = (url: any) => {
         window.open(url)

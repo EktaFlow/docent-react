@@ -10,9 +10,9 @@ export async function grabAssessments() {
   return result.data
 }
 
-export async function updateAssessment(assessment_id, data) {
+export async function updateAssessment(data) {
   const token = localStorage.getItem("token");
-  const result = await axios.put({
+  const result = await axios({
     method: 'put', 
     url: `${apiUrl}/update_assessments`, 
     data: data, 
@@ -146,6 +146,17 @@ export async function createTeamMember(data) {
     method: 'post',
     url: `${apiUrl}/team_members`,
     data: {user: data},
+    headers: {Authorization: `Bearer ${token}`}
+  })
+  return result.data
+}
+
+export async function grabTeamMemberInfo(assessment_id) {
+  const token = localStorage.getItem("token");
+  const result = await axios({
+    method: 'get',
+    url: `${apiUrl}/get_all_tm?id=${assessment_id}`,
+    // data: data,
     headers: {Authorization: `Bearer ${token}`}
   })
   return result.data

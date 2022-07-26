@@ -9,7 +9,19 @@
       // height: auto; 
       // margin-bottom: 600px; 
       
+    .add-team-members {
+      display: flex;
+      align-items: center;
 
+      ion-button {
+        margin-left: 10px; 
+      }
+    }
+
+    .team-members {
+      padding-top: 10px; 
+      // text-indent: 2ch;
+    }
       // ion-button {}
       span p {
         // display: inline-block;
