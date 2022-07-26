@@ -10,9 +10,9 @@ import { createAssessment } from '../../../api/api';
 import {useHistory} from "react-router-dom";
 
 const New: React.FC = () => {
-  type ThreadsType = {t: boolean, a: boolean, b: boolean, c: boolean, d: boolean, e: boolean, f: boolean, g: boolean, h: boolean, i: boolean}
+  type ThreadsType = {a: boolean, b: boolean, c: boolean, d: boolean, e: boolean, f: boolean, g: boolean, h: boolean, i: boolean}
   const [selectedDate, setSelectedDate] = useState('');
-  const [openDate, setOpenDate] = useState(false); 
+  const [openDate, setOpenDate] = useState(false);
   const [newAssessment, setNewAssessment] = useState({
     name: '',
     scope: '',
@@ -29,13 +29,13 @@ const New: React.FC = () => {
     role: ''
   })
   const [tms, setTms] = useState<any>([]);
-  const [missingTMValues, setMissingTMValues] = useState(false); 
+  const [missingTMValues, setMissingTMValues] = useState(false);
   let history = useHistory();
   const [validationErrors, setValidationErrors] = useState({
     name: false,
     target_mrl: false
   });
-  const [threads, setThreads] = useState<ThreadsType>({t: true, a: true, b: true, c: true, d: true, e: true, f: true, g: true, h: true, i: true});
+  const [threads, setThreads] = useState<ThreadsType>({a: true, b: true, c: true, d: true, e: true, f: true, g: true, h: true, i: true});
   const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
@@ -57,13 +57,13 @@ const New: React.FC = () => {
   }, [threads])
 
   useEffect(() => {
-    console.log(tms); 
+    console.log(tms);
     // if(tms != []) {
     //   let tm = tms[0];
     //   console.log(tm['email']);
     //   console.log(typeof tms.last)
     // }
-    
+
   }, [tms])
 
   const handleAssessmentChange = (e: any) => {
@@ -130,7 +130,7 @@ const New: React.FC = () => {
     } else {
       var ths:any = [];
       var keys = Object.keys(threads);
-      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach((count) => {
+      [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach((count) => {
         var thname = keys[count]
         if (threads[thname as keyof ThreadsType] == true) {
           ths.push(count);
@@ -140,6 +140,7 @@ const New: React.FC = () => {
 
       var nA = newAssessment
       nA["team_members"] = tms
+      nA["threads"] = ths
       console.log(nA)
       setShowToast(true);
 
