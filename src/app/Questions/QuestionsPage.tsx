@@ -244,7 +244,7 @@ const QuestionsPage: React.FC = (props) => {
         saveAnswers();
       }
     }
-
+    
     await grabNextQuestionAction(assessmentId, movement_action, question.question_id)
       .then((res) => {
         console.log(res)
@@ -258,6 +258,7 @@ const QuestionsPage: React.FC = (props) => {
       })
       .catch((err) => {
         setToastMessage({ message: 'Error navigating to next question, please refresh', status: 'danger' })
+        setShowToast(true);
         setTimeout(() => {
           setShowToast(false)
         }, 2000)
