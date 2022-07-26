@@ -22,7 +22,8 @@ const New: React.FC = () => {
     target: null,
     location: '',
     deskbook_version: '',
-    team_members: ''
+    team_members: '',
+    threads: []
   });
   const [tempTM, setTempTM] = useState({
     email: '',
@@ -48,7 +49,8 @@ const New: React.FC = () => {
       target: null,
       location: '',
       deskbook_version: '2020',
-      team_members: ''
+      team_members: '',
+      threads: []
     })
   }, [])
 
@@ -130,17 +132,17 @@ const New: React.FC = () => {
     } else {
       var ths:any = [];
       var keys = Object.keys(threads);
-      [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach((count) => {
-        var thname = keys[count]
+      ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'].forEach((letter, index) => {
+        var thname = keys[index]
         if (threads[thname as keyof ThreadsType] == true) {
-          ths.push(count);
+          ths.push(letter);
         }
       });
       console.log(ths);
 
       var nA = newAssessment
       nA["team_members"] = tms
-      nA["threads"] = ths
+      nA.threads = ths
       console.log(nA)
       setShowToast(true);
 
