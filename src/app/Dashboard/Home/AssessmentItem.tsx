@@ -53,30 +53,43 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
         <p><b>Additional Information: </b>{assessmentInfo.scope}</p>
         <p><b>Location: </b>{assessmentInfo.location}</p>
         <p><b>Level Switching On?: </b>{assessmentInfo.level_switching ? 'Yes' : 'No'}</p>
-        <span>
+        <p>
           
-          <p><b>Team Members: </b> {
-            teamMembers.length == 0 ?
+          <span >
+            <div className="add-team-members">
+             <b>Team Members: </b> 
+              <IonButton 
+                size="small" 
+                color="docentsuccess" 
+                onClick={() => {clickTM(assessmentInfo.id)}
+                }>
+                <FaUserPlus/>
+              </IonButton>
+            </div>
+            {showTM &&
+              <p className="invite-new-tm">
+                <InviteTMPopover processNewTM={processNewTM}/>
+              </p>
+            }
+          
+          <div className="team-members">
+            {teamMembers.length == 0 ?
             <span> No Team Members</span> 
             :
             teamMembers.map((tm:any, index:number) => (
-              <p>{tm.email} (dev) {index !== teamMembers.length - 1 ? ', ' : ''}</p>
-            ))
-          }
-             <IonButton 
-              size="small" 
-              color="docentsuccess" 
-              onClick={() => {clickTM(assessmentInfo.id)}
-              }>
-               <FaUserPlus/>
-             </IonButton>
-          </p>
-          {showTM &&
-            <p>
-              <InviteTMPopover processNewTM={processNewTM}/>
-            </p>
-          }
-        </span>
+              <div >
+                <p>{tm.email} ({tm.role}) {index !== teamMembers.length - 1 ? ', ' : ''}</p>
+                <br/>
+              </div>
+             
+            ))}
+          </div>
+            
+          
+             
+          </span>
+          
+        </p>
         
         
         

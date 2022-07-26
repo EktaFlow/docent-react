@@ -51,7 +51,6 @@ const QuestionsPage: React.FC = (props) => {
 
   const [showHistory, setShowHistory] = useState(false); 
   const history = useHistory();
-  const [questionHistory, setQuestionHistory] = useState([]); 
 
   const [explanationText, showExplanationText] = useState(false);
 
@@ -150,70 +149,43 @@ const QuestionsPage: React.FC = (props) => {
 
   useEffect(() => {
     // console.log(question.question_text)
-    setAnswer({
-      answer: null, 
-      likelihood: null,
-      consequence: null,
-      risk_response: null,
-      greatest_impact: null,
-      mmp_summary: '',
-      objective_evidence: '',
-      assumptions_yes: '',
-      notes_yes: '',
-      what: '',
-      when: '',
-      who: '',
-      risk: '',
-      reason: '',
-      assumptions_no: '',
-      documentation_no: '',
-      assumptions_na: '',
-      assumptions_skipped: '',
-      notes_skipped: '',
-      notes_no: '',
-      notes_na: '',
-    })
+    if(question.current_answer_text === '' || question.all_answers.length == 0) {
+      setAnswer({
+        answer: null, 
+        likelihood: null,
+        consequence: null,
+        risk_response: null,
+        greatest_impact: null,
+        mmp_summary: '',
+        objective_evidence: '',
+        assumptions_yes: '',
+        notes_yes: '',
+        what: '',
+        when: '',
+        who: '',
+        risk: '',
+        reason: '',
+        assumptions_no: '',
+        documentation_no: '', //should be na
+        assumptions_na: '',
+        assumptions_skipped: '',
+        notes_skipped: '',
+        notes_no: '',
+        notes_na: '',
+      })
+    }
+    // else {
+    //   revertBack(question.all_answers[0])
+    // }
+    console.log(question)
+    // console.log(answer['answer'])
+    
 
   }, [question.question_id])
 
   // useEffect(() => {
-  //   console.log(allChanges)
-  // }, [allChanges])
-
-  // const clearAnswers = () => {
-  //   for(let field in allChanges) {
-  //     if(field == 'answer' || field == 'likelihood' || field == 'consequence' ||field == 'risk_response' || field == 'greatest_impact') {
-  //       setAnswer({
-  //         ...answer, 
-  //         [field]: null
-  //       })
-  //     }
-  //     else {
-  //       setAnswer({
-  //         ...answer, 
-  //         [field]: ''
-  //       })
-  //     }
-  //   }
-  //   setAllChanges(allChanges => []);
-  // }
-
-
-  // useEffect(() => {
-  //   // if (valuesChanged === true) {
-  //   //   console.log("Value changed: " + valuesChanged);
-  //   // }
-  //   console.log("Value changed: " + valuesChanged);
-  // }, [valuesChanged]);
-
-  // useEffect(() => {
-  //   if (answer) {
-  //     console.log(answer.answer);
-  //     console.log(question.question_id)
-  //   }
-  //   // resetQuestionAnswers()
-  //   // setAnswer
-  // }, [answer]);
+  //   console.log(answer)
+  // }, [answer])
 
   useEffect(() => {
     if (selectedFile) {
@@ -243,9 +215,7 @@ const QuestionsPage: React.FC = (props) => {
   async function grabQ(assessment_id: Number) {
     var next_question = await grabNextQuestion(assessment_id)
       .then((res) => {
-        // setIsNewQ(true)
         setUpQuestionsPage(res)
-        resetQuestionAnswers()
         return res
       })
       .catch((error) => {
@@ -257,10 +227,7 @@ const QuestionsPage: React.FC = (props) => {
     // console.log(question_id)
     var next_question = await grabSpecificQuestion(question_id)
       .then((res) => {
-        // setIsNewQ(true)
         setUpQuestionsPage(res)
-        resetQuestionAnswers()
-        // console.log(res)
         return res
       })
       .catch((error) => {
@@ -277,18 +244,17 @@ const QuestionsPage: React.FC = (props) => {
         saveAnswers();
       }
     }
-    // setShowToast(true);
-    //if answer is no and its the last item in the subthread, AND level switching is on THEN give user notification that they failed the subthread and are being dropped
-    // setToastMessage({ message: 'Navigating to Question', status: 'primary' })
+
     await grabNextQuestionAction(assessmentId, movement_action, question.question_id)
       .then((res) => {
         console.log(res)
-        resetQuestionAnswers()
         setUpQuestionsPage(res)
         loadFiles(assessmentId)
-        setShowToast(true)
         setToastMessage({ message: 'Navigating to Question', status: 'primary' })
-        setShowToast(false);
+        setShowToast(true)
+        setTimeout(() => {
+          setShowToast(false)
+        }, 1000)
       })
       .catch((err) => {
         setToastMessage({ message: 'Error navigating to next question, please refresh', status: 'danger' })
@@ -296,8 +262,6 @@ const QuestionsPage: React.FC = (props) => {
           setShowToast(false)
         }, 2000)
       })
-
-      // setShowToast(false);
   }
 
   function setUpQuestionsPage(res: any) {
@@ -309,78 +273,44 @@ const QuestionsPage: React.FC = (props) => {
     setSubthread(res.subthread)
     setThread(res.thread)
     setAssessInfo(res.assessment_info)
+    // var all_ans = res.question.all_answers
+    if(res.question.all_answers.length > 0) {
+      revertBack(res.question.all_answers[0])
+      // console.log("reverting back")
+    }
     
-    //if previous answers, set to new question
-    // if (res.question.all_answers.length != 0) {
-    //   setAnswer(res.question.new_answer);
-    //   var ci = changeInterface(res.question.new_answer.answer);
-    //   // setAnswer(res.question.new_answer);
-    //   // var ci = changeInterface('');
-    //   if (ci == 'done') {
-    //     setValuesChanged(false)
-    //   }
-    //   // setValuesChanged(false); 
-    // }
-    // else {  //if no previous answers
-    //   setAnswer(res.question.current_answer);
-    //   var ci = changeInterface(res.question.current_answer_text);
-    //   if (ci == 'done') {
-    //     setValuesChanged(false)
-    //   }
-    // }
-
-    
-    // setValuesChanged(false);
-  }
-
-  const resetQuestionAnswers = () => {
-    setAnswer({
-      ...answer,
-      likelihood: null, 
-      consequence: null, 
-      risk_response: null, 
-      greatest_impact: null, 
-      mmp_summary: '', 
-      risk: '', 
-    })
-    // setSelectedFile(null); 
-    // console.log(answer.risk); 
-    // if( answer.risk) {
-    //   setAnswer({
-    //     ...answer,
-    //     likelihood: '', 
-    //   })
-      // setAnswer({
-      //   ...answer,
-      //   consequence: null 
-      // })
-    //   setAnswer({
-    //     ...answer, 
-    //     risk: ''
-    //   })
-    //   setAnswer({
-    //     ...answer, 
-    //     answer: null
-    //   })
-      
-    // }
-    // setAnswer({
-    //   ...answer, 
-    //   answer: null
-    // })
-    
-    // setYes(false)
-    // setNo(false)
-    // setNA(false)
   }
 
   const revertBack = (ans:any) => {
-    console.log(ans)
-    // setAnswer(ans)
     changeInterface(ans.answer)
     setAnswer(ans)
+    // setAnswer(ans)
     setShowHistory(false)
     setValuesChanged(false)
+  }
+
+  const checkIfAnswerChanged = (ans:any) => {
+    // var name = e.target.name.toString()
+    //should go through all the values in each to see if they are equal
+    if(question.all_answers.length > 0) {
+      var most_recent = question.all_answers[0]
+      for(const prop in ans) {
+        console.log(prop)
+        console.log("check changed" + (prop !== most_recent[`${prop}`]))
+        if(prop !== most_recent[`${prop}`]) {
+          return true; 
+        }
+      }
+      return false
+    }
+    return true
+    
+    // if(ans === question.all_answers[0]) {
+    //   return false
+    // }
+    // else {
+    //   return true
+    // }
   }
 
   async function saveAnswers() {
@@ -388,29 +318,23 @@ const QuestionsPage: React.FC = (props) => {
       question_id: question.question_id,
       answer: answer
     }
-    // console.log(data)
-    // console.log("saving answers and values changed: " + valuesChanged)
-    // setShowToast(true)
-    // console.log("answer changed? " + valuesChanged)
+    
     if (yes === true || no === true || na === true) {
-      // console.log("Answer condition activated")
-      if (valuesChanged === true ) {
-        // console.log("saving answer")
-        // setToastMessage({ message: 'Answers Saving', status: 'primary' })
-        // setShowToast(true)
+      let check = checkIfAnswerChanged(answer)
+      if (valuesChanged === true && check) {
         await createAnswers(data)
           .then((res) => {
-            setShowToast(true)
             setToastMessage({ message: 'Answers have Saved Successfully', status: 'success' })
+            setShowToast(true)
             setTimeout(() => {
               setShowToast(false)
-            }, 2000)
+            }, 1000)
             console.log(res)
             return res
           })
           .catch((error) => {
-            setShowToast(true)
             setToastMessage({ message: 'Error saving answers', status: 'danger' })
+            setShowToast(true)
             setTimeout(() => {
               setShowToast(false)
             }, 2000)
@@ -424,7 +348,7 @@ const QuestionsPage: React.FC = (props) => {
 
           var assm = await addFileToAssessment(formData).then((res) => {
             loadFiles(assessmentId)
-            // saveFileToQuestion(res.file.id);
+            saveFileToQuestion(res.file.id);
           })
             .catch((error) => {
               console.log(error)
@@ -432,8 +356,8 @@ const QuestionsPage: React.FC = (props) => {
         }
       }
       else {
+        setToastMessage({ message: 'Answers have Saved', status: 'primary' })        
         setShowToast(true)
-        setToastMessage({ message: 'Answers have Saved', status: 'primary' })
         setTimeout(() => {
           setShowToast(false)
         }, 2000)
@@ -442,9 +366,8 @@ const QuestionsPage: React.FC = (props) => {
       setValuesChanged(false)
     }
     else {
-      setShowToast(true)
-      // console.log("Didn't save answer")
       setToastMessage({ message: 'Select an answer before saving', status: 'danger' })
+      setShowToast(true)
       setTimeout(() => {
         setShowToast(false)
       }, 2000)
@@ -457,19 +380,18 @@ const QuestionsPage: React.FC = (props) => {
       file_id: file_id
     }
 
-    setShowToast(true);
-
     var ques = await addFileToQuestion(data).then((res) => {
-      console.log(showToast)
       loadFiles(assessmentId)
       setToastMessage({ message: 'File added to question', status: 'success' })
+      setShowToast(true);
       setTimeout(() => {
         setShowToast(false)
       }, 2000)
     })
       .catch((error) => {
         // console.log('2')
-        setToastMessage({ message: 'Error attaching question', status: 'danger' })
+        setToastMessage({ message: 'Error attaching file question', status: 'danger' })
+        setShowToast(true);
         setTimeout(() => {
           setShowToast(false)
         }, 2000)
@@ -482,21 +404,20 @@ const QuestionsPage: React.FC = (props) => {
       question_id: question.question_id, 
       file_id: file_id
     }
-    // setShowToast(true);
 
     var file = await deleteFileFromQuestion(data).then((res) => {
-      console.log(showToast)
+      // console.log(showToast)
       loadFiles(assessmentId)
-      setShowToast(true);
       setToastMessage({ message: 'Removed file from question', status: 'success' })
+      setShowToast(true);
       setTimeout(() => {
         setShowToast(false)
       }, 2000)
     })
     .catch((error) => {
-      console.log('2')
-      setShowToast(true);
+      // console.log('2')
       setToastMessage({ message: 'Error removing file from question', status: 'danger' })
+      setShowToast(true);
       setTimeout(() => {
         setShowToast(false)
       }, 2000)
@@ -509,19 +430,17 @@ const QuestionsPage: React.FC = (props) => {
       assessment_id: assessmentId, 
       file_id: file_id
     }
-    // setShowToast(true);
-
     var file = await deleteFileFromAssessment(data).then((res) => {
       loadFiles(assessmentId)
-      setShowToast(true);
       setToastMessage({ message: 'Removed file from assessment', status: 'success' })
+      setShowToast(true);
       setTimeout(() => {
         setShowToast(false)
       }, 2000)
     })
     .catch((error) => {
-      setShowToast(true);
       setToastMessage({ message: 'Error removing file from assessment', status: 'danger' })
+      setShowToast(true);
       setTimeout(() => {
         setShowToast(false)
       }, 2000)
@@ -538,42 +457,15 @@ const QuestionsPage: React.FC = (props) => {
     if (e.target.name === "answer") {
       changeInterface(e.target.value)
     }
-    else if(e.target.name === "assumptions") {
-      if(answer.answer) {
-        // setAssumptions(e.target.detail)
-        // console.log(fieldNames)
-        // return 
-      }
-    }
-    else if(e.target.name === "notes") {
-      if(answer.answer) {
-        // setNotes(e.target.detail)
-      }
-    }
-    // else if(answer['answer'] === null && e.target.value !== ''){
-    //   let name = e.target.name; 
-    //   if(name === "likelihood" || name === "consequence" || name === "greatest_impact" || name === "risk_response" || name === "mmp_summary") {
-    //     setShowToast(true)
-    //     setToastMessage({ message: `Select an answer before entering ${e.target.name}`, status: 'danger' })
-    //     setTimeout(() => {
-    //       setShowToast(false)
-    //     }, 2000)
-
-    //     setAnswer({
-    //       ...answer,
-    //       [e.target.name]: ''
-    //     })
-    //   }
-    // }
     else {
-      console.log("name: " + e.target.name + "\nvalue: " + (typeof e.target.value))
+      // console.log("name: " + e.target.name + "\nvalue: " + (typeof e.target.value))
+      // console.log(e.target.name)
       setAnswer({
         ...answer,
         [e.target.name]: e.target.value
       });
     }
   };
-
   
 
   const changeInterface = (answer: any) => {
@@ -630,7 +522,6 @@ const QuestionsPage: React.FC = (props) => {
         assumptions_name: '',
         notes_name: ''
       })
-      // resetQuestionAnswers(); 
     }
     // setValuesChanged(true); 
     // console.log("valuesChanged in changeInterface: " + valuesChanged)
@@ -841,6 +732,7 @@ const QuestionsPage: React.FC = (props) => {
                                       name="when"
                                       value={answer.when}
                                       presentation="date"
+                                      showDefaultButtons={true}
                                       onIonChange={e => getWhen(formatDate(e.detail.value))} />
                                   </IonPopover>
                                 </IonItem>
