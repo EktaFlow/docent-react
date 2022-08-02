@@ -69,7 +69,7 @@ const QuestionsPage: React.FC = (props) => {
     id: null, mr_level: null, name: ''
   })
   const [assessInfo, setAssessInfo] = useState({
-    targetDate: null, additionalInfo: ''
+    targetDate: null, additionalInfo: '', levelSwitching: false
   })
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState({ message: '', status: '' });
@@ -149,6 +149,9 @@ const QuestionsPage: React.FC = (props) => {
 
   useEffect(() => {
     // console.log(question.question_text)
+    // if level switching on, change position variable
+
+    // else (if level switching is off) keep normal
     if(question.current_answer_text === '' || question.all_answers.length == 0) {
       setAnswer({
         answer: null, 

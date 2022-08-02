@@ -47,8 +47,8 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
     <div className="assessment-inner">
       <div className="assessment-info">
         <p><b>Name: </b>{assessmentInfo.name}</p>
-        <p><b>{assessmentInfo.count} out of {assessmentInfo.length} </b>questions answered</p>
-        <p><b>MRL: </b>{assessmentInfo.target_mrl}</p>
+        <p><b>{assessmentInfo.count} out of {assessmentInfo.length} </b>total questions answered</p>
+        <p><b>Target MRL: </b>{assessmentInfo.target_mrl}</p>
         <p><b>Target Date: </b>{assessmentInfo.target}</p>
         <p><b>Additional Information: </b>{assessmentInfo.scope}</p>
         <p><b>Location: </b>{assessmentInfo.location}</p>

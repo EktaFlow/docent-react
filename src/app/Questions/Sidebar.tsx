@@ -14,8 +14,13 @@ const Sidebar: React.FC<({ getSQ: any, assessmentId: any, thread: any, subthread
 
   const [assessmentData, setAssessmentData] = useState<any>();
   const [threadData, setThreadData] = useState<any>([]);
+  // const [assessInfo, setAssessInfo] = useState<any>();
   const [assessInfo, setAssessInfo] = useState({
-    targetDate: null, additionalInfo: ''
+    targetDate: null, 
+    additionalInfo: '',
+    level_switching: false, 
+    target_mrl: '',
+    current_mrl: ''
   })
 
   const [menuCollapse, setMenuCollapse] = useState(false); 
@@ -29,10 +34,23 @@ const Sidebar: React.FC<({ getSQ: any, assessmentId: any, thread: any, subthread
         var assessmentInfo = await grabSingleAssessment(assessmentId);
         console.log(assessmentInfo)
         await setAssessmentData(assessmentInfo);
+        // console.log(assessmentInfo['info'])
+        await setAssessInfo(assessmentInfo['info']);
       }
     }
     getAssessment();
   }, [assessmentId]);
+
+  useEffect(() => {
+    setAssessInfo({
+      ...assessInfo, 
+      current_mrl: thread.mr_level
+    })
+  }, [thread.mr_level])
+
+  // useEffect(() => {
+  //   console.log(assessInfo.level_switching)
+  // }, [])
 
   // useEffect(() => {
   //   if (assessmentData) {
@@ -109,10 +127,10 @@ const Sidebar: React.FC<({ getSQ: any, assessmentId: any, thread: any, subthread
               <MenuItem>Question {question.position} out of {question.assessment_length}</MenuItem>
               <MenuItem style={{overflowWrap: "break-word", whiteSpace: "normal"}}>Thread: {thread.name}</MenuItem>
               <MenuItem>Subthread: {subthread.name}</MenuItem>
-              <MenuItem>Question: {question.question_text}</MenuItem>
-              <MenuItem>Target MRL: {thread.mr_level} </MenuItem>
-              <MenuItem>Current MRL: {thread.mr_level}</MenuItem>
-
+              {/* <MenuItem>Question: {question.question_text}</MenuItem> */}
+              <MenuItem>Target MRL: {assessInfo.target_mrl} </MenuItem>
+              <MenuItem>Current MRL: {assessInfo.current_mrl}</MenuItem>
+              <MenuItem>Level Switching: {(assessInfo.level_switching) ? 'Yes' : 'No'}</MenuItem>
               <MenuItem>Target Date: {assessInfo.targetDate !== null ? Moment(assessInfo.targetDate).format('MM/DD/YYYY') : 'No date set'}</MenuItem>
               <MenuItem>Additional Info: {assessInfo.additionalInfo ? assessInfo.additionalInfo : "None"}</MenuItem>
               

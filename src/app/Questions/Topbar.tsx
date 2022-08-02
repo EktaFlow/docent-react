@@ -21,6 +21,10 @@ const Topbar: React.FC<({ getNextQuestion: any, saveAnswers: any, assessmentId: 
 
     const history = useHistory();
 
+    useEffect(() => {
+        console.log(subthread)
+    }, [subthread])
+
     async function navigateToQuestionsList() {
         history.push({
             pathname: '/questions-list',
@@ -38,21 +42,28 @@ const Topbar: React.FC<({ getNextQuestion: any, saveAnswers: any, assessmentId: 
         <div className="topbar-wrapper">
             <IonGrid>
                 <IonRow>
-                    <IonCol size="12" size-md="6" className="first-col">
+                    <IonCol size="12" size-md="7" className="first-col">
                         <h4>
                             Thread: {thread.name} | Subthread: {subthread.name}
                         </h4>
+                        {assessInfo.levelSwitching && 
+                            <IonLabel>Current MRL: {subthread.mr_level}</IonLabel>
+                        }
 
                     </IonCol>
-                    <IonCol size="12" size-md="6" className="second-col">
+                    <IonCol size="12" size-md="5" className="second-col">
                         
                         <div className="button-wrapper">
                             <IonButton color="dsb" onClick={() => getNextQuestion('prev')} disabled={question.position == 1}>Previous</IonButton>
                             <IonButton color="dsb" onClick={() => getNextQuestion('next')} disabled={question.position == question.assessment_length}>Next</IonButton>
                             <IonButton color="dsb" onClick={() => saveAnswers()}>Save</IonButton>
                         </div>
-
-                        <IonLabel>Question {question.position} out of {question.assessment_length}</IonLabel>
+                        {assessInfo.levelSwitching ? 
+                            <IonLabel>Subthread Question {question.pos_in_sub} out of {subthread.questions.length}</IonLabel>
+                        :
+                            <IonLabel>Question {question.position} out of {question.assessment_length}</IonLabel>
+                        }
+                        
                         
                     </IonCol>
 

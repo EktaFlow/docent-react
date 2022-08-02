@@ -1,5 +1,5 @@
 import { IonPage, IonContent, IonRow, IonCol, IonButton } from '@ionic/react';
-import React, { useState, useEffect, Fragment, useRef } from 'react';
+import React, { useState, useEffect, Fragment, useRef, useCallback } from 'react';
 
 import { useHistory } from 'react-router-dom';
 
@@ -10,16 +10,13 @@ import ReportsTopbar from '../ReportsTopbar';
 
 import { grabSingleAssessment } from '../../../api/api';
 
-import { exportComponentAsJPEG, exportComponentAsPDF, exportComponentAsPNG } from 'react-component-export-image';
-import html2canvas from 'html2canvas';
+// import { exportComponentAsJPEG, exportComponentAsPNG } from 'react-component-export-image';
+import { toPng, toJpeg } from 'html-to-image'
 
-
-// const ComponentToScreenShot = React.forwardRef((props, ref) => (
-//   <div ref={ref}>Hello World</div>
-// ));
 
 const MRLSummary: React.FC = () => {
-  const screenshotRef = useRef<HTMLDivElement>(); 
+  const screenshotRef = useRef<HTMLDivElement>(null);  
+  
   const mrLevel = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
   const history = useHistory();
@@ -92,24 +89,22 @@ const MRLSummary: React.FC = () => {
     }
   }, [assessmentData]);
 
-  // const handleDownloadImage = async () => {
-  //   const element = screenshotRef.current;
-  //   const canvas = await html2canvas(element as <HTMLElement>);
+  const takeScreenshot = useCallback(() => {
+    if (screenshotRef.current === null) {
+      return
+    }
 
-  //   const data = canvas.toDataURL('mrl_summary/png');
-  //   const link = document.createElement('a');
-
-  //   if (typeof link.download === 'string') {
-  //     link.href = data;
-  //     link.download = 'mrl_summary.png';
-
-  //     document.body.appendChild(link);
-  //     link.click();
-  //     document.body.removeChild(link);
-  //   } else {
-  //     window.open(data);
-  //   }
-  // };
+    toPng(screenshotRef.current, {cacheBust: true})
+      .then((dataUrl) => {
+        const link = document.createElement('a')
+        link.download = 'mrl-summary.png'
+        link.href = dataUrl
+        link.click()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [screenshotRef])
 
   // <InfoCard assessmentId={assessmentId} />
 
@@ -120,13 +115,13 @@ const MRLSummary: React.FC = () => {
       {/* <Fragment>
         <ComponentToScreenShot ref={screenshot}/>
       </Fragment> */}
-
+      {/* <ComponentToScreenShot ref={screenshotRef}/> */}
       <div>
         <div className="mrl-summary-wrapper">
           <IonRow className="mrl-summary-toolbar">
             <IonCol size="12" size-lg="2" className="download-image ion-padding-bottom">
-              <div onClick={() => exportComponentAsPNG(screenshotRef as React.RefObject<HTMLDivElement>)}>
-              <IonButton color="dsb" >Download Image</IonButton> 
+              <div onClick={() => takeScreenshot()}>
+                <IonButton color="dsb" >Download Image</IonButton> 
               </div>
             </IonCol>
             <IonCol size-lg="2" className="ion-padding-top ion-margin-top">
@@ -211,7 +206,7 @@ const MRLSummary: React.FC = () => {
             ))}
           </div>
 
-          <div className="mobile">
+          <div className="mobile" >
             {assessmentData && assessmentData.threads.map((thread: any, index: any) => (
               <div className="single-thread">
                 <h3>{thread.name}</h3>
