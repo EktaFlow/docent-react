@@ -74,11 +74,9 @@ const QuestionsPage: React.FC = (props) => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState({ message: '', status: '' });
   const [valuesChanged, setValuesChanged] = useState(false)
-  const [isNewQ, setIsNewQ] = useState(false)
 
   const [selectedFile, setSelectedFile] = useState<any>(null);
   const [loadedFiles, setLoadedFiles] = useState([])
-  const [fileModal, setFileModal] = useState(false);
   const fileInput = useRef(null);
   const [showFiles, setShowFiles] = useState(false); 
 
@@ -134,13 +132,11 @@ const QuestionsPage: React.FC = (props) => {
         if(question.id != his["location"]["state"]["question_id"]) {
           var q_id = his["location"]["state"]["question_id"]
           var q = grabSQ(q_id)       
-          // setIsNewQ(true)
         }
       }
       else {
         setAssessmentId(ast_id)
         var q = grabQ(ast_id)
-        // setIsNewQ(true)
       }
       loadFiles(ast_id)
     }
@@ -186,10 +182,6 @@ const QuestionsPage: React.FC = (props) => {
 
   }, [question.question_id])
 
-  // useEffect(() => {
-  //   console.log(answer)
-  // }, [answer])
-
   useEffect(() => {
     if (selectedFile) {
       setShowToast(true)
@@ -199,11 +191,6 @@ const QuestionsPage: React.FC = (props) => {
       }, 3000)
     }
   }, [selectedFile]);
-
-  // useEffect(() => {
-  //   console.log("grab first question")
-  //   grabSQ(1)
-  // })
 
   async function loadFiles(assessmentId: any) {
     await grabFiles(assessmentId).then((res) => {
@@ -251,13 +238,24 @@ const QuestionsPage: React.FC = (props) => {
     await grabNextQuestionAction(assessmentId, movement_action, question.question_id)
       .then((res) => {
         console.log(res)
-        setUpQuestionsPage(res)
+        
         loadFiles(assessmentId)
-        setToastMessage({ message: 'Navigating to Question', status: 'primary' })
-        setShowToast(true)
-        setTimeout(() => {
-          setShowToast(false)
-        }, 1000)
+        if(thread.mr_level == 1 && assessInfo.levelSwitching && no) {
+          setToastMessage({ message: 'Cannot drop to lower MRL', status: 'danger' })
+          setShowToast(true)
+          setTimeout(() => {
+            setShowToast(false)
+          }, 1000)
+        }
+        else {
+          setToastMessage({ message: 'Navigating to next question', status: 'primary' })
+          setShowToast(true)
+          setTimeout(() => {
+            setShowToast(false)
+          }, 1000)
+        }
+        setUpQuestionsPage(res)
+        
       })
       .catch((err) => {
         setToastMessage({ message: 'Error navigating to next question, please refresh', status: 'danger' })
@@ -269,7 +267,7 @@ const QuestionsPage: React.FC = (props) => {
   }
 
   function setUpQuestionsPage(res: any) {
-    console.log("setting up new questions page: ");
+    // console.log("setting up new questions page: ");
     console.log(res); 
     setShowHistory(false)
     setShowFiles(false)
@@ -830,9 +828,10 @@ const QuestionsPage: React.FC = (props) => {
 
                         {showFiles ? 
                           <IonCol size="12" size-lg="7">
-                            <FilePopover saveFileToQuestion={saveFileToQuestion} files={loadedFiles} question_id={question.question_id} deleteQuestionFile={deleteQuestionFile} deleteAssessmentFile={deleteAssessmentFile}/>
+                            <div>
+                              <FilePopover saveFileToQuestion={saveFileToQuestion} files={loadedFiles} question_id={question.question_id} deleteQuestionFile={deleteQuestionFile} deleteAssessmentFile={deleteAssessmentFile}/>
+                            </div>
                           </IonCol>
-                          
                         :
                         <>
                           <IonCol size="12" size-lg="3">

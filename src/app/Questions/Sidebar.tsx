@@ -16,7 +16,7 @@ const Sidebar: React.FC<({ getSQ: any, assessmentId: any, thread: any, subthread
   const [threadData, setThreadData] = useState<any>([]);
   // const [assessInfo, setAssessInfo] = useState<any>();
   const [assessInfo, setAssessInfo] = useState({
-    targetDate: null, 
+    target: '', 
     additionalInfo: '',
     level_switching: false, 
     target_mrl: '',
@@ -131,7 +131,7 @@ const Sidebar: React.FC<({ getSQ: any, assessmentId: any, thread: any, subthread
               <MenuItem>Target MRL: {assessInfo.target_mrl} </MenuItem>
               <MenuItem>Current MRL: {assessInfo.current_mrl}</MenuItem>
               <MenuItem>Level Switching: {(assessInfo.level_switching) ? 'Yes' : 'No'}</MenuItem>
-              <MenuItem>Target Date: {assessInfo.targetDate !== null ? Moment(assessInfo.targetDate).format('MM/DD/YYYY') : 'No date set'}</MenuItem>
+              <MenuItem>Target Date: {assessInfo.target != null ? Moment(assessInfo.target).format('MM/DD/YYYY') : 'No date set'}</MenuItem>
               <MenuItem>Additional Info: {assessInfo.additionalInfo ? assessInfo.additionalInfo : "None"}</MenuItem>
               
             </SubMenu> 

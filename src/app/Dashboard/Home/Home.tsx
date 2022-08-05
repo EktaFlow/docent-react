@@ -74,17 +74,44 @@ const Home: React.FC = () => {
   async function deleteAssessmentFromBack(id: number) {
     setShowToast(true);
     console.log(id)
-    var deleted = await deleteAssessment(id);
-    var asts = assessments;
-    var currentAst = assessments.find((assessment) => assessment.assessment.id == id).name
+    var currentAst = assessments.find((assessment) => assessment.assessment.id == id).assessment.name
+    var msg = "Assessment '" + currentAst + "' has been deleted";
+    
     var ats = assessments.filter((assess) => assess.assessment.id !== id);
-    // setDeletedAssess(currentAst);
+    var deleted = await deleteAssessment(id)
+      .then((res) => {
+        setToastMessage({message: msg, status: 'success'})
+        setShowToast(true)
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000)
+        setAssessments(ats);
+      })
+      .catch((error) => {
+        setToastMessage({message: `Error deleting assessment`, status: 'danger'})
+        setShowToast(true)
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000)
+      })
+
+    console.log(deleted)
+    console.log(currentAst)
+    
     //if deleted, show toast?
-    setToastMessage({message: `Assessment ${currentAst} has been deleted`, status: 'success'})
-    setTimeout(() => {
-      setShowToast(false)
-    }, 2000)
-    setAssessments(ats);
+    // if(deleted['success'] == true) {
+    //   console.log("showing toast")
+      
+    // }
+    // else {
+    //   setShowToast(true)
+    //   setToastMessage({message: `Error deleting assessment`, status: 'danger'})
+    //   setTimeout(() => {
+    //     setShowToast(false)
+    //   }, 2000)
+    // }
+    
+    
   }
 
   return (
@@ -127,8 +154,8 @@ const Home: React.FC = () => {
             isOpen={showToast}
             onDidDismiss={() => setShowToast(false)}
             message={toastMessage.message}
-            color="docentdark"
-            duration={2000}
+            color={toastMessage.status}
+            // duration={2000}
           />
 
         </div>
