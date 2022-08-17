@@ -9,7 +9,7 @@ const Files: React.FC<{ files?: any, question_id?: any, answer_id?: any }> = ({ 
     if (files) {
       // console.log(files)
       // console.log(answer_id)
-      // setCurrentFiles([]);
+      setCurrentFiles([]);
       let insertFileData = files.map((file: any, index: any) => {
         let attachedToQuestion = false;
         let questionArray: { id: number }[] = [];

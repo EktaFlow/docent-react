@@ -7,6 +7,7 @@ import { id } from 'date-fns/locale';
 import { useHistory } from 'react-router-dom';
 import InviteTMPopover from './InviteTMPopover';
 import {FaUserPlus} from "react-icons/fa";
+import Moment from 'moment';
 
 const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack: any, openInviteTM: any, teamMembers: any, processNewTM: any })> = ({ assessmentInfo, deleteAssessmentFromBack, openInviteTM, teamMembers, processNewTM }) => {
   const [showTM, setShowTM] = useState(false); 
@@ -47,9 +48,9 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
     <div className="assessment-inner">
       <div className="assessment-info">
         <p><b>Name: </b>{assessmentInfo.name}</p>
-        <p><b>{assessmentInfo.count} out of {assessmentInfo.length} </b>questions answered</p>
-        <p><b>MRL: </b>{assessmentInfo.target_mrl}</p>
-        <p><b>Target Date: </b>{assessmentInfo.target}</p>
+        <p><b>{assessmentInfo.count} out of {assessmentInfo.length} </b>total questions answered</p>
+        <p><b>Target MRL: </b>{assessmentInfo.target_mrl}</p>
+        <p><b>Target Date: </b>{assessmentInfo.target != null ? Moment(assessmentInfo.target).format('MM/DD/YYYY') : 'No date set'}</p>
         <p><b>Additional Information: </b>{assessmentInfo.scope}</p>
         <p><b>Location: </b>{assessmentInfo.location}</p>
         <p><b>Level Switching On?: </b>{assessmentInfo.level_switching ? 'Yes' : 'No'}</p>

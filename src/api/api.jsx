@@ -162,6 +162,17 @@ export async function grabTeamMemberInfo(assessment_id) {
   return result.data
 }
 
+export async function deleteTeamMember(data) {
+  const token = localStorage.getItem("token");
+  const result = await axios({
+    method: 'delete',
+    url: `${apiUrl}/delete_tm`,
+    data: {data},
+    headers: {Authorization: `Bearer ${token}`}
+  })
+  return result.data
+}
+
 export async function addFileToAssessment(data) {
   const token = localStorage.getItem("token");
   const result = await axios({

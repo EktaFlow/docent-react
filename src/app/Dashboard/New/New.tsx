@@ -132,10 +132,11 @@ const New: React.FC = () => {
     } else {
       var ths:any = [];
       var keys = Object.keys(threads);
-      ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'].forEach((letter, index) => {
+      ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'].forEach((lett, index) => {
         var thname = keys[index]
+        console.log(thname)
         if (threads[thname as keyof ThreadsType] == true) {
-          ths.push(letter);
+          ths.push(lett);
         }
       });
       console.log(ths);

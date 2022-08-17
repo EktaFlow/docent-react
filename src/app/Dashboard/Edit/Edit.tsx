@@ -7,15 +7,24 @@ import React, { useState, useEffect } from 'react';
 
 import ChooseThreads from '../New/ChooseThreads';
 
-import { updateAssessment, createTeamMember, grabSingleAssessment, grabTeamMemberInfo } from '../../../api/api';
-
+import { updateAssessment, createTeamMember, grabSingleAssessment, grabTeamMemberInfo, deleteTeamMember } from '../../../api/api';
 import { format, parseISO } from 'date-fns';
 import {  closeCircle, removeCircleOutline, trashOutline } from 'ionicons/icons';
 
 const Edit: React.FC = () => {
   type ThreadsType = {t: boolean, a: boolean, b: boolean, c: boolean, d: boolean, e: boolean, f: boolean, g: boolean, h: boolean, i: boolean}
 
-  const[ assessData, setAssessData ] = useState(); 
+  // const[ assessData, setAssessData ] = useState<any>([]); 
+  const[ oldAssessData, setOldAssessData ] = useState({
+    id: 0, 
+    name: '',
+    scope: '', //additional_info
+    target_mrl: null, 
+    target: '', //date
+    level_switching: false, //boolean 
+    location: '',
+    team_members: []
+  })
   const [atts, setAtts] = useState({
     id: 0, 
     name: '',
@@ -24,14 +33,9 @@ const Edit: React.FC = () => {
     target: '', //date
     level_switching: false, //boolean 
     location: '',
-    // team_members: []
+    team_members: []
   })
   const history = useHistory();
-  // const [newTM, setNewTM] = useState({
-  //   name: '',
-  //   role: '',
-  //   email: ''
-  // })
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState({message: '', status: ''})
 
@@ -49,6 +53,7 @@ const Edit: React.FC = () => {
 
   const [threads, setThreads] = useState<ThreadsType>({t: true, a: true, b: true, c: true, d: true, e: true, f: true, g: true, h: true, i: true});
 
+  const [openDate, setOpenDate] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
   const formatDate = (value: string) => {
     return format(parseISO(value), 'MMM dd yyyy');
@@ -57,74 +62,61 @@ const Edit: React.FC = () => {
   async function getSingleAssessment(id: Number) {
     var ast = await grabSingleAssessment(id);
 
-    const data = {
-      id: id
-    }
     var tmss = await grabTeamMemberInfo(id)
     console.log(tmss.team_members)
-    // var ats = asts.assessments.assessments
-    console.log(ast)
-    setAssessData(ast)
-    // console.log(ast.team_members)
+
+    console.log(ast.info)
+    // setOldAssessData(ast.info)
+    setOldAssessData({
+      id: ast.info.id, 
+      name: ast.info.name,
+      scope: ast.info.scope, //additional_info
+      target_mrl: ast.info.target_mrl.toString(), 
+      target: ast.info.target, //date
+      level_switching: ast.info.level_switching, //boolean 
+      location: ast.info.location,
+      team_members: []
+    })
     setCurrTms(tmss.team_members)
   }
-//USE FOR GETTING ASSESSMENT ID TO UPDATE
+
   useEffect(() => {
-    // let id = 0
     async function getAssessmentInfo() {
       var his: any = history
       var assessment_id = his["location"]["state"]["assessment_id"]
       // id = assessment_id
-      console.log(assessment_id)
       getSingleAssessment(assessment_id)
       await setAtts({...atts, id: assessment_id})
+      // await setPropsAtts(assessment_id)
+      
     }
     
     getAssessmentInfo()
-    // getSingleAssessment()
-    console.log(currTms)
-    
   }, []);
 
-  // useEffect(() => {
-    
-  //   getSingleAssessment()
-  // }, [atts.id])
-
-  
-  async function update() {
-    if(selectedDate) {
-      setAtts ({
-        ...atts, 
-        target: selectedDate
+  useEffect(() => {
+    if(oldAssessData) {
+      console.log(oldAssessData)
+      setAtts({
+        id: oldAssessData.id, 
+        name: oldAssessData.name,
+        scope: oldAssessData.scope, //additional_info
+        target_mrl: oldAssessData.target_mrl, 
+        target: oldAssessData.target, //date
+        level_switching: oldAssessData.level_switching, //boolean 
+        location: oldAssessData.location,
+        team_members: []
       })
     }
+  }, [oldAssessData])
 
-    let assmUpdate = {...atts}
-    //filter out blank attributes so does not update to blank??
-    // assmUpdate.filter({
 
-    // })
-
-    // const {[name]: removedProperty, ...employeeRest } = assmUpdate
-    // const { name, target, ...assmRest } = assmUpdate;
-    // console.log(assmRest)
-
-    console.log(atts)
-    console.log(Object.keys(assmUpdate))
-    // for(const key in assmUpdate) {
-    //   if(assmUpdate[key])
-    // }
-    // Object.keys(atts).forEach(key => {
-    //   if(assmUpdate[key] === null || assmUpdate[key] === '') {
-    //     delete assmUpdate[key];
-    //   }
-    // });
-
+  async function update() {
+    var assmUpdate = atts
+    assmUpdate["id"] = oldAssessData.id //for some reason this wasn't updating
+    assmUpdate["team_members"] = tms
+    console.log(assmUpdate)
     
-    //need to add team members
-    // console.log(typeof assmUpdate)
-    // assmUpdate["team_members"].push(newTM); 
     if(atts.name == '' || atts.target_mrl == null) {
       setValidationErrors({
         name: atts.name == '' ? true : false,
@@ -132,7 +124,13 @@ const Edit: React.FC = () => {
       })
     }
     else {
-      var assm = await updateAssessment(atts)
+      setShowToast(true)
+      setToastMessage({message: `Updated Assessment: ${assmUpdate["name"]}`, status: 'success'})
+      setShowToast(true)
+      setTimeout(() => {
+        setShowToast(false)
+      }, 2000)
+      var assm = await updateAssessment(assmUpdate)
       .then((res) => {
         console.log(res)
         history.push({
@@ -144,10 +142,13 @@ const Edit: React.FC = () => {
       })
       .catch((error) => {
         console.log(error)
+        setShowToast(true)
+        setToastMessage({message: 'Error updating assessment, please refresh.', status: 'danger'})
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000)
       })
     }
-    
-
     
   }
 
@@ -175,40 +176,38 @@ const Edit: React.FC = () => {
     setTempTM({email: '', role: ''})
   }
 
-  function removeIcon(spot:any){
+  function removeNewTM(spot:any){
     var t = [...tms]
     t.splice(spot, 1)
     setTms(t)
   }
 
-  async function removeTM(tm:any) {
-
-  }
-
-  async function processNewTM(tm:any){
-    tm['assessment_id'] = atts.id
+  async function removeCurrTM(tm:any, spot:any) {
+    tm['assessment_id'] = oldAssessData.id
     console.log(tm)
-    var newTm = await createTeamMember(tm);
-    console.log(newTm)
-    if (newTm.team_member) {
-      //is this needed?:
-      // var index = assessments.findIndex((ast) => ast.id == tm['assessment_id']);
-      // var astclone = Object.create(assessments);
-      // astclone[index] = newTm.assessment;
-      // setAssessments(astclone);
-      
-      if (newTm.newUser) {
-        setShowToast(true);
-        setToastMessage({message: `${newTm.team_member} has been invited to the assessment: ${newTm.assessment.name}`, status: 'success'})
-      } else {
-        setShowToast(true);
-        setToastMessage({message: `${newTm.team_member} has been invited to Docent as a new user and been invited to the assessment: ${newTm.assessment.name}`, status: 'success'})
-      }
-      // window.location.reload(); 
-    }
 
+    var removingTM = await deleteTeamMember(tm)
+      .then((res) => {
+        var t = [...currTms]
+        t.splice(spot, 1)
+        setCurrTms(t)
+        setShowToast(true)
+        setToastMessage({message: 'Team member removed successfully', status: 'success'})
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000)
+      })
+      .catch((error) => {
+        console.log(error)
+        setShowToast(true)
+        setToastMessage({message: 'Error removing team member', status: 'danger'})
+        setTimeout(() => {
+          setShowToast(false)
+        }, 2000)
+      })
+    
+    
   }
-
 
   const handleAnswerChange = (e: any) => {
     if (e.target.name == 'name' && validationErrors.name == true) {
@@ -216,14 +215,20 @@ const Edit: React.FC = () => {
       v.name = false;
       setValidationErrors(v)
     }
-    if (e.target.name == 'target_mrl' && validationErrors.target_mrl == true) {
+    else if (e.target.name == 'target_mrl' && validationErrors.target_mrl == true) {
       var v = validationErrors
       v.target_mrl = false;
       setValidationErrors(v)
     }
-    
-    if(e.target.name == 'level_switching') {
+    else if(e.target.name == 'level_switching') {
       e.target.value == 'yes' ? setAtts({...atts, level_switching: true}) : setAtts({...atts, level_switching: false}) 
+    }
+    else if(e.target.name == "date") {
+      console.log("setting date", e.detail.value!)
+      setAtts({
+        ...atts,
+        target: formatDate(e.detail.value!)
+      })
     }
     else {
       setAtts({
@@ -232,23 +237,24 @@ const Edit: React.FC = () => {
       })
     }
   }
-  
 
   return (
     <IonPage className="new-page-wrapper">
       <Header />
       <div className="content-wrapper">
         <div className="header-info">
-          <h2>Edit Assessment</h2>
+          <h2>Edit Assessment: {oldAssessData.name}</h2>
         </div>
         <div className="panel-wrappers">
           <div className="assessment-info">
             <h3>Assessment Information</h3>
+            {/* <p onClick={showCurrentInfo}>See Current Info</p> */}
             <IonItem color={validationErrors.name == false ? 'docentlight' : 'danger'}>
-              <IonLabel position="floating">Assessment Name* (50 characters max)</IonLabel>
+              <IonLabel position="floating">New Assessment Name* (50 characters max)</IonLabel>
               <IonInput
                 name="name"
                 value={atts.name}
+                placeholder={oldAssessData.name}
                 onIonChange={handleAnswerChange}
                 maxlength={50}
                 required
@@ -278,7 +284,7 @@ const Edit: React.FC = () => {
               <IonLabel position="floating">Level Switching</IonLabel>
               <IonSelect
                 name="level_switching"
-                value={atts.level_switching}
+                value={atts.level_switching ? "yes" : "no"}
                 onIonChange={handleAnswerChange}
                 interface="popover"
               >
@@ -288,12 +294,14 @@ const Edit: React.FC = () => {
             </IonItem>
             <IonItem button={true} id="open-date-input" color="docentlight">
                    <IonLabel>Date</IonLabel>
-                   <IonText slot="end">{selectedDate}</IonText>
-                   <IonPopover trigger="open-date-input" showBackdrop={false}>
+                   <IonText slot="end">{selectedDate ? selectedDate : oldAssessData.target}</IonText>
+                   <IonPopover trigger="open-date-input" showBackdrop={false} isOpen={openDate}>
                      <IonDatetime
+                      name="date"
                       presentation="date"
+                      showClearButton={true}
                       showDefaultButtons={true}
-                      onIonChange={ev => {setSelectedDate(formatDate(ev.detail.value!));}}
+                      onIonChange={ev => {setSelectedDate(formatDate(ev.detail.value!)); handleAnswerChange(ev);}}
                     />
                   </IonPopover>
                 </IonItem>
@@ -302,6 +310,7 @@ const Edit: React.FC = () => {
               <IonInput
                 name="location"
                 value={atts.location}
+                placeholder={oldAssessData.location}
                 onIonChange={handleAnswerChange}
               ></IonInput>
             </IonItem>
@@ -310,6 +319,7 @@ const Edit: React.FC = () => {
               <IonTextarea
                 name="scope"
                 value={atts.scope}
+                placeholder={oldAssessData.scope}
                 onIonChange={handleAnswerChange}
                 maxlength={250}
               ></IonTextarea>
@@ -348,7 +358,7 @@ const Edit: React.FC = () => {
               { tms.length > 0 && tms.map((tm:any, index:any) => (
                 <IonChip key={index} color="docentdark">
                   <IonLabel color="docentdark" >Email: <b>{tm.email}</b> Role: <b>{tm.role}</b></IonLabel>
-                  <span onClick={() => removeIcon(index)}><IonIcon  icon={closeCircle} /></span>
+                  <span onClick={() => removeNewTM(index)}><IonIcon  icon={closeCircle} /></span>
                 </IonChip>
               ))
               }
@@ -359,9 +369,9 @@ const Edit: React.FC = () => {
               <h3>Remove Current Team Members</h3>
               <IonRow>
                 {currTms.length > 0 && currTms.map((tm:any, index: any) => (
-                  <IonChip color="docentdark" >
+                  <IonChip color="docentdark" key={index}>
                     <IonLabel color="docentdark">Email: <b>{tm.email}</b> Role: <b>{tm.role}</b></IonLabel>
-                    <span ><IonIcon color="danger" icon={closeCircle} onClick={() => removeTM(tm)} /></span>
+                    <span ><IonIcon color="danger" icon={closeCircle} onClick={() => removeCurrTM(tm, index)} /></span>
                   </IonChip>
                 ))}
                 
@@ -377,7 +387,8 @@ const Edit: React.FC = () => {
             <IonToast
               isOpen={showToast}
               onDidDismiss={() => setShowToast(false)}
-              message={`Updating Assessment`}
+              message={toastMessage.message}
+              color={toastMessage.status}
             />
           </div>
         </div>
