@@ -13,7 +13,7 @@ import { format, parseISO } from 'date-fns';
 import { createAnswers, grabNextQuestion, grabSpecificQuestion, addFileToAssessment, addFileToQuestion, grabFiles, grabNextQuestionAction, grabAnswers, deleteFileFromQuestion, deleteFileFromAssessment } from '../../api/api';
 
 import Topbar from './Topbar';
-import Sidebar from './Sidebar'; 
+import Sidebar from './Sidebar';
 import RiskAssessment from './RiskAssessment/RiskAssessment';
 import RiskMatrix from './RiskAssessment/RiskMatrix';
 
@@ -24,7 +24,7 @@ const QuestionsPage: React.FC = (props) => {
 
   // const [questionList, setQuestionList] = useState(questions);
   const [answer, setAnswer] = useState({
-    answer: null, 
+    answer: null,
     likelihood: null,
     consequence: null,
     risk_response: null,
@@ -49,7 +49,7 @@ const QuestionsPage: React.FC = (props) => {
 
   const [allChanges, setAllChanges] = useState(['']);
 
-  const [showHistory, setShowHistory] = useState(false); 
+  const [showHistory, setShowHistory] = useState(false);
   const history = useHistory();
 
   const [explanationText, showExplanationText] = useState(false);
@@ -78,7 +78,7 @@ const QuestionsPage: React.FC = (props) => {
   const [selectedFile, setSelectedFile] = useState<any>(null);
   const [loadedFiles, setLoadedFiles] = useState([])
   const fileInput = useRef(null);
-  const [showFiles, setShowFiles] = useState(false); 
+  const [showFiles, setShowFiles] = useState(false);
 
   const [assessmentId, setAssessmentId] = useState<number>();
 
@@ -97,14 +97,11 @@ const QuestionsPage: React.FC = (props) => {
 
   useEffect(() => {
     var his: any = history
-    console.log(his["location"]["state"])
 
     if (his["location"]["state"]) {
-      console.log(his["location"]["state"]["question_id"]);
       var ast_id = his["location"]["state"]["assessment_id"]
-      // var q_id; 
+      // var q_id;
       if(his["location"]["state"]["question_id"]){
-        console.log("grabbing specific question")
         var q_id = his["location"]["state"]["question_id"]
         var q = grabSQ(q_id)
         // setIsNewQ(true)
@@ -116,22 +113,19 @@ const QuestionsPage: React.FC = (props) => {
       }
       loadFiles(ast_id)
     }
-    
-    
+
+
   }, []);
 
   useEffect(() => {
     var his: any = history
-    console.log(his["location"]["state"])
     if (his["location"]["state"]) {
-      // console.log(his["location"]["state"]["question_id"]);
       var ast_id = his["location"]["state"]["assessment_id"]
-      console.log(ast_id)
       setAssessmentId(ast_id)
       if(his["location"]["state"]["question_id"]){
         if(question.id != his["location"]["state"]["question_id"]) {
           var q_id = his["location"]["state"]["question_id"]
-          var q = grabSQ(q_id)       
+          var q = grabSQ(q_id)
         }
       }
       else {
@@ -140,17 +134,16 @@ const QuestionsPage: React.FC = (props) => {
       }
       loadFiles(ast_id)
     }
-    
+
   }, [history])
 
   useEffect(() => {
-    // console.log(question.question_text)
     // if level switching on, change position variable
 
     // else (if level switching is off) keep normal
     if(question.current_answer_text === '' || question.all_answers.length == 0) {
       setAnswer({
-        answer: null, 
+        answer: null,
         likelihood: null,
         consequence: null,
         risk_response: null,
@@ -176,9 +169,7 @@ const QuestionsPage: React.FC = (props) => {
     // else {
     //   revertBack(question.all_answers[0])
     // }
-    console.log(question)
-    // console.log(answer['answer'])
-    
+
 
   }, [question.question_id])
 
@@ -194,7 +185,6 @@ const QuestionsPage: React.FC = (props) => {
 
   async function loadFiles(assessmentId: any) {
     await grabFiles(assessmentId).then((res) => {
-      // console.log(res);
       setLoadedFiles(res.files);
     })
       .catch((error) => {
@@ -214,7 +204,6 @@ const QuestionsPage: React.FC = (props) => {
   }
 
   async function grabSQ(question_id: Number) {
-    // console.log(question_id)
     var next_question = await grabSpecificQuestion(question_id)
       .then((res) => {
         setUpQuestionsPage(res)
@@ -227,48 +216,68 @@ const QuestionsPage: React.FC = (props) => {
 
   async function getNextQuestion(movement_action: any) {
     //will run and grab the right question
+    var readyToMove = false;
     console.log("valuesChanged in getNextQ: " + valuesChanged);
     if (yes == true || no == true || na == true) {
       if (valuesChanged == true && answer.answer != null) {
         console.log("saving answers")
-        saveAnswers();
+        var res = await saveAnswers();
+        // console.log(res)
+        if (res == true){
+          readyToMove = true;
+        }
+      } else {
+        readyToMove = true;
       }
+    } else {
+      readyToMove = true;
     }
-    
-    await grabNextQuestionAction(assessmentId, movement_action, question.question_id)
-      .then((res) => {
-        console.log(res)
-        
-        loadFiles(assessmentId)
-        if(thread.mr_level == 1 && assessInfo.levelSwitching && no) {
-          setToastMessage({ message: 'Cannot drop to lower MRL', status: 'danger' })
-          setShowToast(true)
-          setTimeout(() => {
-            setShowToast(false)
-          }, 1000)
-        }
-        else {
-          setToastMessage({ message: 'Navigating to next question', status: 'primary' })
-          setShowToast(true)
-          setTimeout(() => {
-            setShowToast(false)
-          }, 1000)
-        }
-        setUpQuestionsPage(res)
-        
-      })
-      .catch((err) => {
-        setToastMessage({ message: 'Error navigating to next question, please refresh', status: 'danger' })
-        setShowToast(true);
-        setTimeout(() => {
-          setShowToast(false)
-        }, 2000)
-      })
+
+    if (readyToMove == true){
+      setTimeout(async () => {
+        await grabNextQuestionAction(assessmentId, movement_action, question.question_id)
+          .then((res) => {
+            console.log(res)
+            console.log('LEVEL CHANGE', res.level_change)
+            loadFiles(assessmentId)
+            if(thread.mr_level == 1 && assessInfo.levelSwitching && no) {
+              setToastMessage({ message: 'Cannot drop to lower MRL', status: 'danger' })
+              setShowToast(true)
+              setTimeout(() => {
+                setShowToast(false)
+              }, 1000)
+            } else if (assessInfo.levelSwitching && res.level_change == 'down'){
+              setToastMessage({ message: 'Subthread has failed. Dropping you to lower level', status: 'primary' })
+              setShowToast(true)
+              setTimeout(() => {
+                setShowToast(false)
+              }, 1000)
+            }
+            else {
+              setToastMessage({ message: 'Navigating to next question', status: 'warning' })
+              setShowToast(true)
+              setTimeout(() => {
+                setShowToast(false)
+              }, 2000)
+            }
+            setUpQuestionsPage(res)
+
+          })
+          .catch((err) => {
+            setToastMessage({ message: 'Error navigating to next question, please refresh', status: 'danger' })
+            setShowToast(true);
+            setTimeout(() => {
+              setShowToast(false)
+            }, 2000)
+            })
+          }, 1500)
+
+    }
   }
 
+
+
   function setUpQuestionsPage(res: any) {
-    // console.log("setting up new questions page: ");
-    console.log(res); 
     setShowHistory(false)
     setShowFiles(false)
     setQuestion(res.question)
@@ -278,9 +287,8 @@ const QuestionsPage: React.FC = (props) => {
     // var all_ans = res.question.all_answers
     if(res.question.all_answers.length > 0) {
       revertBack(res.question.all_answers[0])
-      // console.log("reverting back")
     }
-    
+
   }
 
   const revertBack = (ans:any) => {
@@ -297,16 +305,14 @@ const QuestionsPage: React.FC = (props) => {
     if(question.all_answers.length > 0) {
       var most_recent = question.all_answers[0]
       for(const prop in ans) {
-        console.log(prop)
-        console.log("check changed" + (prop !== most_recent[`${prop}`]))
         if(prop !== most_recent[`${prop}`]) {
-          return true; 
+          return true;
         }
       }
       return false
     }
     return true
-    
+
     // if(ans === question.all_answers[0]) {
     //   return false
     // }
@@ -320,7 +326,7 @@ const QuestionsPage: React.FC = (props) => {
       question_id: question.question_id,
       answer: answer
     }
-    
+
     if (yes === true || no === true || na === true) {
       let check = checkIfAnswerChanged(answer)
       if (valuesChanged === true && check) {
@@ -330,16 +336,18 @@ const QuestionsPage: React.FC = (props) => {
             setShowToast(true)
             setTimeout(() => {
               setShowToast(false)
+              return true
             }, 1000)
-            console.log(res)
-            return res
+
           })
           .catch((error) => {
             setToastMessage({ message: 'Error saving answers', status: 'danger' })
             setShowToast(true)
             setTimeout(() => {
               setShowToast(false)
+              return false
             }, 2000)
+
           })
         if (selectedFile !== null && assessmentId !== undefined) {
           const formData = new FormData();
@@ -351,21 +359,25 @@ const QuestionsPage: React.FC = (props) => {
           var assm = await addFileToAssessment(formData).then((res) => {
             loadFiles(assessmentId)
             saveFileToQuestion(res.file.id);
+            return true
           })
             .catch((error) => {
               console.log(error)
+              return false
             })
         }
       }
       else {
-        setToastMessage({ message: 'Answers have Saved', status: 'primary' })        
+        setToastMessage({ message: 'Navigating to Next Question', status: 'primary' })
         setShowToast(true)
         setTimeout(() => {
           setShowToast(false)
+          return true
         }, 2000)
       }
       //if values have not been changed
       setValuesChanged(false)
+      return true
     }
     else {
       setToastMessage({ message: 'Select an answer before saving', status: 'danger' })
@@ -391,7 +403,6 @@ const QuestionsPage: React.FC = (props) => {
       }, 2000)
     })
       .catch((error) => {
-        // console.log('2')
         setToastMessage({ message: 'Error attaching file question', status: 'danger' })
         setShowToast(true);
         setTimeout(() => {
@@ -403,12 +414,11 @@ const QuestionsPage: React.FC = (props) => {
 
   async function deleteQuestionFile(file_id: any) {
     var data = {
-      question_id: question.question_id, 
+      question_id: question.question_id,
       file_id: file_id
     }
 
     var file = await deleteFileFromQuestion(data).then((res) => {
-      // console.log(showToast)
       loadFiles(assessmentId)
       setToastMessage({ message: 'Removed file from question', status: 'success' })
       setShowToast(true);
@@ -417,7 +427,6 @@ const QuestionsPage: React.FC = (props) => {
       }, 2000)
     })
     .catch((error) => {
-      // console.log('2')
       setToastMessage({ message: 'Error removing file from question', status: 'danger' })
       setShowToast(true);
       setTimeout(() => {
@@ -429,7 +438,7 @@ const QuestionsPage: React.FC = (props) => {
 
   async function deleteAssessmentFile(file_id: any) {
     var data = {
-      assessment_id: assessmentId, 
+      assessment_id: assessmentId,
       file_id: file_id
     }
     var file = await deleteFileFromAssessment(data).then((res) => {
@@ -455,28 +464,24 @@ const QuestionsPage: React.FC = (props) => {
   };
 
   const handleAnswerChange = (e: any) => {
-    // console.log(e)
     if (e.target.name === "answer") {
       changeInterface(e.target.value)
     }
     else {
-      // console.log("name: " + e.target.name + "\nvalue: " + (typeof e.target.value))
-      // console.log(e.target.name)
       setAnswer({
         ...answer,
         [e.target.name]: e.target.value
       });
     }
   };
-  
+
 
   const changeInterface = (answer: any) => {
-    // console.log("yes: " + yes + "\nno: " + no + "\nna: " + na)
     if (answer === "yes") {
       setYes(true);
       setNo(false);
       setNA(false);
-      setFieldNames({ 
+      setFieldNames({
         assumptions_name: "assumptions_yes",
         notes_name: "notes_yes"
       })
@@ -484,14 +489,14 @@ const QuestionsPage: React.FC = (props) => {
         ...answer,
         answer: 'yes'
       });
-      
-      setValuesChanged(true); 
+
+      setValuesChanged(true);
     }
     else if (answer === "no") {
       setYes(false);
       setNo(true);
       setNA(false);
-      setFieldNames({ 
+      setFieldNames({
         assumptions_name: "assumptions_no",
         notes_name: "notes_no"
       })
@@ -499,13 +504,13 @@ const QuestionsPage: React.FC = (props) => {
         ...answer,
         answer: 'no'
       });
-      setValuesChanged(true); 
+      setValuesChanged(true);
     }
     else if (answer === "na") {
       setYes(false);
       setNo(false);
       setNA(true);
-      setFieldNames({ 
+      setFieldNames({
         assumptions_name: "assumptions_na",
         notes_name: "notes_na"
       })
@@ -513,20 +518,18 @@ const QuestionsPage: React.FC = (props) => {
         ...answer,
         answer: 'na'
       });
-      setValuesChanged(true); 
+      setValuesChanged(true);
     }
     else {
       setYes(false);
       setNo(false);
       setNA(false);
-      setValuesChanged(false); 
-      setFieldNames({ 
+      setValuesChanged(false);
+      setFieldNames({
         assumptions_name: '',
         notes_name: ''
       })
     }
-    // setValuesChanged(true); 
-    // console.log("valuesChanged in changeInterface: " + valuesChanged)
     return 'done'
   }
 
@@ -636,7 +639,6 @@ const QuestionsPage: React.FC = (props) => {
         ...answer,
         risk: data
       });
-      // console.log(data)
       setValuesChanged(true)
   }
 
@@ -648,7 +650,6 @@ const QuestionsPage: React.FC = (props) => {
 
   const showHistoryToggle = () => {
     showHistory ? setShowHistory(false) : setShowHistory(true)
-    // console.log(showHistory)
   }
 
   return (
@@ -657,10 +658,10 @@ const QuestionsPage: React.FC = (props) => {
         <IonHeader>
           <Header showAssessment={true} inAssessment={true} assessmentId={assessmentId} />
         </IonHeader>
-        
+
         <IonSplitPane contentId="page-content">
             <Sidebar getSQ={grabSQ} assessmentId={assessmentId} thread={thread} subthread={subthread} question={question} assessmentInfo={assessInfo} />
-          
+
           <div id="page-content">
             <Topbar getNextQuestion={getNextQuestion} saveAnswers={saveAnswers} assessmentId={assessmentId} question={question} subthread={subthread} thread={thread} assessInfo={assessInfo} />
 
@@ -797,9 +798,9 @@ const QuestionsPage: React.FC = (props) => {
                               >
                             </IonTextarea>
                           </IonItem>
-                          
+
                           <IonButton color="dsb" onClick={() => setShowFiles(!showFiles)}>{showFiles ? "Show Question" : "Manage Files"}</IonButton>
-                          
+
                           <br />
 
                           <IonButton color="dsb" onClick={() => {
@@ -821,12 +822,12 @@ const QuestionsPage: React.FC = (props) => {
                             <FilePopover saveFileToQuestion={saveFileToQuestion} files={loadedFiles} question_id={question.question_id} />
                           </IonPopover> */}
 
-                        
+
 
                           <Files files={loadedFiles} question_id={question.question_id} answer_id={question.current_answer_id} />
                         </IonCol>
 
-                        {showFiles ? 
+                        {showFiles ?
                           <IonCol size="12" size-lg="7">
                             <div>
                               <FilePopover saveFileToQuestion={saveFileToQuestion} files={loadedFiles} question_id={question.question_id} deleteQuestionFile={deleteQuestionFile} deleteAssessmentFile={deleteAssessmentFile}/>
@@ -840,7 +841,7 @@ const QuestionsPage: React.FC = (props) => {
                                 handleAnswerChange={handleAnswerChange}
                                 getRiskScore={getRiskScore}
                               />
-                              
+
                             </IonCol>
                             <IonCol size="12" size-lg="4">
                               <RiskMatrix
@@ -849,9 +850,9 @@ const QuestionsPage: React.FC = (props) => {
                               {/* <IonButton size="large"></IonButton> */}
                           </IonCol>
                         </>
-                        
+
                         }
-                        
+
                       </>
                     }
                     {/* </IonRow> */}
@@ -867,12 +868,12 @@ const QuestionsPage: React.FC = (props) => {
                   />
                 </div>
               </IonContent>
-            
+
           </div>
         </IonSplitPane>
 
       </IonPage>
-    </div> 
+    </div>
   )
 }
 export default QuestionsPage;
