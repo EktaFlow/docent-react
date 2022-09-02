@@ -58,7 +58,7 @@ const Home: React.FC = () => {
       var astclone = Object.create(assessments);
       astclone[index] = newTm.assessment;
       setAssessments(astclone);
-      
+
       if (newTm.newUser) {
         setShowToast(true);
         setToastMessage({message: `${newTm.team_member} has been invited to the assessment: ${newTm.assessment.name}`, status: 'success'})
@@ -66,7 +66,7 @@ const Home: React.FC = () => {
         setShowToast(true);
         setToastMessage({message: `${newTm.team_member} has been invited to Docent as a new user and been invited to the assessment: ${newTm.assessment.name}`, status: 'success'})
       }
-      // window.location.reload(); 
+      // window.location.reload();
     }
 
   }
@@ -76,7 +76,7 @@ const Home: React.FC = () => {
     console.log(id)
     var currentAst = assessments.find((assessment) => assessment.assessment.id == id).assessment.name
     var msg = "Assessment '" + currentAst + "' has been deleted";
-    
+
     var ats = assessments.filter((assess) => assess.assessment.id !== id);
     var deleted = await deleteAssessment(id)
       .then((res) => {
@@ -97,11 +97,11 @@ const Home: React.FC = () => {
 
     console.log(deleted)
     console.log(currentAst)
-    
+
     //if deleted, show toast?
     // if(deleted['success'] == true) {
     //   console.log("showing toast")
-      
+
     // }
     // else {
     //   setShowToast(true)
@@ -110,8 +110,8 @@ const Home: React.FC = () => {
     //     setShowToast(false)
     //   }, 2000)
     // }
-    
-    
+
+
   }
 
   return (

@@ -29,11 +29,9 @@ const Header: React.FC<{ showAssessment?: boolean, inAssessment?: boolean, asses
   }
 
   async function logout() {
+    localStorage.removeItem("token");
+    history.replace('/login')
     var logout = await logoutUser();
-    if (logout.data) {
-      localStorage.removeItem("token");
-      history.push('/login')
-    }
   }
 
   async function navigateToReports(value: string) {
