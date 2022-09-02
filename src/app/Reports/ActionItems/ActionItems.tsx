@@ -60,7 +60,7 @@ const ActionItems: React.FC = () => {
       let insertQuestionData = assessmentData.threads.map((thread: any) => (
         thread.subthreads.map((subthread: any) => (
           subthread.questions.map((question: any) => (
-            question.answer !== "Unanswered" && setData((questionData: any) => [...questionData, {
+            question.answer !== "Unanswered" && question.answer.answer === 'no' && setData((questionData: any) => [...questionData, {
               id: thread.id,
               MRL: assessmentData.info.current_mrl,
               Threads: thread.name,
@@ -78,7 +78,7 @@ const ActionItems: React.FC = () => {
       let insertFilteringData = assessmentData.threads.map((thread: any) => (
         thread.subthreads.map((subthread: any) => (
           subthread.questions.map((question: any) => (
-            question.answer !== "Unanswered" && setFilteringData((questionData: any) => [...questionData, {
+            question.answer !== "Unanswered" && question.answer.answer === 'no' && setFilteringData((questionData: any) => [...questionData, {
               id: thread.id,
               MRL: assessmentData.info.current_mrl,
               Threads: thread.name,

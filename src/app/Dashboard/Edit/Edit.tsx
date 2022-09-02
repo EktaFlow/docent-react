@@ -14,24 +14,24 @@ import {  closeCircle, removeCircleOutline, trashOutline } from 'ionicons/icons'
 const Edit: React.FC = () => {
   type ThreadsType = {t: boolean, a: boolean, b: boolean, c: boolean, d: boolean, e: boolean, f: boolean, g: boolean, h: boolean, i: boolean}
 
-  // const[ assessData, setAssessData ] = useState<any>([]); 
+  // const[ assessData, setAssessData ] = useState<any>([]);
   const[ oldAssessData, setOldAssessData ] = useState({
-    id: 0, 
+    id: 0,
     name: '',
     scope: '', //additional_info
-    target_mrl: null, 
+    target_mrl: '',
     target: '', //date
-    level_switching: false, //boolean 
+    level_switching: false, //boolean
     location: '',
     team_members: []
   })
   const [atts, setAtts] = useState({
-    id: 0, 
+    id: 0,
     name: '',
     scope: '', //additional_info
-    target_mrl: null, 
+    target_mrl: '',
     target: '', //date
-    level_switching: false, //boolean 
+    level_switching: false, //boolean
     location: '',
     team_members: []
   })
@@ -44,7 +44,7 @@ const Edit: React.FC = () => {
     role: ''
   })
   const [tms, setTms] = useState<any>([]);
-  const [missingTMValues, setMissingTMValues] = useState(false); 
+  const [missingTMValues, setMissingTMValues] = useState(false);
   const [currTms, setCurrTms] = useState<any>([]);
   const [validationErrors, setValidationErrors] = useState({
     name: false,
@@ -68,12 +68,23 @@ const Edit: React.FC = () => {
     console.log(ast.info)
     // setOldAssessData(ast.info)
     setOldAssessData({
-      id: ast.info.id, 
+      id: ast.info.id,
       name: ast.info.name,
       scope: ast.info.scope, //additional_info
-      target_mrl: ast.info.target_mrl.toString(), 
+      target_mrl: ast.info.target_mrl.toString(),
       target: ast.info.target, //date
-      level_switching: ast.info.level_switching, //boolean 
+      level_switching: ast.info.level_switching, //boolean
+      location: ast.info.location,
+      team_members: []
+    })
+
+    setAtts({
+      id: ast.info.id,
+      name: ast.info.name,
+      scope: ast.info.scope, //additional_info
+      target_mrl: ast.info.target_mrl.toString(),
+      target: ast.info.target, //date
+      level_switching: ast.info.level_switching, //boolean
       location: ast.info.location,
       team_members: []
     })
@@ -88,9 +99,9 @@ const Edit: React.FC = () => {
       getSingleAssessment(assessment_id)
       await setAtts({...atts, id: assessment_id})
       // await setPropsAtts(assessment_id)
-      
+
     }
-    
+
     getAssessmentInfo()
   }, []);
 
@@ -98,12 +109,12 @@ const Edit: React.FC = () => {
     if(oldAssessData) {
       console.log(oldAssessData)
       setAtts({
-        id: oldAssessData.id, 
+        id: oldAssessData.id,
         name: oldAssessData.name,
         scope: oldAssessData.scope, //additional_info
-        target_mrl: oldAssessData.target_mrl, 
+        target_mrl: oldAssessData.target_mrl,
         target: oldAssessData.target, //date
-        level_switching: oldAssessData.level_switching, //boolean 
+        level_switching: oldAssessData.level_switching, //boolean
         location: oldAssessData.location,
         team_members: []
       })
@@ -116,7 +127,7 @@ const Edit: React.FC = () => {
     assmUpdate["id"] = oldAssessData.id //for some reason this wasn't updating
     assmUpdate["team_members"] = tms
     console.log(assmUpdate)
-    
+
     if(atts.name == '' || atts.target_mrl == null) {
       setValidationErrors({
         name: atts.name == '' ? true : false,
@@ -149,7 +160,7 @@ const Edit: React.FC = () => {
         }, 2000)
       })
     }
-    
+
   }
 
   function updateTM(e: any){
@@ -205,8 +216,8 @@ const Edit: React.FC = () => {
           setShowToast(false)
         }, 2000)
       })
-    
-    
+
+
   }
 
   const handleAnswerChange = (e: any) => {
@@ -221,7 +232,7 @@ const Edit: React.FC = () => {
       setValidationErrors(v)
     }
     else if(e.target.name == 'level_switching') {
-      e.target.value == 'yes' ? setAtts({...atts, level_switching: true}) : setAtts({...atts, level_switching: false}) 
+      e.target.value == 'yes' ? setAtts({...atts, level_switching: true}) : setAtts({...atts, level_switching: false})
     }
     else if(e.target.name == "date") {
       console.log("setting date", e.detail.value!)
@@ -232,7 +243,7 @@ const Edit: React.FC = () => {
     }
     else {
       setAtts({
-        ...atts, 
+        ...atts,
         [e.target.name]: e.target.value
       })
     }
@@ -330,7 +341,7 @@ const Edit: React.FC = () => {
               <IonButton color="dsb" expand='full' onClick={() => update()}>Update Assessment</IonButton>
             </div>
           </div>
-          
+
           <div className="assessment-choices">
             <h3>Add New Team Members</h3>
             <div className="tm-fields-wrapper">
@@ -374,7 +385,7 @@ const Edit: React.FC = () => {
                     <span ><IonIcon color="danger" icon={closeCircle} onClick={() => removeCurrTM(tm, index)} /></span>
                   </IonChip>
                 ))}
-                
+
                 {/* <IonCol size="12" size-lg="6">
                   <span className="file-name-content">team member </span>
                   <IonIcon icon={removeCircleOutline} color="docentdark"></IonIcon>
@@ -407,7 +418,7 @@ const Edit: React.FC = () => {
     //           <IonCol size="12" size-lg="4">
     //             <IonItem color="docentlight">
     //               <IonLabel position="floating">Assessment Name</IonLabel>
-    //               <IonInput 
+    //               <IonInput
     //                 placeholder="Name"
     //                 name={"name"}
     //                 value={atts.name}
@@ -422,7 +433,7 @@ const Edit: React.FC = () => {
     //           <IonCol size="12" size-lg="5">
     //             <IonItem color="docentlight">
     //               <IonLabel position="floating">Additional Info</IonLabel>
-    //               <IonInput 
+    //               <IonInput
     //                 placeholder="Enter Additional Information Here"
     //                 name="scope"
     //                 value={atts.scope}
@@ -435,7 +446,7 @@ const Edit: React.FC = () => {
     //           <IonCol size="12" size-lg="2">
     //             <IonItem color="docentlight">
     //               <IonLabel position="floating">Target MRL*</IonLabel>
-    //               <IonSelect 
+    //               <IonSelect
     //                 interface="popover"
     //                 name="target_mrl"
     //                 value={atts.target_mrl}
@@ -458,7 +469,7 @@ const Edit: React.FC = () => {
     //           <IonCol size="12" size-lg="2">
     //             <IonItem color="docentlight">
     //               <IonLabel position="floating">Level Switching</IonLabel>
-    //               <IonSelect 
+    //               <IonSelect
     //                 interface="popover"
     //                 name="level_switching"
     //                 // value={atts.level_switching}
@@ -487,7 +498,7 @@ const Edit: React.FC = () => {
     //           <IonCol size="12" size-lg="6">
     //             <IonItem className="date-picker" color="docentlight">
     //               <IonLabel position="floating">Location</IonLabel>
-    //               <IonInput 
+    //               <IonInput
     //                 placeholder="Enter Location"
     //                 name="location"
     //                 value={atts.location}
@@ -511,11 +522,11 @@ const Edit: React.FC = () => {
     //         </IonRow>
 
     //         <h4>Add New Team Members</h4>
-    //         <IonRow>  
+    //         <IonRow>
     //           {/* <IonCol size="12" size-lg="4">
     //               <IonItem color="docentlight">
     //                 <IonLabel position="floating">Member Name</IonLabel>
-    //                 <IonInput 
+    //                 <IonInput
     //                   name="name"
     //                   value={newTM.name}
     //                   onIonChange={e => handleAnswerChange(e)}
@@ -526,7 +537,7 @@ const Edit: React.FC = () => {
     //           <IonCol size="12" size-lg="4">
     //             <IonItem color="docentlight">
     //               <IonLabel position="floating">Member Email</IonLabel>
-    //               <IonInput 
+    //               <IonInput
     //                 name="email"
     //                 value={newTM.email}
     //                 onIonChange={e => handleAnswerChange(e)}
@@ -537,7 +548,7 @@ const Edit: React.FC = () => {
     //           <IonCol size="12" size-lg="4">
     //             <IonItem color="docentlight">
     //               <IonLabel position="floating">Member Role</IonLabel>
-    //               <IonInput 
+    //               <IonInput
     //                 name="role"
     //                 value={newTM.role}
     //                 onIonChange={e => handleAnswerChange(e)}
@@ -573,10 +584,10 @@ const Edit: React.FC = () => {
     //             <IonCol size="12" size-lg="2">
     //               <IonButton color="dsb" expand='full' onClick={() => {checkMissingTMValues()}}>Add Team Member</IonButton>
     //             </IonCol>
-                
+
     //           {/* </div> */}
 
-               
+
 
     //           <IonCol className="added-members" size="12" size-lg="6">
     //             {/* <h5>New Team Members</h5> */}
@@ -596,10 +607,10 @@ const Edit: React.FC = () => {
 
     //         <h4>Edit Current Team Members</h4>
     //         <IonRow>
-              
+
     //         </IonRow>
 
-            
+
 
     //         <IonRow>
     //           <IonCol className="ion-text-end" size="12" size-lg="6">
