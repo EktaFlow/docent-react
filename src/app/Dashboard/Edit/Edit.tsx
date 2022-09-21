@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 
 import ChooseThreads from '../New/ChooseThreads';
 
-import { updateAssessment, createTeamMember, grabSingleAssessment, grabTeamMemberInfo, deleteTeamMember } from '../../../api/api';
+import { updateAssessment, createTeamMember, grabSingleAssessmentData, deleteTeamMember } from '../../../api/api';
 import { format, parseISO } from 'date-fns';
 import {  closeCircle, removeCircleOutline, trashOutline } from 'ionicons/icons';
 
@@ -60,10 +60,10 @@ const Edit: React.FC = () => {
   };
 
   async function getSingleAssessment(id: Number) {
-    var ast = await grabSingleAssessment(id);
+    var ast = await grabSingleAssessmentData(id);
 
-    var tmss = await grabTeamMemberInfo(id)
-    console.log(tmss.team_members)
+    // var tmss = await grabTeamMemberInfo(id)
+    // console.log(tmss.team_members)
 
     console.log(ast.info)
     // setOldAssessData(ast.info)
@@ -88,7 +88,7 @@ const Edit: React.FC = () => {
       location: ast.info.location,
       team_members: []
     })
-    setCurrTms(tmss.team_members)
+    setCurrTms(ast.team_members)
   }
 
   useEffect(() => {
@@ -112,7 +112,7 @@ const Edit: React.FC = () => {
         id: oldAssessData.id,
         name: oldAssessData.name,
         scope: oldAssessData.scope, //additional_info
-        target_mrl: oldAssessData.target_mrl,
+        target_mrl: oldAssessData.target_mrl.toString(),
         target: oldAssessData.target, //date
         level_switching: oldAssessData.level_switching, //boolean
         location: oldAssessData.location,

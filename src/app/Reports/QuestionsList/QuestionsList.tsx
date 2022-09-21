@@ -61,7 +61,7 @@ const QuestionsList: React.FC = () => {
 
   useEffect(() => {
     console.log("assessment id effect used")
-    async function getAssessment() { 
+    async function getAssessment() {
       if (assessmentId) {
         var assessmentInfo = await grabSingleAssessment(assessmentId);
         await setAssessmentData(assessmentInfo)
@@ -90,7 +90,7 @@ const QuestionsList: React.FC = () => {
           if (questionArray.length > 0) {
             setQuestionData((questionData: any) => [...questionData, {
               MRL: assessmentData.info.current_mrl,
-              // MRL: thread.mr_level, 
+              // MRL: thread.mr_level,
               thread_name: thread.name,
               subthread_name: subthread.name,
               questionInfo: questionArray,
@@ -109,7 +109,7 @@ const QuestionsList: React.FC = () => {
           if (questionArray.length > 0) {
             setFilteringData((questionData: any) => [...questionData, {
               MRL: assessmentData.info.current_mrl,
-              // MRL: thread.mr_level, 
+              // MRL: thread.mr_level,
               thread_name: thread.name,
               subthread_name: subthread.name,
               questionInfo: questionArray,
@@ -176,7 +176,7 @@ const QuestionsList: React.FC = () => {
         if (filteredAnswer === 'all-answers') {
           const newData = filteringData
           await setQuestionData(newData)
-          // await setQuestionData(filteringData.filter((question: any) => Number(filteredMRL) === assessmentData.info.current_mrl)) 
+          // await setQuestionData(filteringData.filter((question: any) => Number(filteredMRL) === assessmentData.info.current_mrl))
         }
         else {
           let questionArray: any[] = [];
@@ -209,7 +209,7 @@ const QuestionsList: React.FC = () => {
           if (questionArray.length > 0) {
             setFilteringData((questionData: any) => [...questionData, {
               MRL: th.mr_level,
-              // MRL: thread.mr_level, 
+              // MRL: thread.mr_level,
               thread_name: th.name,
               subthread_name: sub.name,
               questionInfo: questionArray,
@@ -231,7 +231,7 @@ const QuestionsList: React.FC = () => {
             if (questionArray.length > 0) {
               setFilteringData((questionData: any) => [...questionData, {
                 MRL: th.mr_level,
-                // MRL: thread.mr_level, 
+                // MRL: thread.mr_level,
                 thread_name: th.name,
                 subthread_name: sub.name,
                 questionInfo: questionArray,
@@ -251,7 +251,7 @@ const QuestionsList: React.FC = () => {
 
     //set filteringData to questions in correct mrl
     getQuestionsAtMRL(selectedMRL)
-    
+
     filterData();
     //reset filtering data
     // setFilteringData([])
@@ -290,7 +290,7 @@ const QuestionsList: React.FC = () => {
                   <IonSelectOption value="all-levels">All Levels</IonSelectOption>
                   <IonSelectOption value="1">1</IonSelectOption>
                   <IonSelectOption value="2">2</IonSelectOption>
-                  <IonSelectOption value="3">3</IonSelectOption> 
+                  <IonSelectOption value="3">3</IonSelectOption>
                   <IonSelectOption value="4">4</IonSelectOption>
                   <IonSelectOption value="5">5</IonSelectOption>
                   <IonSelectOption value="6">6</IonSelectOption>
@@ -335,7 +335,7 @@ const QuestionsList: React.FC = () => {
                   <div className="mrl">
                     <h6><b>MR Level: {question.MRL}</b></h6>
                     {question.questionInfo.map((question_info: any, index: any) => (
-                      
+
                       <div className="question" onClick = {() => navigateToAssessment(question_info.question_id)} key={index}>
                         <h5 className="navigate-links">
                           <span>
@@ -345,7 +345,10 @@ const QuestionsList: React.FC = () => {
                             {question_info.current_answer === 'no' &&
                               <IonButton size="small" color="docentdanger" className="status-button ion-no-padding">No</IonButton>
                             }
-                            {(question_info.current_answer === 'na' || !question_info.current_answer) &&
+                            {question_info.current_answer === 'na' &&
+                              <IonButton size="small" color="secondary" className="status-button ion-no-padding">N/A</IonButton>
+                            }
+                            {!question_info.current_answer &&
                               <IonButton size="small" className="status-button ion-no-padding">Unanswered</IonButton>
                             }
                           </span>

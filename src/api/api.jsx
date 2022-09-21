@@ -13,9 +13,9 @@ export async function grabAssessments() {
 export async function updateAssessment(data) {
   const token = localStorage.getItem("token");
   const result = await axios({
-    method: 'put', 
-    url: `${apiUrl}/update_assessments`, 
-    data: data, 
+    method: 'put',
+    url: `${apiUrl}/update_assessments`,
+    data: data,
     headers: {Authorization: `Bearer ${token}`}
   })
   return result.data
@@ -25,6 +25,15 @@ export async function grabSingleAssessment(assessment_id) {
   const token = localStorage.getItem("token");
   const result = await axios.get(
     `${apiUrl}/get_assessment?id=${assessment_id}`,
+    {headers: {Authorization: `Bearer ${token}`}}
+  )
+  return result.data
+}
+
+export async function grabSingleAssessmentData(assessment_id){
+  const token = localStorage.getItem("token");
+  const result = await axios.get(
+    `${apiUrl}/assessment_data?id=${assessment_id}`,
     {headers: {Authorization: `Bearer ${token}`}}
   )
   return result.data
@@ -198,9 +207,9 @@ export async function addFileToQuestion(data) {
 export async function deleteFileFromQuestion(data) {
   const token = localStorage.getItem("token");
   const result = await axios ({
-    method: 'put', 
-    url: `${apiUrl}/delete_file_question`, 
-    data: data, 
+    method: 'put',
+    url: `${apiUrl}/delete_file_question`,
+    data: data,
     headers: {Authorization: `Bearer ${token}`}
   })
   return result.data
@@ -209,9 +218,9 @@ export async function deleteFileFromQuestion(data) {
 export async function deleteFileFromAssessment(data) {
   const token = localStorage.getItem("token");
   const result = await axios ({
-    method: 'delete', 
-    url: `${apiUrl}/delete_file_assessment`, 
-    data: data, 
+    method: 'delete',
+    url: `${apiUrl}/delete_file_assessment`,
+    data: data,
     headers: {Authorization: `Bearer ${token}`}
   })
   return result.data

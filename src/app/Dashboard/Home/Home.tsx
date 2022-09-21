@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import { IonContent, IonIcon, IonAccordionGroup, IonAccordion, IonItem, IonLabel, IonList, IonButton, IonInput, IonPage, IonPopover, IonToast } from '@ionic/react';
-
+import { peopleCircleOutline } from 'ionicons/icons';
 import Header from '../../Framework/Header';
 import './Home.scss';
 import AssessmentItem from './AssessmentItem';
@@ -140,6 +140,10 @@ const Home: React.FC = () => {
               assessments && assessments.map((assessment, index) => (
                 <IonAccordion value={assessment.assessment.id}>
                   <IonItem slot="header" id="invite-trigger" color="docentdark">
+                    { assessment.assessment.shared &&
+                      <IonIcon icon={peopleCircleOutline}></IonIcon>
+
+                    }
                     <IonLabel>Assessment Name: {assessment.assessment.name}</IonLabel>
                   </IonItem>
                   <IonItem slot="content" color="docentlight">

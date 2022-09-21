@@ -141,6 +141,29 @@ const QuestionsPage: React.FC = (props) => {
     // if level switching on, change position variable
 
     // else (if level switching is off) keep normal
+    // setAnswer({
+    //   answer: null,
+    //   likelihood: null,
+    //   consequence: null,
+    //   risk_response: null,
+    //   greatest_impact: null,
+    //   mmp_summary: '',
+    //   objective_evidence: '',
+    //   assumptions_yes: '',
+    //   notes_yes: '',
+    //   what: '',
+    //   when: '',
+    //   who: '',
+    //   risk: '',
+    //   reason: '',
+    //   assumptions_no: '',
+    //   documentation_no: '', //should be na
+    //   assumptions_na: '',
+    //   assumptions_skipped: '',
+    //   notes_skipped: '',
+    //   notes_no: '',
+    //   notes_na: '',
+    // })
     if(question.current_answer_text === '' || question.all_answers.length == 0) {
       setAnswer({
         answer: null,
@@ -166,9 +189,9 @@ const QuestionsPage: React.FC = (props) => {
         notes_na: '',
       })
     }
-    // else {
-    //   revertBack(question.all_answers[0])
-    // }
+    else {
+      revertBack(question.all_answers[0])
+    }
 
 
   }, [question.question_id])
