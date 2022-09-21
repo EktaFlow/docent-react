@@ -71,7 +71,7 @@ const Edit: React.FC = () => {
       id: ast.info.id,
       name: ast.info.name,
       scope: ast.info.scope, //additional_info
-      target_mrl: ast.info.target_mrl.toString(),
+      target_mrl: ast.info.target_mrl,
       target: ast.info.target, //date
       level_switching: ast.info.level_switching, //boolean
       location: ast.info.location,
@@ -82,7 +82,7 @@ const Edit: React.FC = () => {
       id: ast.info.id,
       name: ast.info.name,
       scope: ast.info.scope, //additional_info
-      target_mrl: ast.info.target_mrl.toString(),
+      target_mrl: ast.info.target_mrl,
       target: ast.info.target, //date
       level_switching: ast.info.level_switching, //boolean
       location: ast.info.location,
@@ -112,7 +112,7 @@ const Edit: React.FC = () => {
         id: oldAssessData.id,
         name: oldAssessData.name,
         scope: oldAssessData.scope, //additional_info
-        target_mrl: oldAssessData.target_mrl.toString(),
+        target_mrl: oldAssessData.target_mrl,
         target: oldAssessData.target, //date
         level_switching: oldAssessData.level_switching, //boolean
         location: oldAssessData.location,
@@ -279,16 +279,16 @@ const Edit: React.FC = () => {
                 onIonChange={handleAnswerChange}
                 interface="popover"
               >
-                <IonSelectOption value="1">1</IonSelectOption>
-                <IonSelectOption value="2">2</IonSelectOption>
-                <IonSelectOption value="3">3</IonSelectOption>
-                <IonSelectOption value="4">4</IonSelectOption>
-                <IonSelectOption value="5">5</IonSelectOption>
-                <IonSelectOption value="6">6</IonSelectOption>
-                <IonSelectOption value="7">7</IonSelectOption>
-                <IonSelectOption value="8">8</IonSelectOption>
-                <IonSelectOption value="9">9</IonSelectOption>
-                <IonSelectOption value="10">10</IonSelectOption>
+                <IonSelectOption value={1}>1</IonSelectOption>
+                <IonSelectOption value={2}>2</IonSelectOption>
+                <IonSelectOption value={3}>3</IonSelectOption>
+                <IonSelectOption value={4}>4</IonSelectOption>
+                <IonSelectOption value={5}>5</IonSelectOption>
+                <IonSelectOption value={6}>6</IonSelectOption>
+                <IonSelectOption value={7}>7</IonSelectOption>
+                <IonSelectOption value={8}>8</IonSelectOption>
+                <IonSelectOption value={9}>9</IonSelectOption>
+                <IonSelectOption value={10}>10</IonSelectOption>
               </IonSelect>
             </IonItem>
             <IonItem color="docentlight"   >
