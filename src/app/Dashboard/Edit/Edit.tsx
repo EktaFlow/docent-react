@@ -71,7 +71,7 @@ const Edit: React.FC = () => {
       id: ast.info.id,
       name: ast.info.name,
       scope: ast.info.scope, //additional_info
-      target_mrl: ast.info.target_mrl.toString(),
+      target_mrl: ast.info.target_mrl,
       target: ast.info.target, //date
       level_switching: ast.info.level_switching, //boolean
       location: ast.info.location,
@@ -82,7 +82,7 @@ const Edit: React.FC = () => {
       id: ast.info.id,
       name: ast.info.name,
       scope: ast.info.scope, //additional_info
-      target_mrl: ast.info.target_mrl.toString(),
+      target_mrl: ast.info.target_mrl,
       target: ast.info.target, //date
       level_switching: ast.info.level_switching, //boolean
       location: ast.info.location,

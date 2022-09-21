@@ -10,7 +10,7 @@ import {FaUserPlus} from "react-icons/fa";
 import Moment from 'moment';
 
 const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack: any, openInviteTM: any, teamMembers: any, processNewTM: any })> = ({ assessmentInfo, deleteAssessmentFromBack, openInviteTM, teamMembers, processNewTM }) => {
-  const [showTM, setShowTM] = useState(false); 
+  const [showTM, setShowTM] = useState(false);
   const history = useHistory();
 
   async function navigateToPage(value: string) {
@@ -31,7 +31,7 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
   }, [assessmentInfo]);
 
   // useEffect(() => {
-    
+
   // })
 
   const removeAssessment = (id: number) => {
@@ -40,8 +40,8 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
   }
 
   function clickTM(id:any){
-    showTM ? setShowTM(false) : setShowTM(true); 
-    openInviteTM(id); 
+    showTM ? setShowTM(false) : setShowTM(true);
+    openInviteTM(id);
   }
 
   return (
@@ -55,13 +55,13 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
         <p><b>Location: </b>{assessmentInfo.location}</p>
         <p><b>Level Switching On?: </b>{assessmentInfo.level_switching ? 'Yes' : 'No'}</p>
         <p>
-          
+
           <span >
             <div className="add-team-members">
-             <b>Team Members: </b> 
-              <IonButton 
-                size="small" 
-                color="docentsuccess" 
+             <b>Team Members: </b>
+              <IonButton
+                size="small"
+                color="docentsuccess"
                 onClick={() => {clickTM(assessmentInfo.id)}
                 }>
                 <FaUserPlus/>
@@ -72,28 +72,28 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
                 <InviteTMPopover processNewTM={processNewTM}/>
               </p>
             }
-          
+
           <div className="team-members">
             {teamMembers.length == 0 ?
-            <span> No Team Members</span> 
+            <span> No Team Members</span>
             :
             teamMembers.map((tm:any, index:number) => (
               <div >
                 <p>{tm.email} ({tm.role}) {index !== teamMembers.length - 1 ? ', ' : ''}</p>
                 <br/>
               </div>
-             
+
             ))}
           </div>
-            
-          
-             
+
+
+
           </span>
-          
+
         </p>
-        
-        
-        
+
+
+
         {/* <IonButton size="small" color="docentdark"  onClick={() => clickTM()} >Invite Team Members</IonButton> */}
         {/* {showTM &&
           <div>
@@ -107,9 +107,15 @@ const AssessmentItem: React.FC<({ assessmentInfo: any, deleteAssessmentFromBack:
         <IonButton size="small" expand="full" color="docentdark"  onClick={() => navigateToPage('mrl-summary')}>MRL Summary</IonButton>
         <IonButton size="small" expand="full" color="docentdark"  onClick={() => navigateToPage('action-items')}>Action Items</IonButton>
         {/* <IonButton size="small" expand="full" color="docentdark"  onClick={() => openInviteTM(assessmentInfo.id)} >Invite Team Members</IonButton> */}
-        <IonButton size="small" expand="full" color="docentdark" onClick={() => navigateToPage('edit-assessment')}>Edit Assessment Info</IonButton>
-        <IonButton size="small" expand="full" color="docentdark"  onClick={() => removeAssessment(assessmentInfo.id)}>Delete Assessment</IonButton>
-        <IonButton size="small" expand="full" color="docentdark" >Export Assessment</IonButton>
+        {
+          !assessmentInfo.shared &&
+          <>
+            <IonButton size="small" expand="full" color="docentdark" onClick={() => navigateToPage('edit-assessment')}>Edit Assessment Info</IonButton>
+            <IonButton size="small" expand="full" color="docentdark"  onClick={() => removeAssessment(assessmentInfo.id)}>Delete Assessment</IonButton>
+            <IonButton size="small" expand="full" color="docentdark" >Export Assessment</IonButton>
+          </>
+        }
+
       </div>
     </div>
   )
